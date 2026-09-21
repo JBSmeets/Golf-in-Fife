@@ -234,6 +234,21 @@ details.fold[open] summary::after{content:' −';}
 .kv span{font-size:11px;color:var(--muted)}
 .site{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:10px 0 2px;padding:12px 14px;border:1px solid var(--hair);border-radius:12px;color:var(--midnight);text-decoration:none;font-weight:500;font-size:15px;background:#FBF9F4}
 .site span{color:var(--golddk)}
+.stats-card{padding:4px 14px}
+.srow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--hair2)}
+.srow:first-child{border-top:0}
+.srow .sl{font-size:12px;color:var(--muted)}
+.srow .sw{font-family:var(--serif);font-weight:600;font-size:19px;color:var(--midnight);line-height:1.15}
+.srow .sv{font-size:13px;color:var(--golddk);font-weight:500;text-align:right;flex:none;max-width:45%}
+.conf{padding:12px 0;border-top:1px solid var(--hair2)}
+.conf:first-child{border-top:0}
+.conf .opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.conf .opts button{border:1px solid var(--hair);background:#fff;border-radius:10px;padding:8px 12px;font-size:14px;text-align:left;min-height:44px}
+.conf .opts button.cur{border-color:var(--gold);background:#F4EEDF}
+.conf .opts b{font-size:18px;margin-right:6px}
+.brow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 0;border-top:1px solid var(--hair2);font-size:14px}
+.brow:first-child{border-top:0}
+.brow .btns{margin:0;flex:none}
 .ngf{font-size:14px}
 .ngf dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:8px 0}
 .ngf dt{color:var(--muted)} .ngf dd{margin:0;font-weight:500}
@@ -308,7 +323,7 @@ const DEFAULT_COURSES = {
       si: [5,11,14,1,18,9,16,7,3, 10,2,17,8,15,4,13,12,6],
       yds:[403,339,312,415,128,325,266,355,546, 348,447,140,490,170,417,280,330,427], totalYds:6138,
       names:null, cr:70.2, slope:130, check:'',
-      founded:'1868', architect:'Old Tom Morris, James Braid (1909)', member:'Flup', url:'https://lundingolfclub.co.uk/',
+      founded:'1868', architect:'Old Tom Morris, James Braid (1909)', member:'Folpmer', url:'https://lundingolfclub.co.uk/',
       desc:'Een klassieke Fife-links tussen Lundin Links en Lower Largo, aan de Firth of Forth. De eerste vijf en de laatste vier holes zijn pure links langs de kust; daartussen steek je de oude spoorlijn over naar negen holes die James Braid in 1909 toevoegde. Verwacht burns, blinde tee shots, out of bounds langs de voormalige spoorbaan en greens die tot de beste van de regio horen. Lundin was jarenlang kwalificatiebaan voor The Open in St Andrews.' },
   2:{ name:'The Golf House Club, Elie', short:'Elie', dayname:'Zaterdag', day:'Zaterdag 3 oktober', date:'2026-10-03', tees:'11.00 en 11.10 uur',
       par:[4,4,3,4,4,4,4,4,4, 4,3,4,4,4,4,4,4,4],
@@ -335,6 +350,9 @@ let state = load();
 function load(){ try{ const s = JSON.parse(localStorage.getItem(LS)); return s ? Object.assign(blank(), s) : blank(); }catch(e){ return blank(); } }
 function save(){ try{ localStorage.setItem(LS, JSON.stringify(state)); }catch(e){ toast('Opslag op deze telefoon is vol'); } }
 
+let DEV = (()=>{ try{ return JSON.parse(localStorage.getItem('gif_device')) || null; }catch(e){ return null; } })();
+if (!DEV){ DEV = { id:'d'+Date.now().toString(36)+Math.random().toString(36).slice(2,7), name:'' }; localStorage.setItem('gif_device', JSON.stringify(DEV)); }
+function setDeviceName(n){ DEV.name=n; localStorage.setItem('gif_device', JSON.stringify(DEV)); }
 const ui = { tab: sessionStorage.getItem('gif_tab') || 'prog', round: defaultRound(), flight:'A', hole:1,
   boardView: sessionStorage.getItem('gif_bview') || 'tot', courseMode:'list', expanded:{}, player:null,
   admin: sessionStorage.getItem('gif_admin')==='1' };
@@ -392,6 +410,43 @@ function distribution(p){
   return d;
 }
 
+/* ============ Statistics ============ */
+function holeList(p, rounds){ const out=[]; rounds.forEach(r=>{ const c=course(r); for (let h=1;h<=18;h++){ const i=holeInfo(p,r,h); if (has(i.s)) out.push({...i,r,h,course:c.short}); } }); return out; }
+function streak(p, rounds){ let best=0; rounds.forEach(r=>{ let cur=0; for (let h=1;h<=18;h++){ const i=holeInfo(p,r,h); if (has(i.s) && i.pts>=2){ cur++; best=Math.max(best,cur); } else cur=0; } }); return best; }
+function leaders(rows, key, min=1){
+  const vals = rows.map(x=>({p:x.p, v:x[key]})).filter(x=>x.v>=min); if (!vals.length) return null;
+  const top = Math.max(...vals.map(x=>x.v)); return { v:top, names: vals.filter(x=>x.v===top).map(x=>first(x.p.name)) };
+}
+function joinNames(a){ return a.length<=1 ? (a[0]||'') : a.slice(0,-1).join(', ')+' en '+a[a.length-1]; }
+function statsFor(rounds){
+  const rows = players().map(p=>{
+    const hl = holeList(p, rounds);
+    const nine = []; rounds.forEach(r=>{ const rs=roundStats(p,r); [[0,9],[9,18]].forEach(([a,b])=>{ const seg=rs.info.slice(a,b); if (seg.every(i=>has(i.s))) nine.push(sum(seg.map(i=>i.pts))); }); });
+    const rnds = rounds.map(r=>roundStats(p,r)).filter(x=>x.thru===18).map(x=>x.pts);
+    const hi = hl.reduce((m,i)=>i.pts>m.pts?i:m, {pts:-1});
+    return { p, birdies: hl.filter(i=>i.s>0 && i.s<i.par).length, pars: hl.filter(i=>i.s===i.par).length,
+      zeros: hl.filter(i=>i.pts===0).length, best9: nine.length?Math.max(...nine):0, bestRound: rnds.length?Math.max(...rnds):0,
+      streak: streak(p, rounds), topHole: hi.pts, topHoleAt: hi.pts>=0 ? `${hi.course} ${hi.h}` : '' };
+  });
+  const out = [];
+  const add = (label, l, unit, extra='') => { if (l) out.push({label, who: joinNames(l.names), val: `${l.v} ${unit}${extra}`}); };
+  add('Meeste birdies', leaders(rows,'birdies'), 'birdies', ', bruto');
+  add('Meeste pars', leaders(rows,'pars'), 'pars', ', bruto');
+  if (rounds.length>1) add('Beste ronde', leaders(rows,'bestRound'), 'punten');
+  add('Beste negen holes', leaders(rows,'best9'), 'punten');
+  add('Langste reeks van 2+ punten', leaders(rows,'streak',3), 'holes op rij');
+  const th = leaders(rows,'topHole',4);
+  if (th){ const who = rows.filter(x=>x.topHole===th.v).map(x=>`${first(x.p.name)} (${x.topHoleAt})`); out.push({label:'Meeste punten op één hole', who: joinNames(who), val:`${th.v} punten`}); }
+  add('Meeste strepen en nullen', leaders(rows,'zeros',2), 'holes', ', de poedelprijs');
+  return out;
+}
+function prizeHtml(r){
+  const pr = ((state.settings.prizes||{})[r]) || {}, out=[];
+  [['nearest','Nearest the pin'],['longest','Longest drive']].forEach(([k,l])=>{ const x=pr[k]; if (x && x.pid && pById(x.pid)) out.push({label:l, who:pById(x.pid).name, val:[x.hole?`hole ${x.hole}`:'', x.note||''].filter(Boolean).join(', ')}); });
+  return out;
+}
+function statList(items){ return items.map(x=>`<div class="srow"><div><div class="sl">${esc(x.label)}</div><div class="sw">${esc(x.who)}</div></div><div class="sv">${esc(x.val)}</div></div>`).join(''); }
+
 /* ============ Helpers ============ */
 const $ = s => document.querySelector(s);
 const esc = s => String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -441,7 +496,11 @@ function viewBoard(){
         h += `<span class="tot num">${any?r.main:'–'}</span></button>`;
       });
     }
-    h += `</div><p class="tiny muted" style="margin:10px 2px">Een klein cijfer bij een score is het aantal gespeelde holes van een lopende ronde. Bij gelijke stand beslist de laatste ronde, daarna de laatste 9, 6, 3 en 1 hole. Tik op een naam voor de scorekaart.</p>`;
+    const wk = statsFor([1,2,3]);
+    const pz = [1,2,3].flatMap(r=>prizeHtml(r).map(x=>({...x, label:`${x.label}, ${course(r).short}`})));
+    h += `</div>`;
+    if (wk.length || pz.length) h += `<h2>Statistieken van het weekend</h2><div class="card stats-card">${statList(pz)}${statList(wk)}</div>`;
+    h += `<p class="tiny muted" style="margin:10px 2px">Een klein cijfer bij een score is het aantal gespeelde holes van een lopende ronde. Bij gelijke stand beslist de laatste ronde, daarna de laatste 9, 6, 3 en 1 hole. Tik op een naam voor de scorekaart.</p>`;
     return h;
   }
   const r = Number(ui.boardView), c = course(r), live = isLive(r);
@@ -471,7 +530,11 @@ function viewBoard(){
     }
   });
   h += `</div>`;
-  if (rows.every(x=>x.rs[r-1].thru===18)) h += `<div class="note">Dagwinnaar op ${esc(c.short)}: <b>${esc(rows[0].p.name)}</b> met ${rows[0].main} punten.</div>`;
+  const done = rows.every(x=>x.rs[r-1].thru===18);
+  const day = [];
+  if (any){ const top = rows.filter(x=>x.pos===1); day.push({label: done?'Dagwinnaar':'Leidt nu', who: joinNames(top.map(x=>x.p.name)), val:`${top[0].main} punten`}); }
+  const items = [...day, ...prizeHtml(r), ...statsFor([r])];
+  if (items.length) h += `<h2>Uitslag van de dag</h2><div class="card stats-card">${statList(items)}</div>`;
   return h;
 }
 
@@ -482,6 +545,8 @@ function viewScore(){
   h += `<div class="seg"><button class="${ui.flight==='A'?'on':''}" data-act="flight" data-v="A">Flight 1<small>${fl.A.map(p=>esc(first(p.name))).join(', ')||'leeg'}</small></button><button class="${ui.flight==='B'?'on':''}" data-act="flight" data-v="B">Flight 2<small>${fl.B.map(p=>esc(first(p.name))).join(', ')||'leeg'}</small></button></div>`;
   if (!state.players.length) return h + `<div class="card">Er zijn nog geen spelers. Voeg ze toe onder Beheer.</div>`;
   if (!grp.length) return h + `<div class="card">Deze flight is leeg. Verdeel de spelers onder Beheer.</div>`;
+  if (!DEV.name) return h + `<div class="card"><h3 style="margin-top:0">Wie voert in op deze telefoon?</h3><p class="small muted">Dan kan de beheerder achteraf zien wie welke score heeft doorgegeven.</p>
+    <select class="t" id="devname">${players().map(p=>`<option>${esc(p.name)}</option>`).join('')}</select><div class="btns"><button class="btn" data-act="setdev">Opslaan</button></div></div>`;
   const hole = ui.hole, par = c.par[hole-1], si = c.si[hole-1];
   const name = c.names ? c.names[hole-1] : c.short;
   const yds = c.yds && c.yds[hole-1] ? c.yds[hole-1] : null;
@@ -507,6 +572,7 @@ function viewScore(){
   h += `<div class="strip num">${Array.from({length:18},(_,i)=>i+1).map(n=>{
       const cnt = grp.filter(p=>has(getS(p.id,r,n))).length;
       return `<button class="${cnt===grp.length?'done':cnt?'part':''} ${n===hole?'cur':''}" data-act="hole" data-v="${n}">${n}</button>`;}).join('')}</div></div>`;
+  h += `<p class="tiny muted" style="margin:0 2px 10px">Invoer op deze telefoon door ${esc(DEV.name)}. <button class="pu-link" style="font-size:12px;margin:0;padding:0" data-act="resetdev">Wijzigen</button></p>`;
   const pend = Object.keys(state.outbox).length;
   if (pend) h += `<div class="note">${pend} ${pend===1?'score staat':'scores staan'} veilig op deze telefoon en ${pend===1?'wordt':'worden'} verstuurd zodra er bereik is.</div>`;
   return h;
@@ -656,6 +722,36 @@ function viewAdmin(){
   });
   h += `<input type="file" id="photofile" accept="image/*" hidden>`;
 
+  h += `<h2>Nearest en longest drive</h2><div class="card"><p class="small muted" style="margin-top:0">Vul na de ronde in wie er won. Het komt bij de uitslag van de dag en de weekendstatistieken.</p>`;
+  [1,2,3].forEach(r=>{ const c=course(r), pr=((state.settings.prizes||{})[r])||{};
+    h += `<h3>${esc(c.short)}</h3>`;
+    [['nearest','Nearest the pin',c.par.map((x,i)=>x===3?i+1:0).filter(Boolean)],['longest','Longest drive',c.par.map((x,i)=>x>=4?i+1:0).filter(Boolean)]].forEach(([kk,l,holes])=>{
+      const x = pr[kk]||{};
+      h += `<label class="f">${l}</label><div class="row2"><select class="t" data-chg="prize" data-r="${r}" data-k="${kk}" data-f="pid"><option value="">Nog niet bekend</option>${ps.map(p=>`<option value="${p.id}" ${x.pid===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select>
+        <select class="t" data-chg="prize" data-r="${r}" data-k="${kk}" data-f="hole"><option value="">Hole</option>${holes.map(n=>`<option value="${n}" ${Number(x.hole)===n?'selected':''}>Hole ${n}</option>`).join('')}</select></div>
+        <input class="t" style="margin-top:6px" placeholder="${kk==='nearest'?'Afstand, bijvoorbeeld 1,80 m':'Eventueel afstand'}" value="${esc(x.note||'')}" data-chg="prize" data-r="${r}" data-k="${kk}" data-f="note">`;
+    });
+  });
+  h += `</div>`;
+
+  h += `<h2>Controle van de scores</h2><div class="card">`;
+  if (!ui.log) h += `<p class="small" style="margin-top:0">Hier zie je holes waarop verschillende telefoons een andere score hebben doorgegeven. De live stand gebruikt steeds de laatste invoer; hier kies je achteraf de juiste.</p><div class="btns"><button class="btn sm" data-act="loadlog">Controle uitvoeren</button></div>`;
+  else {
+    const cf = conflicts();
+    if (!cf.length) h += `<p style="margin:4px 0">Geen verschillen gevonden in ${ui.log.length} ingevoerde scores.</p>`;
+    cf.forEach(x=>{ const p=pById(x.pid), c=course(x.r);
+      h += `<div class="conf"><div><b style="font-family:var(--serif);font-size:18px">${esc(p?p.name:'?')}</b> <span class="small muted">${esc(c.short)}, hole ${x.h}, par ${c.par[x.h-1]}</span></div><div class="opts">`;
+      x.opts.forEach(o=>{ h += `<button class="${o.v===x.cur?'cur':''}" data-act="resolve" data-p="${x.pid}" data-r="${x.r}" data-h="${x.h}" data-v="${o.v===null?'':o.v}"><b>${o.v===null?'leeg':o.v===0?'streep':o.v}</b><span class="tiny muted">${esc(o.who)}${o.v===x.cur?', staat nu':''}</span></button>`; });
+      h += `</div></div>`; });
+    h += `<div class="btns"><button class="btn sm alt" data-act="loadlog">Opnieuw controleren</button></div>`;
+  }
+  h += `</div>`;
+
+  h += `<h2>Automatische back-ups</h2><div class="card"><p class="small" style="margin-top:0">Na elke wijziging maakt de database zelf een momentopname. De app kan die lezen maar nooit wissen.</p>`;
+  if (ui.backups){ if (!ui.backups.length) h += `<p class="small muted">Nog geen back-ups.</p>`;
+    ui.backups.forEach(b=>{ h += `<div class="brow"><span>${new Date(b.created_at).toLocaleString('nl-NL',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}<br><span class="tiny muted">${b.n_scores} scores${b.reason&&b.reason!=='auto'?', '+esc(b.reason):''}</span></span><span class="btns"><button class="btn sm alt" data-act="bdl" data-v="${b.id}">Download</button><button class="btn sm red" data-act="brestore" data-v="${b.id}">Terugzetten</button></span></div>`; }); }
+  h += `<div class="btns"><button class="btn sm" data-act="loadbackups">${ui.backups?'Lijst verversen':'Back-ups tonen'}</button><button class="btn sm alt" data-act="snapnow">Nu een back-up maken</button></div></div>`;
+
   h += `<h2>Back-up en herstel</h2><div class="card">
     <p class="small">Een back-up bevat spelers, flights, baninstellingen, foto’s en alle scores. Maak er na elke ronde een.</p>
     <div class="btns"><button class="btn sm" data-act="backup">Back-up downloaden</button>
@@ -669,6 +765,21 @@ function viewAdmin(){
     <label class="f" for="newpin">Nieuwe pincode</label><div class="row2"><input class="t" id="newpin" inputmode="numeric"><button class="btn sm alt" data-act="setpin">Pincode opslaan</button></div>
     <div class="btns"><button class="btn sm alt" data-act="lock">Beheer sluiten</button></div></div>`;
   return h;
+}
+
+function conflicts(){
+  const res = state.settings.resolved || {}, by = {};
+  (ui.log||[]).forEach(e=>{ const kk=k(e.player_id,e.round_no,e.hole); if (res[kk] && new Date(e.updated_at) <= new Date(res[kk])) return;
+    const dev = e.device || e.device_name || '?'; (by[kk] = by[kk] || {})[dev] = e; });
+  const out = [];
+  Object.entries(by).forEach(([kk,devs])=>{
+    const latest = Object.values(devs); const vals = [...new Set(latest.map(e=>e.strokes))];
+    if (vals.length<2) return;
+    const [pid,r,h] = kk.split('|');
+    out.push({ pid, r:+r, h:+h, cur:getS(pid,+r,+h),
+      opts: vals.map(v=>({ v, who: latest.filter(e=>e.strokes===v).map(e=>`${e.device_name||'onbekend'} ${new Date(e.updated_at).toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})}`).join(', ') })) });
+  });
+  return out.sort((a,b)=>a.r-b.r || a.h-b.h);
 }
 
 /* ============ Actions ============ */
@@ -728,6 +839,16 @@ document.addEventListener('click', async e=>{
     case 'photo': photoRound = Number(b.dataset.r); $('#photofile').click(); break;
     case 'photodel': { const r=Number(b.dataset.r); if (!confirm('Foto verwijderen?')) break; state.photos[r]={data:null,t:new Date().toISOString()}; state.photoDirty[r]=true; save(); render(); sync(); break; }
     case 'backup': downloadBackup(); break;
+    case 'setdev': { const n=$('#devname').value; if (n){ setDeviceName(n); render(); } break; }
+    case 'resetdev': setDeviceName(''); render(); break;
+    case 'loadlog': try{ ui.log = await api('/gif_score_log?select=player_id,round_no,hole,strokes,updated_at,device,device_name&order=id'); render(); }catch(err){ toast('Controle vraagt een internetverbinding'); } break;
+    case 'resolve': { const r=Number(b.dataset.r), hh=Number(b.dataset.h), val = b.dataset.v==='' ? null : Number(b.dataset.v), kk=k(pid,r,hh), now=new Date().toISOString();
+      state.scores[kk]={s:val,t:now}; state.outbox[kk]=true; state.settings.resolved = state.settings.resolved||{}; state.settings.resolved[kk]=now;
+      markDirty('settings'); render(); toast('Score vastgezet'); break; }
+    case 'loadbackups': try{ ui.backups = await api('/gif_backups?select=id,created_at,reason,n_scores&order=id.desc&limit=20'); render(); }catch(err){ toast('Back-ups vragen een internetverbinding'); } break;
+    case 'snapnow': try{ await api('/rpc/gif_make_snapshot',{method:'POST',body:JSON.stringify({reason:'handmatig'})}); ui.backups = await api('/gif_backups?select=id,created_at,reason,n_scores&order=id.desc&limit=20'); render(); toast('Back-up gemaakt'); }catch(err){ toast('Back-up maken vraagt een internetverbinding'); } break;
+    case 'bdl': case 'brestore': try{ const got = await api('/gif_backups?select=data&id=eq.'+v); const d = got[0].data;
+        if (a==='bdl') downloadJson(d, 'golf-in-fife-backup-'+v); else await restoreData(d); }catch(err){ toast('Back-up ophalen lukt niet'); } break;
     case 'restore': $('#restorefile').click(); break;
     case 'syncnow': sync(true); break;
     case 'resetscores': if (confirm('Alle scores van alle rondes wissen? Dit kan niet ongedaan worden, maak eerst een back-up.')){ state.scores={}; state.outbox={}; state.op='resetscores'; save(); render(); sync(true); } break;
@@ -744,6 +865,8 @@ document.addEventListener('change', async e=>{
   const p = el.dataset.p ? pById(el.dataset.p) : null, r = Number(el.dataset.r), h = Number(el.dataset.h);
   const num = x => { x=String(x).trim().replace(',', '.'); return x.startsWith('+') ? -Number(x.slice(1)) : Number(x); };
   switch(c){
+    case 'prize': { const pz = state.settings.prizes = state.settings.prizes || {}; const x = (pz[r] = pz[r] || {}); const it = (x[el.dataset.k] = x[el.dataset.k] || {});
+      it[el.dataset.f] = el.value; markDirty('settings'); break; }
     case 'pname': if (p){ p.name = el.value.trim() || p.name; markDirty('players'); render(); } break;
     case 'phcp': if (p){ const n = num(el.value); if (isNaN(n) || n>54 || n<-10){ toast('Ongeldige handicap'); render(); break; } p.hcp = Math.round(n*10)/10; markDirty('players'); render(); } break;
     case 'ccr': { const n=num(el.value); if (!isNaN(n) && n>50 && n<90) setCourse(r,{cr:n}); else toast('Course rating ligt tussen 50 en 90'); render(); break; }
@@ -781,20 +904,25 @@ function downloadBackup(){
   const data = { app:'golf-in-fife', version:2, exported_at:new Date().toISOString(),
     players: players(), settings: state.settings, photos: Object.fromEntries(Object.entries(state.photos).filter(([,v])=>v&&v.data).map(([r,v])=>[r,v.data])),
     scores: Object.entries(state.scores).map(([kk,v])=>{ const [player_id,round_no,hole]=kk.split('|'); return { player_id, round_no:+round_no, hole:+hole, strokes:v.s, updated_at:v.t }; }) };
+  downloadJson(data, 'golf-in-fife-backup-'+new Date().toISOString().slice(0,16).replace(/[:T]/g,'-'));
+}
+function downloadJson(data, name){
   const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-  a.download = 'golf-in-fife-backup-'+new Date().toISOString().slice(0,16).replace(/[:T]/g,'-')+'.json';
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name+'.json';
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
   toast('Back-up gedownload');
 }
 async function restoreFrom(file){
+  try{ await restoreData(JSON.parse(await file.text())); }catch(err){ toast('Back-up kon niet worden gelezen'); }
+}
+async function restoreData(d){
   try{
-    const d = JSON.parse(await file.text());
     if (d.app!=='golf-in-fife' || !Array.isArray(d.players)) throw new Error('Dit is geen Golf in Fife back-up.');
     if (!confirm(`Back-up van ${new Date(d.exported_at).toLocaleString('nl-NL')} terugzetten? Alle huidige gegevens worden vervangen.`)) return;
     const now = new Date().toISOString();
     state.players = d.players; state.settings = d.settings || {}; state.scores = {}; state.outbox = {};
     (d.scores||[]).forEach(s=>{ const kk=k(s.player_id,s.round_no,s.hole); state.scores[kk]={ s:s.strokes, t:now }; state.outbox[kk]=true; });
+    if (d.settings && d.settings.resolved) delete state.settings.resolved;
     Object.entries(d.photos||{}).forEach(([r,data])=>{ state.photos[r]={data,t:now}; state.photoDirty[r]=true; });
     state.dirty = {players:true, settings:true}; state.deleted = []; state.op = 'replace';
     save(); render(); toast('Back-up teruggezet'); sync(true);
@@ -813,7 +941,9 @@ const UPSERT = {Prefer:'resolution=merge-duplicates,return=minimal'};
 async function sync(manual){
   if (syncing) return; if (!navigator.onLine){ syncErr='offline'; renderSync(); if (manual) toast('Geen verbinding, scores blijven bewaard'); return; }
   syncing = true; renderSync();
+  let changed = false;
   try{
+    changed = !!(state.op || state.deleted.length || state.dirty.players || state.dirty.settings || Object.keys(state.outbox).length || Object.keys(state.photoDirty).length);
     if (state.op==='replace'){ await api('/gif_players?id=neq.__none__', {method:'DELETE'}); state.deleted=[]; }
     if (state.op==='resetscores'){ await api('/gif_scores?round_no=gte.1', {method:'DELETE'}); }
     if (state.deleted.length){ await api('/gif_players?id=in.('+state.deleted.map(encodeURIComponent).join(',')+')', {method:'DELETE'}); state.deleted=[]; }
@@ -823,7 +953,7 @@ async function sync(manual){
       state.dirty.players = false;
     }
     if (state.dirty.settings){
-      const s = state.settings, rows = ['courses','flights','pin'].filter(x=>s[x]!==undefined).map(x=>({key:x,value:s[x],updated_at:new Date().toISOString()}));
+      const s = state.settings, rows = ['courses','flights','pin','prizes','resolved'].filter(x=>s[x]!==undefined).map(x=>({key:x,value:s[x],updated_at:new Date().toISOString()}));
       if (rows.length) await api('/gif_settings', {method:'POST', headers:UPSERT, body: JSON.stringify(rows)});
       state.dirty.settings = false;
     }
@@ -837,7 +967,7 @@ async function sync(manual){
     const keys = Object.keys(state.outbox);
     if (keys.length){
       const sent = {}; const rows = keys.map(kk=>{ const [player_id,r,h]=kk.split('|'); const v=state.scores[kk]; sent[kk]=v.t;
-        return { player_id, round_no:+r, hole:+h, strokes: v.s===null?null:v.s, updated_at:v.t }; });
+        return { player_id, round_no:+r, hole:+h, strokes: v.s===null?null:v.s, updated_at:v.t, device: (ui.tab==='admin'&&ui.admin)?DEV.id+'-beheer':DEV.id, device_name: (ui.tab==='admin'&&ui.admin)?'Beheer':(DEV.name||'onbekend') }; });
       await api('/rpc/gif_upsert_scores', {method:'POST', body: JSON.stringify({rows})});
       keys.forEach(kk=>{ if (state.scores[kk] && state.scores[kk].t===sent[kk]) delete state.outbox[kk]; });
       save();
@@ -858,6 +988,7 @@ async function sync(manual){
         if (got && got[0]) state.photos[r] = {data:got[0].value.data, t:got[0].updated_at}; } }
     Object.keys(state.photos).forEach(r=>{ if (!seen[r] && !state.photoDirty[r]) delete state.photos[r]; });
     state.lastSync = new Date().toISOString(); syncErr = null; save();
+    if (changed) api('/rpc/gif_make_snapshot',{method:'POST',body:JSON.stringify({reason:'auto'})}).catch(()=>{});
     if (manual) toast('Alles gesynchroniseerd');
   }catch(err){
     syncErr = (err.status===404 || /gif_/.test(err.message||'')) ? 'schema' : (navigator.onLine ? 'error' : 'offline');
