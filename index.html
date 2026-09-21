@@ -3,185 +3,290 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#12264A">
+<meta name="theme-color" content="#0D1B33">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Golf in Fife">
+<meta name="format-detection" content="telephone=no">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>Golf in Fife</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Barlow+Semi+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --navy:#12264A; --navy2:#1D3765; --gold:#B58B35; --goldlt:#D9C28E;
-  --linen:#E8EBE3; --paper:#F7F8F4; --fescue:#56703E; --flag:#A62B2E;
-  --ink:#1B2127; --muted:#5E6770; --rule:#C9CEC3;
-  --fell:'IM Fell English', Georgia, 'Times New Roman', serif;
-  --ui:'Barlow Semi Condensed', 'Arial Narrow', system-ui, sans-serif;
+  --midnight:#0D1B33; --navy:#16294A; --navy2:#22385F;
+  --ivory:#F7F4EC; --card:#FFFFFF; --hair:#E4DCCB; --hair2:#EFE9DC;
+  --gold:#B08D4C; --goldlt:#D8C18F; --golddk:#8A6A2E;
+  --green:#2F4B37; --claret:#7A1F2B;
+  --ink:#1A1C22; --muted:#6D6A63; --faint:#9C978C;
+  --serif:'Cormorant Garamond', 'Iowan Old Style', Georgia, serif;
+  --sans:'Jost', 'Avenir Next', 'Segoe UI', system-ui, sans-serif;
+  --r:14px;
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--linen);color:var(--ink);font-family:var(--ui);font-size:17px;line-height:1.4;-webkit-tap-highlight-color:transparent}
-body{padding-bottom:calc(74px + env(safe-area-inset-bottom,0px))}
+html{-webkit-text-size-adjust:100%}
+html,body{margin:0;background:var(--ivory);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.45}
+body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px));-webkit-font-smoothing:antialiased;overscroll-behavior-y:none}
 button,input,select{font:inherit;color:inherit}
-button{cursor:pointer}
-:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+button{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"tnum","lnum"}
 
 /* Header */
-.top{position:sticky;top:0;z-index:10;background:var(--navy);color:#fff;border-bottom:3px solid var(--gold);
-  padding:calc(env(safe-area-inset-top,0px) + 12px) 18px 12px}
+.top{position:sticky;top:0;z-index:20;background:var(--midnight);color:var(--ivory);
+  padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px;border-bottom:1px solid var(--gold)}
 .top-in{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:12px}
 .brand{display:flex;align-items:center;gap:11px;flex:1;min-width:0}
-.brand img{width:48px;height:48px;border-radius:50%;background:#F8F6EF;box-shadow:0 0 0 2px var(--gold);flex:none}
-.top h1{font-family:var(--fell);font-weight:400;font-size:31px;line-height:1;margin:0}
-.top .sub{font-size:14px;color:#C3CCDD;margin-top:4px}
-.sync{flex:none;align-self:center;display:flex;align-items:center;gap:6px;font-size:13px;background:rgba(255,255,255,.1);border:0;border-radius:999px;padding:5px 11px;color:#fff}
-.sync i{width:8px;height:8px;border-radius:50%;background:#7FB069;display:block}
-.sync.wait i{background:var(--goldlt)}
-.sync.off i{background:#E07A6E}
+.brand img{width:40px;height:40px;border-radius:50%;background:#F8F6EF;box-shadow:0 0 0 1.5px var(--gold);flex:none}
+.brand h1{font-family:var(--serif);font-weight:600;font-size:24px;line-height:1;margin:0;letter-spacing:.3px}
+.brand .sub{font-size:12px;color:#B9C1D1;margin-top:3px;letter-spacing:.3px}
+.pill{flex:none;display:flex;align-items:center;gap:6px;font-size:12px;border:1px solid rgba(216,193,143,.45);background:none;border-radius:999px;padding:5px 10px;color:var(--ivory)}
+.pill i{width:7px;height:7px;border-radius:50%;background:#8FBF7F;display:block}
+.pill.live i{animation:pulse 1.8s ease-in-out infinite}
+.pill.wait i{background:var(--goldlt)} .pill.off i{background:#D9776B}
+@keyframes pulse{50%{opacity:.25}}
+@media (prefers-reduced-motion: reduce){.pill.live i{animation:none}}
 
-main{max-width:560px;margin:0 auto;padding:16px 14px 24px}
-h2{font-family:var(--fell);font-weight:400;font-size:26px;margin:18px 0 8px;color:var(--navy)}
+main{max-width:560px;margin:0 auto;padding:14px 14px 28px}
+h2{font-family:var(--serif);font-weight:600;font-size:27px;line-height:1.1;margin:22px 0 10px;color:var(--midnight)}
 h2:first-child{margin-top:4px}
-h3{font-size:18px;font-weight:600;margin:16px 0 6px;color:var(--navy)}
+h3{font-family:var(--serif);font-weight:600;font-size:21px;margin:14px 0 6px;color:var(--midnight)}
 p{margin:6px 0}
-.muted{color:var(--muted)}
-.small{font-size:14px}
+.muted{color:var(--muted)} .small{font-size:14px} .tiny{font-size:12px}
+.lead{font-family:var(--serif);font-size:19px;line-height:1.45;color:#3A3C44}
 
-/* Segmented controls */
-.seg{display:flex;background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:3px;gap:3px;margin:0 0 12px}
-.seg button{flex:1;border:0;background:none;border-radius:6px;padding:7px 4px;font-weight:500;line-height:1.15;font-size:15px}
-.seg button small{display:block;font-size:12px;color:var(--muted);font-weight:400}
-.seg button.on{background:var(--navy);color:#fff}
-.seg button.on small{color:var(--goldlt)}
+/* Segmented control */
+.seg{display:flex;background:#EDE7DA;border-radius:12px;padding:3px;gap:2px;margin:0 0 12px}
+.seg button{flex:1;border:0;background:none;border-radius:9px;padding:8px 4px;font-size:14px;font-weight:500;color:#5B5850;line-height:1.15;min-height:40px}
+.seg button small{display:block;font-size:11px;font-weight:400;color:var(--faint);margin-top:1px}
+.seg button.on{background:var(--card);color:var(--midnight);box-shadow:0 1px 3px rgba(13,27,51,.12)}
+.seg button.on small{color:var(--golddk)}
+.stick{position:sticky;top:calc(env(safe-area-inset-top,0px) + 61px);z-index:5;background:var(--ivory);padding-top:4px;margin-top:-4px}
 
-/* The leaderboard: manual scoreboard */
-.board{background:var(--navy);border:2px solid var(--gold);border-radius:4px;padding:10px 8px 12px;box-shadow:0 2px 0 #0c1a33}
-.hero{display:block;width:min(180px,48vw);height:auto;margin:2px auto 14px;border-radius:50%;filter:drop-shadow(0 3px 6px rgba(18,38,74,.18))}
-.board-title{font-family:var(--fell);color:#fff;font-size:22px;text-align:center;margin:0 0 2px}
-.board-sub{color:var(--goldlt);text-align:center;font-size:13px;margin:0 0 8px}
-.board table{width:100%;border-collapse:separate;border-spacing:3px}
-.board th{color:var(--goldlt);font-weight:500;font-size:13px;text-align:center;padding:0 2px 2px}
-.board th.l{text-align:left;padding-left:8px}
-.board td{background:var(--paper);color:var(--navy);text-align:center;font-weight:700;font-size:18px;font-variant-numeric:tabular-nums;padding:7px 2px;border-radius:1px}
-.board td.pos{width:34px;background:#dfe4ea}
-.board td.name{text-align:left;padding-left:9px;font-weight:600;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:40vw}
-.board td.name small{display:block;font-weight:400;font-size:12px;color:var(--muted)}
-.board td.rd{width:40px;font-weight:600;font-size:16px}
-.board td.rd.none{color:#9aa3ad;font-weight:400}
-.board td.tot{width:52px;background:var(--gold);color:#fff;font-size:20px}
-.board tr.lead td.pos{background:var(--gold);color:#fff}
-.board .empty{color:#C3CCDD;text-align:center;padding:18px 8px;font-size:15px}
+.card{background:var(--card);border:1px solid var(--hair);border-radius:var(--r);padding:14px;margin:0 0 12px}
+.note{border-left:2px solid var(--gold);background:#F4EEDF;padding:9px 12px;border-radius:0 8px 8px 0;font-size:14px;margin:10px 0}
+.note.warn{border-left-color:var(--claret);background:#F5E9E7}
+.meta{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin:-4px 2px 10px}
 
-/* Paper cards */
-.paper{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:14px;margin:0 0 12px}
-.note{border-left:3px solid var(--gold);background:#F3EEDF;padding:8px 10px;border-radius:0 4px 4px 0;font-size:14px;margin:8px 0}
-.warn{border-left-color:var(--flag);background:#F6E6E4}
+/* Honours board (total ranking) */
+.honours{background:var(--midnight);color:var(--ivory);border-radius:var(--r);padding:18px 12px 10px;
+  box-shadow:inset 0 0 0 1px var(--gold), inset 0 0 0 5px var(--midnight), inset 0 0 0 6px rgba(176,141,76,.55)}
+.honours .ttl{font-family:var(--serif);font-style:italic;font-weight:500;font-size:25px;color:var(--goldlt);text-align:center;margin:0}
+.honours .st{text-align:center;font-size:12px;color:#AEB7C8;margin:2px 0 12px}
+.hrow{display:grid;grid-template-columns:30px 1fr 34px 34px 34px 48px;align-items:center;gap:4px;padding:11px 6px;border-top:1px solid rgba(216,193,143,.18)}
+.hrow.head{border-top:0;padding:0 6px 6px;font-size:11px;color:#9FA9BC}
+.hrow.head span{text-align:center}
+.hrow .pos{font-family:var(--serif);font-size:22px;font-weight:600;color:var(--goldlt);text-align:center}
+.hrow .nm{font-family:var(--serif);font-size:21px;font-weight:600;line-height:1.05;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hrow .nm small{display:block;font-family:var(--sans);font-size:11px;font-weight:400;color:#9FA9BC;margin-top:2px}
+.hrow .rd{text-align:center;font-size:15px;color:#D5DBE6}
+.hrow .rd.none{color:#56647C}
+.hrow .rd sup{font-size:9px;color:var(--goldlt)}
+.hrow .tot{text-align:right;font-size:22px;font-weight:600;color:var(--goldlt)}
+.hrow.first .nm{color:#fff}
+button.hrow{width:100%;background:none;border-left:0;border-right:0;border-bottom:0;color:inherit;text-align:left}
+.honours .empty{text-align:center;color:#AEB7C8;padding:18px 8px;font-size:15px}
+
+/* Live course leaderboard */
+.lb{background:var(--card);border:1px solid var(--hair);border-radius:var(--r);overflow:hidden}
+.lrow{display:grid;grid-template-columns:34px 1fr 44px 50px;align-items:center;gap:6px;padding:12px 12px;border-top:1px solid var(--hair2);width:100%;background:none;border-left:0;border-right:0;border-bottom:0;text-align:left}
+.lrow:first-child{border-top:0}
+.lrow.head{padding:8px 12px;font-size:11px;color:var(--muted);background:#FBF9F4}
+.lrow.head span:nth-child(n+3){text-align:center}
+.lrow .pos{font-family:var(--serif);font-size:22px;font-weight:600;color:var(--golddk);text-align:center}
+.lrow .nm{font-family:var(--serif);font-size:20px;font-weight:600;color:var(--midnight);line-height:1.1}
+.lrow .nm small{display:block;font-family:var(--sans);font-size:12px;font-weight:400;color:var(--muted);margin-top:2px}
+.thru{justify-self:center;min-width:34px;text-align:center;font-size:13px;font-weight:500;border:1px solid var(--hair);border-radius:999px;padding:2px 6px;color:var(--muted)}
+.thru.f{background:var(--midnight);border-color:var(--midnight);color:var(--goldlt)}
+.thru.on{border-color:var(--gold);color:var(--golddk)}
+.lrow .pts{text-align:right;font-size:24px;font-weight:600;color:var(--midnight)}
+.exp{padding:4px 12px 14px;background:#FBF9F4;border-top:1px solid var(--hair2)}
+.holes{display:grid;grid-template-columns:repeat(9,1fr);gap:2px;text-align:center;margin-top:8px}
+.holes .hn{font-size:10px;color:var(--faint)}
+.holes .hp{font-size:10px;color:var(--green);font-weight:600;min-height:14px}
+
+/* Score marks (Gamebook style) */
+.mk{display:inline-flex;align-items:center;justify-content:center;width:27px;height:27px;font-size:14px;font-weight:500;color:var(--ink)}
+.mk.b{border:1.5px solid var(--gold);border-radius:50%;color:var(--golddk);font-weight:600}
+.mk.e{background:var(--gold);border-radius:50%;color:#fff;font-weight:600}
+.mk.o{border:1px solid #8A93A5;border-radius:3px}
+.mk.d{background:var(--navy);border-radius:3px;color:#fff}
+.mk.x{color:var(--faint)}
+.mk.n{color:#C9C3B6}
+
+/* Matrix */
+.mx{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--hair);border-radius:var(--r);background:var(--card)}
+.mx table{border-collapse:separate;border-spacing:0;font-size:13px}
+.mx th,.mx td{padding:6px 2px;text-align:center;border-bottom:1px solid var(--hair2);min-width:30px}
+.mx th{font-weight:500;color:var(--muted);background:#FBF9F4;font-size:11px}
+.mx .sticky{position:sticky;left:0;background:var(--card);text-align:left;padding-left:10px;min-width:92px;font-family:var(--serif);font-weight:600;font-size:16px;color:var(--midnight);border-right:1px solid var(--hair2);z-index:1}
+.mx th.sticky{background:#FBF9F4;font-family:var(--sans);font-size:11px;font-weight:500;color:var(--muted)}
+.mx .tot{font-weight:600;color:var(--midnight);background:#F6F1E6}
+.mx .mk{width:23px;height:23px;font-size:12px}
 
 /* Score entry */
-.holehead{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--rule);padding-bottom:10px;margin-bottom:6px}
-.holenum{font-family:var(--fell);font-size:54px;line-height:.9;color:var(--navy);min-width:58px;text-align:center}
-.holeinfo .nm{font-family:var(--fell);font-style:italic;font-size:19px;color:var(--navy)}
-.holeinfo .facts{display:flex;gap:14px;font-size:15px;color:var(--muted)}
-.holeinfo .facts b{color:var(--ink);font-weight:600}
-.prow{display:grid;grid-template-columns:1fr 50px 52px 50px 46px;align-items:center;gap:6px;padding:10px 0;border-bottom:1px dotted var(--rule)}
-.prow:last-of-type{border-bottom:0}
-.pname{font-weight:600;font-size:18px;line-height:1.1}
-.pname small{display:block;font-weight:400;font-size:13px;color:var(--muted)}
-.dots{color:var(--gold);font-weight:600}
-.pm{height:50px;border-radius:8px;border:1px solid var(--rule);background:#fff;font-size:26px;font-weight:600;color:var(--navy)}
-.pm:active{background:#e6eaf1}
-.sc{height:52px;border-radius:8px;border:2px solid var(--navy);background:#fff;font-size:26px;font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums}
-.sc.empty{border-style:dashed;border-color:#9aa3ad;color:#9aa3ad;font-weight:500}
-.sc.pu{font-size:15px}
-.pts{text-align:center;font-weight:700;font-size:20px;color:var(--navy);line-height:1}
-.pts small{display:block;font-size:11px;font-weight:400;color:var(--muted)}
-.pts.p0{color:var(--flag)} .pts.p3{color:var(--fescue)} .pts.p4{color:var(--gold)}
-.pubtn{grid-column:1/-1;justify-self:start;margin-top:-4px;border:0;background:none;color:var(--muted);font-size:14px;text-decoration:underline;padding:2px 0}
-.holenav{display:flex;gap:10px;margin-top:12px}
-.btn{border:1px solid var(--navy);background:var(--navy);color:#fff;border-radius:8px;padding:12px 14px;font-weight:600;font-size:17px}
-.btn.alt{background:#fff;color:var(--navy)}
+.hole{background:var(--card);border:1px solid var(--hair);border-radius:var(--r);overflow:hidden;margin-bottom:12px}
+.holehead{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--midnight);color:var(--ivory)}
+.holenum{font-family:var(--serif);font-size:52px;font-weight:600;line-height:.85;color:var(--goldlt);min-width:52px;text-align:center}
+.holeinfo .nm{font-family:var(--serif);font-style:italic;font-size:19px;color:#fff}
+.holeinfo .facts{display:flex;gap:14px;font-size:13px;color:#AEB7C8;margin-top:2px}
+.holeinfo .facts b{color:#fff;font-weight:500}
+.prow{display:grid;grid-template-columns:1fr 52px 58px 52px 40px;align-items:center;gap:6px;padding:12px 14px;border-top:1px solid var(--hair2)}
+.prow:first-of-type{border-top:0}
+.pname{font-family:var(--serif);font-weight:600;font-size:20px;line-height:1.05;color:var(--midnight);min-width:0}
+.pname small{display:block;font-family:var(--sans);font-weight:400;font-size:12px;color:var(--muted);margin-top:3px}
+.pname .st{color:var(--golddk);font-weight:500}
+.pm{height:52px;border-radius:12px;border:1px solid var(--hair);background:#FBF9F4;font-size:26px;font-weight:400;color:var(--midnight);user-select:none}
+.pm:active{background:#EDE7DA;transform:scale(.97)}
+.sc{height:58px;border-radius:12px;border:1.5px solid var(--midnight);background:#fff;font-size:28px;font-weight:600;color:var(--midnight)}
+.sc.empty{border-style:dashed;border-color:#B9B3A6;color:#B9B3A6;font-weight:400}
+.sc.pu{font-size:13px;font-weight:500}
+.sc.b{border-color:var(--gold);color:var(--golddk);box-shadow:0 0 0 3px rgba(176,141,76,.18)}
+.ptsb{text-align:center;font-weight:600;font-size:20px;color:var(--midnight);line-height:1}
+.ptsb small{display:block;font-size:10px;font-weight:400;color:var(--muted);margin-top:2px}
+.ptsb.p0{color:var(--claret)} .ptsb.p3{color:var(--green)} .ptsb.p4{color:var(--golddk)}
+.pu-link{grid-column:1/2;justify-self:start;margin-top:-6px;border:0;background:none;color:var(--muted);font-size:13px;text-decoration:underline;text-underline-offset:2px;padding:4px 0}
+.holenav{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;padding:0 14px 14px}
+.btn{border:1px solid var(--midnight);background:var(--midnight);color:#fff;border-radius:12px;padding:13px 14px;font-weight:500;font-size:16px;min-height:48px}
+.btn:disabled{opacity:.35}
+.btn.alt{background:#fff;color:var(--midnight);border-color:var(--hair)}
 .btn.gold{background:var(--gold);border-color:var(--gold)}
-.btn.red{background:#fff;border-color:var(--flag);color:var(--flag)}
-.btn.sm{padding:8px 12px;font-size:15px}
-.holenav .btn{flex:1;white-space:nowrap}
-.strip{display:grid;grid-template-columns:repeat(9,1fr);gap:4px;margin:12px 0 4px}
-.strip button{border:1px solid var(--rule);background:#fff;border-radius:4px;padding:6px 0;font-weight:600;font-size:14px;color:var(--muted)}
-.strip button.done{background:var(--fescue);border-color:var(--fescue);color:#fff}
-.strip button.part{background:#E6ECDD;color:var(--fescue);border-color:#b9c7a8}
-.strip button.cur{outline:2px solid var(--navy);outline-offset:1px;color:var(--navy)}
+.btn.red{background:#fff;border-color:#D8B7B7;color:var(--claret)}
+.btn.sm{padding:9px 14px;font-size:14px;min-height:40px}
+.strip{display:grid;grid-template-columns:repeat(9,1fr);gap:5px;padding:0 14px 14px}
+.strip button{border:1px solid var(--hair);background:#fff;border-radius:8px;padding:0;height:34px;font-size:13px;font-weight:500;color:var(--muted)}
+.strip button.done{background:var(--green);border-color:var(--green);color:#fff}
+.strip button.part{background:#E8EDE4;border-color:#C4CFBD;color:var(--green)}
+.strip button.cur{box-shadow:0 0 0 2px var(--ivory),0 0 0 3.5px var(--gold);color:var(--midnight)}
 .strip button.done.cur{color:#fff}
-.rtotal{display:flex;justify-content:space-between;font-size:15px;color:var(--muted);padding-top:8px}
-.rtotal b{color:var(--navy)}
+
+/* Players */
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pcard{background:var(--card);border:1px solid var(--hair);border-radius:var(--r);padding:16px 10px 14px;text-align:center;width:100%}
+.mono{display:inline-flex;align-items:center;justify-content:center;width:62px;height:62px;border-radius:50%;background:var(--midnight);color:var(--goldlt);
+  font-family:var(--serif);font-size:26px;font-weight:600;box-shadow:inset 0 0 0 2px var(--midnight),inset 0 0 0 3px var(--gold)}
+.mono.lg{width:92px;height:92px;font-size:38px}
+.pcard .pn{font-family:var(--serif);font-weight:600;font-size:20px;color:var(--midnight);margin-top:8px;line-height:1.1}
+.pcard .ps{font-size:12px;color:var(--muted);margin-top:3px}
+.pcard .pp{font-size:13px;color:var(--golddk);margin-top:6px;font-weight:500}
+.back{border:0;background:none;color:var(--golddk);font-size:15px;padding:6px 0;margin-bottom:4px}
+.prof{text-align:center;padding:6px 0 4px}
+.prof .pn{font-family:var(--serif);font-weight:600;font-size:32px;color:var(--midnight);margin-top:8px;line-height:1}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 12px}
+.stat{background:var(--card);border:1px solid var(--hair);border-radius:12px;padding:10px 6px;text-align:center}
+.stat b{display:block;font-size:24px;font-weight:600;color:var(--midnight);line-height:1.1}
+.stat span{font-size:12px;color:var(--muted)}
+.rsum{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;padding:12px 0;border-top:1px solid var(--hair2)}
+.rsum:first-child{border-top:0;padding-top:2px}
+.rsum .c{font-family:var(--serif);font-weight:600;font-size:19px;color:var(--midnight)}
+.rsum .d{font-size:12px;color:var(--muted)}
+.rsum .v{grid-row:1/3;grid-column:2;text-align:right;font-size:22px;font-weight:600;color:var(--midnight)}
+.rsum .v small{display:block;font-size:11px;font-weight:400;color:var(--muted)}
+.dist{display:flex;height:10px;border-radius:5px;overflow:hidden;background:#EEE8DB;margin:10px 0 8px}
+.dist span{display:block;height:100%}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:-1px}
 
 /* Scorecard table */
-.cardwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px}
-table.card{border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:15px;min-width:100%}
-table.card th,table.card td{border:1px solid var(--rule);text-align:center;padding:5px 0;min-width:28px}
-table.card th{background:var(--navy);color:#fff;font-weight:500}
-table.card td.lbl{text-align:left;padding:5px 6px;color:var(--muted);white-space:nowrap;min-width:52px}
-table.card tr.g td{font-weight:700;color:var(--navy)}
-table.card tr.pt td{color:var(--fescue);font-weight:600}
-table.card td.sum{background:#EEF0EA;font-weight:700}
-.mk{display:inline-block;min-width:22px;line-height:20px;padding:0 1px}
-.mk.b{border:1.5px solid var(--flag);border-radius:50%}
-.mk.e{border:1.5px solid var(--flag);border-radius:50%;box-shadow:0 0 0 2px var(--paper),0 0 0 3.5px var(--flag)}
-.mk.o{border:1.5px solid var(--navy)}
-.mk.d{border:1.5px solid var(--navy);box-shadow:0 0 0 2px var(--paper),0 0 0 3.5px var(--navy)}
+.cardwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:6px 0}
+table.sc-t{border-collapse:collapse;font-size:13px;min-width:100%}
+table.sc-t th,table.sc-t td{border-bottom:1px solid var(--hair2);text-align:center;padding:5px 0;min-width:27px}
+table.sc-t th{color:var(--muted);font-weight:500;font-size:11px}
+table.sc-t td.l{text-align:left;padding-left:2px;color:var(--muted);min-width:46px;font-size:12px}
+table.sc-t tr.p td{color:var(--green);font-weight:600}
+table.sc-t td.s{font-weight:600;color:var(--midnight);background:#F6F1E6}
+details.fold{border-top:1px solid var(--hair2);padding-top:8px;margin-top:8px}
+details.fold summary{cursor:pointer;color:var(--golddk);font-size:14px;font-weight:500;list-style:none;padding:4px 0}
+details.fold summary::-webkit-details-marker{display:none}
+details.fold summary::after{content:' +';}
+details.fold[open] summary::after{content:' −';}
+
+/* Programme */
+.hero{text-align:center;padding:8px 0 4px}
+.hero img{width:min(190px,52vw);height:auto;border-radius:50%;filter:drop-shadow(0 4px 10px rgba(13,27,51,.15))}
+.tl{position:relative;margin:6px 0 0 6px;padding-left:18px;border-left:1px solid var(--goldlt)}
+.tl .d{position:relative;padding:0 0 16px}
+.tl .d::before{content:'';position:absolute;left:-23.5px;top:9px;width:9px;height:9px;border-radius:50%;background:var(--ivory);border:1.5px solid var(--gold)}
+.tl .d h3{margin:0 0 3px;font-size:20px}
+.tl .d p{font-size:15px;color:#3F4149;margin:2px 0}
+.course{background:var(--card);border:1px solid var(--hair);border-radius:var(--r);overflow:hidden;margin:0 0 16px}
+.photo{position:relative;aspect-ratio:16/10;background:var(--midnight);overflow:hidden}
+.photo img{width:100%;height:100%;object-fit:cover;display:block}
+.photo .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--goldlt);
+  background:radial-gradient(120% 90% at 50% 110%, #22385F 0%, #0D1B33 60%)}
+.photo .ph svg{width:70%;max-width:320px;opacity:.9}
+.photo .ph span{font-family:var(--serif);font-style:italic;font-size:15px;color:#9FA9BC;margin-top:6px}
+.photo .cap{position:absolute;left:0;right:0;bottom:0;padding:26px 14px 10px;background:linear-gradient(transparent,rgba(13,27,51,.85));color:#fff}
+.photo .cap .dt{font-size:12px;color:var(--goldlt)}
+.photo .cap .cn{font-family:var(--serif);font-weight:600;font-size:25px;line-height:1.05}
+.cbody{padding:14px 14px 12px}
+.member{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--golddk);border:1px solid var(--goldlt);border-radius:999px;padding:3px 10px;margin-bottom:8px}
+.kv{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--hair2);border-radius:12px;overflow:hidden;margin:6px 0 12px}
+.kv div{padding:9px 6px;text-align:center;border-right:1px solid var(--hair2);border-bottom:1px solid var(--hair2)}
+.kv div:nth-child(3n){border-right:0}
+.kv div:nth-last-child(-n+3){border-bottom:0}
+.kv b{display:block;font-size:18px;font-weight:600;color:var(--midnight);line-height:1.15}
+.kv span{font-size:11px;color:var(--muted)}
+.ngf{font-size:14px}
+.ngf dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:8px 0}
+.ngf dt{color:var(--muted)} .ngf dd{margin:0;font-weight:500}
 
 /* Forms */
-label.f{display:block;font-size:14px;color:var(--muted);margin:8px 0 3px}
-input.t,select.t{width:100%;border:1px solid var(--rule);border-radius:6px;padding:9px 10px;background:#fff;font-size:17px}
-.plist .pl{display:grid;grid-template-columns:1fr 74px 40px;gap:6px;align-items:center;margin-bottom:6px}
-.plist .ch{grid-column:1/-1;font-size:13px;color:var(--muted);margin:-3px 0 6px 2px}
-.x{border:1px solid var(--rule);background:#fff;border-radius:6px;height:42px;color:var(--flag);font-size:20px}
-.fl{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:4px 0}
-.fl .seg{margin:0;width:112px}
-.cgrid{display:grid;grid-template-columns:34px repeat(3,1fr);gap:4px;align-items:center;font-size:14px}
-.cgrid input{width:100%;border:1px solid var(--rule);border-radius:4px;padding:5px 4px;text-align:center;background:#fff;font-size:15px}
+label.f{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
+input.t,select.t{width:100%;border:1px solid var(--hair);border-radius:10px;padding:11px 12px;background:#fff;font-size:16px;min-height:46px}
+.plist .pl{display:grid;grid-template-columns:1fr 76px 44px;gap:6px;align-items:center;margin-top:8px}
+.plist .ch{font-size:12px;color:var(--muted);margin:4px 0 6px 2px}
+.x{border:1px solid var(--hair);background:#fff;border-radius:10px;height:46px;color:var(--claret);font-size:20px}
+.fl{display:grid;grid-template-columns:1fr 112px;gap:8px;align-items:center;padding:3px 0}
+.fl .seg{margin:0}
+.cgrid{display:grid;grid-template-columns:34px repeat(3,1fr);gap:5px;align-items:center;font-size:13px}
+.cgrid input{width:100%;border:1px solid var(--hair);border-radius:8px;padding:8px 4px;text-align:center;background:#fff;font-size:16px}
 .cgrid .h{color:var(--muted);text-align:center}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-
-/* Programme */
-.day{border-left:3px solid var(--gold);padding:2px 0 2px 12px;margin:14px 0}
-.day h3{margin:0 0 4px;font-family:var(--fell);font-weight:400;font-size:22px}
-.day p{font-size:16px}
+.thumb{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:10px;display:block;margin-top:8px}
 
 /* Tabs */
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--navy);border-top:2px solid var(--gold);
-  padding-bottom:env(safe-area-inset-bottom,0px);display:flex;justify-content:center}
-.tabs-in{display:flex;width:100%;max-width:560px}
-.tabs button{flex:1;border:0;background:none;color:#AEB9CE;padding:10px 2px 11px;font-size:14px;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:3px}
-.tabs button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.7}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(13,27,51,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border-top:1px solid rgba(176,141,76,.6);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabs-in{display:flex;max-width:560px;margin:0 auto}
+.tabs button{flex:1;border:0;background:none;color:#8E99AF;padding:9px 2px 8px;font-size:11px;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:4px;letter-spacing:.2px}
+.tabs button svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .tabs button.on{color:var(--goldlt)}
 
-#toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 14px;border-radius:8px;font-size:15px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;z-index:20}
+#toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--midnight);color:#fff;border:1px solid rgba(176,141,76,.5);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:88vw;z-index:30;text-align:center}
 #toast.show{opacity:1}
 @media (prefers-reduced-motion: reduce){#toast{transition:none}}
+@media (max-width:360px){
+  .prow{grid-template-columns:1fr 46px 52px 46px 34px;padding:10px 10px}
+  .hrow{grid-template-columns:26px 1fr 30px 30px 30px 42px}
+  .hrow .nm{font-size:19px}
+}
 </style>
 </head>
 <body>
 <header class="top">
   <div class="top-in">
-    <div class="brand"><img src="logo.webp" alt="" width="48" height="48"><div>
+    <div class="brand"><img src="logo.webp" alt="" width="40" height="40"><div>
       <h1>Golf in Fife</h1>
-      <div class="sub">Lundin, Elie en Crail, 2–4&nbsp;oktober</div>
+      <div class="sub">Fife, 2–4&nbsp;oktober 2026</div>
     </div></div>
-    <button class="sync" id="sync" aria-live="polite"><i></i><span>Laden</span></button>
+    <button class="pill" id="sync" aria-live="polite"><i></i><span>Laden</span></button>
   </div>
 </header>
 
 <main id="view"></main>
 
 <nav class="tabs"><div class="tabs-in" id="tabs">
-  <button data-tab="board"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Stand</button>
-  <button data-tab="score"><svg viewBox="0 0 24 24"><path d="M6 21V3l11 4-11 4"/><ellipse cx="12" cy="21" rx="7" ry="1.2"/></svg>Score</button>
-  <button data-tab="cards"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 10h18M9 5v14M15 5v14"/></svg>Kaarten</button>
-  <button data-tab="prog"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="1"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>Programma</button>
-  <button data-tab="admin"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>Beheer</button>
+  <button data-tab="board"><svg viewBox="0 0 24 24"><path d="M5 20V11M12 20V5M19 20v-6M3 20h18"/></svg>Stand</button>
+  <button data-tab="score"><svg viewBox="0 0 24 24"><path d="M7 21V3.5l10 3.8-10 3.8"/><path d="M4 21h10"/></svg>Score</button>
+  <button data-tab="players"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19.5c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.6c2.4-.2 4.1 1.3 4.6 4"/></svg>Spelers</button>
+  <button data-tab="prog"><svg viewBox="0 0 24 24"><path d="M4 5.5C6.5 4 9.5 4 12 5.5v14C9.5 18 6.5 18 4 19.5z"/><path d="M20 5.5C17.5 4 14.5 4 12 5.5v14c2.5-1.5 5.5-1.5 8 0z"/></svg>Programma</button>
+  <button data-tab="admin"><svg viewBox="0 0 24 24"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"/><path d="M19.4 13.5l1.6 1.2-1.8 3.1-1.9-.7a7 7 0 0 1-1.9 1.1L15 20h-3.6l-.3-1.8a7 7 0 0 1-1.9-1.1l-1.9.7-1.8-3.1 1.6-1.2a7 7 0 0 1 0-2.2L5.5 10l1.8-3.1 1.9.7a7 7 0 0 1 1.9-1.1L11.4 4H15l.3 2.5a7 7 0 0 1 1.9 1.1l1.9-.7L20.9 10l-1.6 1.3a7 7 0 0 1 .1 2.2z"/></svg>Beheer</button>
 </div></nav>
 <div id="toast" role="status"></div>
 
@@ -191,50 +296,55 @@ const API = 'https://xryjzjhfvqwptgkvlgur.supabase.co/rest/v1';
 const KEY = 'sb_publishable_b2BCSdU4dPu6UZxO8cR66Q_-S0jRO_H';
 const LS  = 'gif_state_v1';
 const DEFAULT_PIN = '1589';
+const YD = 0.9144;
 
-/* Course data, yellow men's tees. Admin can override everything in Beheer. */
+/* Course data, yellow men's tees. Everything except the texts can be overridden in Beheer. */
 const DEFAULT_COURSES = {
   1:{ name:'Lundin Golf Club', short:'Lundin', dayname:'Vrijdag', day:'Vrijdag 2 oktober', date:'2026-10-02', tees:'11.00 en 11.10 uur',
       par:[4,4,4,4,3,4,4,4,5, 4,4,3,5,3,4,4,4,4],
       si: [5,11,14,1,18,9,16,7,3, 10,2,17,8,15,4,13,12,6],
-      yds:[403,339,312,415,128,325,266,355,546, 348,447,140,490,170,417,280,330,427],
-      names:null, cr:70.2, slope:130, check:'' },
+      yds:[403,339,312,415,128,325,266,355,546, 348,447,140,490,170,417,280,330,427], totalYds:6138,
+      names:null, cr:70.2, slope:130, check:'',
+      founded:'1868', architect:'Old Tom Morris, James Braid (1909)', member:'Flup', memberLabel:'De baan van Flup',
+      desc:'Een klassieke Fife-links tussen Lundin Links en Lower Largo, aan de Firth of Forth. De eerste vijf en de laatste vier holes zijn pure links langs de kust; daartussen steek je de oude spoorlijn over naar negen holes die James Braid in 1909 toevoegde. Verwacht burns, blinde tee shots, out of bounds langs de voormalige spoorbaan en greens die tot de beste van de regio horen. Lundin was jarenlang kwalificatiebaan voor The Open in St Andrews.' },
   2:{ name:'The Golf House Club, Elie', short:'Elie', dayname:'Zaterdag', day:'Zaterdag 3 oktober', date:'2026-10-03', tees:'11.00 en 11.10 uur',
       par:[4,4,3,4,4,4,4,4,4, 4,3,4,4,4,4,4,4,4],
       si: [12,3,17,6,13,7,15,1,10, 9,18,2,11,5,16,4,14,8],
-      yds:null, names:null, cr:69.3, slope:121,
-      check:'Stroke index per hole komt van de witte kaart. Controleer hem tegen de gele scorekaart van de club.' },
+      yds:null, totalYds:6009, names:null, cr:69.3, slope:121,
+      check:'Stroke index per hole komt van de witte kaart. Controleer hem tegen de gele scorekaart van de club.',
+      founded:'Clubhuis 1875, golf sinds de 16e eeuw', architect:'Old Tom Morris, James Braid', member:'', memberLabel:'',
+      desc:'Op deze links wordt al eeuwen gegolfd en de club behoort tot de oudste ter wereld. Elie telt geen enkele par 5 en maar twee par 3’s, en is daardoor een baan van precisie in plaats van lengte. Op de eerste hole sla je blind over een heuvel; de starter kijkt met een periscoop uit een Royal Navy-onderzeeër of de fairway vrij is. Hole 10 tot en met 13 liggen spectaculair langs de zee.' },
   3:{ name:'Crail Golfing Society, Balcomie Links', short:'Crail', dayname:'Zondag', day:'Zondag 4 oktober', date:'2026-10-04', tees:'tijd volgt',
       par:[4,5,3,4,4,3,4,4,4, 4,5,5,3,3,4,3,4,3],
       si: [11,7,15,5,1,13,9,3,17, 8,10,4,6,18,14,16,2,12],
-      yds:[313,451,168,315,439,172,273,416,250, 287,427,517,207,141,254,157,417,198],
+      yds:[313,451,168,315,439,172,273,416,250, 287,427,517,207,141,254,157,417,198], totalYds:5402,
       names:['Boathouse','Over the Knowe','The Briggs','Fluke Dub',"Hell's Hole",'Wormison','North Carr','Breeches Buoy','Dykeside',
              'Castle Yetts','Lang Whang','The Burn','Craighead','The Cave','Mill Dam','Spion Kop','Road Hole','The Quarry'],
       cr:67.6, slope:118,
-      check:'Alleen hole 5 (SI 1) is bevestigd. De overige stroke indexen, rating en slope zijn voorlopig. Neem ze over van de scorekaart op de club.' }
+      check:'Alleen hole 5 (SI 1) is bevestigd. De overige stroke indexen, rating en slope zijn voorlopig. Neem ze over van de scorekaart op de club.',
+      founded:'1786, links 1895', architect:'Old Tom Morris', member:'Serge', memberLabel:'De baan van Serge',
+      desc:'De Crail Golfing Society is de zevende oudste golfclub ter wereld. Old Tom Morris legde Balcomie in 1895 aan op het uiterste oostpunt van Fife, met de Noordzee op vrijwel elke hole in beeld. Par 69 met zes par 3’s: kort op papier, maar de wind maakt het verschil. Let op Hell’s Hole (5), een dogleg rond de baai, en The Cave (14), een par 3 die diep naar de kust afdaalt. Het clubhuis kijkt uit over de laatste holes.' }
 };
 
 /* ============ State ============ */
-function blank(){ return {players:[], scores:{}, settings:{}, outbox:{}, dirty:{players:false,settings:false}, deleted:[], op:null, lastSync:null}; }
+function blank(){ return {players:[], scores:{}, settings:{}, photos:{}, photoDirty:{}, outbox:{}, dirty:{players:false,settings:false}, deleted:[], op:null, lastSync:null}; }
 let state = load();
 function load(){ try{ const s = JSON.parse(localStorage.getItem(LS)); return s ? Object.assign(blank(), s) : blank(); }catch(e){ return blank(); } }
-function save(){ localStorage.setItem(LS, JSON.stringify(state)); }
+function save(){ try{ localStorage.setItem(LS, JSON.stringify(state)); }catch(e){ toast('Opslag op deze telefoon is vol'); } }
 
-const ui = { tab: sessionStorage.getItem('gif_tab') || 'board', round: defaultRound(), flight:'A', hole:1, boardView:'tot', cardPlayer:null, admin: sessionStorage.getItem('gif_admin')==='1' };
-function defaultRound(){
-  const d = new Date(); const iso = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-  if (iso >= '2026-10-04') return 3; if (iso === '2026-10-03') return 2; return 1;
-}
+const ui = { tab: sessionStorage.getItem('gif_tab') || 'board', round: defaultRound(), flight:'A', hole:1,
+  boardView: sessionStorage.getItem('gif_bview') || 'tot', courseMode:'list', expanded:{}, player:null,
+  admin: sessionStorage.getItem('gif_admin')==='1' };
+function todayIso(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function defaultRound(){ const iso=todayIso(); if (iso >= '2026-10-04') return 3; if (iso === '2026-10-03') return 2; return 1; }
 
 /* ============ Golf maths ============ */
 const sum = a => a.reduce((x,y)=>x+y,0);
 function course(r){ const o = (state.settings.courses||{})[r] || {}; return Object.assign({}, DEFAULT_COURSES[r], o); }
+function meters(c){ return c.yds ? Math.round(sum(c.yds.map(y=>y||0))*YD) : Math.round(c.totalYds*YD); }
 function players(){ return [...state.players].sort((a,b)=>(a.sort||0)-(b.sort||0)); }
 function pById(id){ return state.players.find(p=>p.id===id); }
-function playingHcp(p, r){
-  const c = course(r); const hi = Number(p.hcp)||0;
-  return Math.round(hi * c.slope / 113 + (c.cr - sum(c.par)));   // 100% allowance
-}
+function playingHcp(p, r){ const c=course(r), hi=Number(p.hcp)||0; return Math.round(hi*c.slope/113 + (c.cr - sum(c.par))); }
 function received(ph, si){
   if (ph >= 0) return Math.floor(ph/18) + (si <= ph % 18 ? 1 : 0);
   const p = -ph; return -(Math.floor(p/18) + (si > 18 - (p % 18) ? 1 : 0));
@@ -242,15 +352,16 @@ function received(ph, si){
 function points(s, par, rc){ if (s===undefined || s===null) return null; if (s===0) return 0; return Math.max(0, 2 + par + rc - s); }
 const k = (pid,r,h) => pid+'|'+r+'|'+h;
 function getS(pid,r,h){ const v = state.scores[k(pid,r,h)]; return v ? v.s : undefined; }
+const has = s => s!==undefined && s!==null;
 function holeInfo(p, r, h){
   const c = course(r), ph = playingHcp(p,r), rc = received(ph, c.si[h-1]), s = getS(p.id,r,h);
   return { par:c.par[h-1], si:c.si[h-1], rc, s, pts: points(s, c.par[h-1], rc) };
 }
 function roundStats(p, r){
-  let pts=0, thru=0, gross=0, pu=false; const per=[];
-  for (let h=1; h<=18; h++){ const i = holeInfo(p,r,h); per.push(i.pts);
-    if (i.s!==undefined && i.s!==null){ thru++; pts+=i.pts; if (i.s>0) gross+=i.s; else pu=true; } }
-  return { pts, thru, gross, pu, per };
+  let pts=0, thru=0, gross=0, pu=false, last=0; const per=[], info=[];
+  for (let h=1; h<=18; h++){ const i = holeInfo(p,r,h); per.push(i.pts); info.push(i);
+    if (has(i.s)){ thru++; last=h; pts+=i.pts; if (i.s>0) gross+=i.s; else pu=true; } }
+  return { pts, thru, gross, pu, per, info, last };
 }
 function lastPlayedRound(){ for (let r=3;r>=1;r--) if (state.players.some(p=>roundStats(p,r).thru>0)) return r; return 1; }
 function countback(per){ const s=(a,b)=>sum(per.slice(a,b).map(x=>x||0)); return [s(9,18), s(12,18), s(15,18), s(17,18)]; }
@@ -261,7 +372,7 @@ function ranking(view){
     const main = view==='tot' ? sum(rs.map(x=>x.pts)) : rs[lr-1].pts;
     return { p, rs, main, tb:[ ...(view==='tot'?[rs[lr-1].pts]:[]), ...countback(rs[lr-1].per) ] };
   });
-  rows.sort((a,b)=>{ if (b.main!==a.main) return b.main-a.main; for (let i=0;i<a.tb.length;i++) if (b.tb[i]!==a.tb[i]) return b.tb[i]-a.tb[i]; return 0; });
+  rows.sort((a,b)=>{ if (b.main!==a.main) return b.main-a.main; for (let i=0;i<a.tb.length;i++) if (b.tb[i]!==a.tb[i]) return b.tb[i]-a.tb[i]; return a.p.name.localeCompare(b.p.name); });
   rows.forEach((r,i)=>{ const prev=rows[i-1]; r.pos = (prev && prev.main===r.main && prev.tb.join()===r.tb.join()) ? prev.pos : i+1; });
   return rows;
 }
@@ -270,164 +381,255 @@ function flights(r){
   ps.forEach((p,i)=>{ const g = f[p.id] || (i<Math.ceil(ps.length/2)?'A':'B'); (g==='A'?A:B).push(p); });
   return {A,B};
 }
+function flightOf(p, r){ return flights(r).A.includes(p) ? 1 : 2; }
+function distribution(p){
+  const d = {e:0,b:0,p:0,o:0,d:0,x:0};
+  [1,2,3].forEach(r=>{ for (let h=1;h<=18;h++){ const s=getS(p.id,r,h); if (!has(s)) continue; if (s===0){ d.x++; continue; }
+    const diff = s - course(r).par[h-1]; d[diff<=-2?'e':diff===-1?'b':diff===0?'p':diff===1?'o':'d']++; } });
+  return d;
+}
 
-/* ============ Rendering ============ */
+/* ============ Helpers ============ */
 const $ = s => document.querySelector(s);
 const esc = s => String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast.t); toast.t=setTimeout(()=>t.classList.remove('show'), 2400); }
+function fmtHcp(v){ v=Number(v)||0; return v<0 ? '+'+Math.abs(v).toFixed(1) : v.toFixed(1); }
+function first(n){ return String(n||'').split(' ')[0]; }
+function initials(n){ const w=String(n||'?').trim().split(/\s+/); return ((w[0]||'?')[0] + (w.length>1 ? w[w.length-1][0] : '')).toUpperCase(); }
+function mark(s, par, cls=''){
+  if (!has(s)) return `<span class="mk n ${cls}">·</span>`; if (s===0) return `<span class="mk x ${cls}">–</span>`;
+  const d = s-par, c = d<=-2?'e':d===-1?'b':d===1?'o':d>=2?'d':'';
+  return `<span class="mk ${c} ${cls}">${s}</span>`;
+}
+function ordinal(n){ return n+'e'; }
+function isLive(r){ const rows = state.players.map(p=>roundStats(p,r).thru); return rows.some(t=>t>0 && t<18); }
 
+/* ============ Render ============ */
 function render(){
   document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on', b.dataset.tab===ui.tab));
   const v = $('#view');
   if (ui.tab==='board') v.innerHTML = viewBoard();
   else if (ui.tab==='score') v.innerHTML = viewScore();
-  else if (ui.tab==='cards') v.innerHTML = viewCards();
+  else if (ui.tab==='players') v.innerHTML = ui.player && pById(ui.player) ? viewProfile(pById(ui.player)) : viewPlayers();
   else if (ui.tab==='prog') v.innerHTML = viewProg();
   else v.innerHTML = ui.admin ? viewAdmin() : viewPin();
-  renderSync();
+  renderSync(); wake();
 }
 function roundSeg(cur, act){
-  return `<div class="seg">${[1,2,3].map(r=>{const c=course(r);return `<button class="${cur===r?'on':''}" data-act="${act}" data-v="${r}">${c.dayname}<small>${esc(c.short)}</small></button>`}).join('')}</div>`;
+  return `<div class="seg">${[1,2,3].map(r=>{const c=course(r);return `<button class="${cur===r?'on':''}" data-act="${act}" data-v="${r}">${esc(c.short)}<small>${c.dayname}</small></button>`}).join('')}</div>`;
 }
 
+/* ---- Stand ---- */
 function viewBoard(){
-  const opts = [['tot','Totaal'],['1','Vrijdag'],['2','Zaterdag'],['3','Zondag']];
-  let h = `<img class="hero" src="logo.webp" alt="Golf in Fife, Scotland" width="230" height="230"><div class="seg">${opts.map(([v,l])=>`<button class="${ui.boardView===v?'on':''}" data-act="bview" data-v="${v}">${l}</button>`).join('')}</div>`;
+  const opts = [['tot','Totaal'],['1',course(1).short],['2',course(2).short],['3',course(3).short]];
+  let h = `<div class="stick"><div class="seg">${opts.map(([v,l])=>`<button class="${ui.boardView===v?'on':''}" data-act="bview" data-v="${v}">${esc(l)}</button>`).join('')}</div></div>`;
   const rows = ranking(ui.boardView);
-  const anyScore = rows.some(r=>r.rs.some(x=>x.thru>0));
+  const upd = state.lastSync ? new Date(state.lastSync).toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'}) : '–';
   if (ui.boardView==='tot'){
-    h += `<div class="board"><p class="board-title">Klassement</p><p class="board-sub">Stableford, 54 holes, volledige handicap</p>`;
+    const any = rows.some(r=>r.rs.some(x=>x.thru>0));
+    h += `<div class="meta"><span>Stableford over 54 holes</span><span>Bijgewerkt ${upd}</span></div>`;
+    h += `<div class="honours"><p class="ttl">Klassement</p><p class="st">${any?'Stand na '+['','Lundin','Elie','Crail'][lastPlayedRound()]:'Eerste afslag vrijdag om 11.00 uur'}</p>`;
     if (!rows.length) h += `<div class="empty">Voeg de spelers toe onder Beheer.</div>`;
     else {
-      h += `<table><thead><tr><th></th><th class="l">Speler</th><th>Vr</th><th>Za</th><th>Zo</th><th>Tot</th></tr></thead><tbody>`;
+      h += `<div class="hrow head"><span></span><span style="text-align:left">Speler</span><span>Lun</span><span>Elie</span><span>Crail</span><span style="text-align:right">Tot</span></div>`;
       rows.forEach(r=>{
-        h += `<tr class="${r.pos===1&&anyScore?'lead':''}"><td class="pos">${anyScore?r.pos:''}</td><td class="name">${esc(r.p.name)}<small>hcp ${fmtHcp(r.p.hcp)}</small></td>`;
-        r.rs.forEach(x=>{ h += x.thru ? `<td class="rd">${x.pts}${x.thru<18?`<sup style="font-size:10px;color:#8a93a0">${x.thru}</sup>`:''}</td>` : `<td class="rd none">–</td>`; });
-        h += `<td class="tot">${anyScore?r.main:'–'}</td></tr>`;
+        h += `<button class="hrow ${r.pos===1&&any?'first':''}" data-act="openp" data-p="${r.p.id}"><span class="pos">${any?r.pos:''}</span><span class="nm">${esc(r.p.name)}<small>hcp ${fmtHcp(r.p.hcp)}</small></span>`;
+        r.rs.forEach(x=>{ h += x.thru ? `<span class="rd num">${x.pts}${x.thru<18?`<sup>${x.thru}</sup>`:''}</span>` : `<span class="rd none">–</span>`; });
+        h += `<span class="tot num">${any?r.main:'–'}</span></button>`;
       });
-      h += `</tbody></table>`;
     }
-    h += `</div><p class="small muted" style="margin-top:8px">Een klein cijfertje naast een score betekent dat de ronde nog loopt (aantal gespeelde holes). Bij gelijke stand beslist de laatste ronde, daarna de laatste 9, 6, 3 en 1 hole.</p>`;
-  } else {
-    const r = Number(ui.boardView), c = course(r);
-    h += `<div class="board"><p class="board-title">${esc(c.short)}</p><p class="board-sub">${c.day}, par ${sum(c.par)}</p>`;
-    if (!rows.length) h += `<div class="empty">Voeg de spelers toe onder Beheer.</div>`;
-    else {
-      const any = rows.some(x=>x.rs[r-1].thru>0);
-      h += `<table><thead><tr><th></th><th class="l">Speler</th><th>PH</th><th>Holes</th><th>Pnt</th></tr></thead><tbody>`;
-      rows.forEach(x=>{ const s=x.rs[r-1];
-        h += `<tr class="${x.pos===1&&any?'lead':''}"><td class="pos">${any?x.pos:''}</td><td class="name">${esc(x.p.name)}</td><td class="rd">${playingHcp(x.p,r)}</td><td class="rd">${s.thru===18?'F':s.thru||'–'}</td><td class="tot">${s.thru?s.pts:'–'}</td></tr>`; });
-      h += `</tbody></table>`;
-    }
-    h += `</div>`;
-    if (rows.length && rows.some(x=>x.rs[r-1].thru===18) && rows.every(x=>x.rs[r-1].thru===18))
-      h += `<div class="note">Dagwinnaar ${c.dayname.toLowerCase()}: <b>${esc(rows[0].p.name)}</b> met ${rows[0].main} punten.</div>`;
+    h += `</div><p class="tiny muted" style="margin:10px 2px">Een klein cijfer bij een score is het aantal gespeelde holes van een lopende ronde. Bij gelijke stand beslist de laatste ronde, daarna de laatste 9, 6, 3 en 1 hole. Tik op een naam voor de scorekaart.</p>`;
+    return h;
   }
+  const r = Number(ui.boardView), c = course(r), live = isLive(r);
+  const any = rows.some(x=>x.rs[r-1].thru>0);
+  h += `<div class="meta"><span>${c.day}, par ${sum(c.par)}</span><span>${live?'<b style="color:var(--claret);font-weight:500">Live</b>, ':''}bijgewerkt ${upd}</span></div>`;
+  h += `<div class="seg" style="max-width:220px"><button class="${ui.courseMode==='list'?'on':''}" data-act="cmode" data-v="list">Stand</button><button class="${ui.courseMode==='matrix'?'on':''}" data-act="cmode" data-v="matrix">Alle holes</button></div>`;
+  if (!rows.length) return h + `<div class="card">Voeg de spelers toe onder Beheer.</div>`;
+  if (ui.courseMode==='matrix'){
+    h += `<div class="mx"><table class="num"><thead><tr><th class="sticky">Hole</th>${c.par.map((_,i)=>`<th>${i+1}</th>`).join('')}<th>Pnt</th></tr>
+      <tr><th class="sticky">Par</th>${c.par.map(x=>`<th>${x}</th>`).join('')}<th></th></tr></thead><tbody>`;
+    rows.forEach(x=>{ const s=x.rs[r-1];
+      h += `<tr><td class="sticky">${esc(first(x.p.name))}</td>${s.info.map(i=>`<td>${has(i.s)?mark(i.s,i.par):'<span class="mk n">·</span>'}</td>`).join('')}<td class="tot">${s.thru?s.pts:'–'}</td></tr>`; });
+    h += `</tbody></table></div><p class="tiny muted" style="margin:8px 2px">Bruto scores. Cirkel is birdie, gevulde cirkel eagle, vierkant bogey, gevuld vierkant dubbel bogey of slechter.</p>`;
+    return h;
+  }
+  h += `<div class="lb"><div class="lrow head"><span></span><span>Speler</span><span>Hole</span><span style="text-align:right">Pnt</span></div>`;
+  rows.forEach(x=>{ const s=x.rs[r-1], open=ui.expanded[x.p.id];
+    const thru = s.thru===18 ? '<span class="thru f">F</span>' : s.thru ? `<span class="thru on num">${s.last}</span>` : '<span class="thru">–</span>';
+    h += `<button class="lrow" data-act="exp" data-p="${x.p.id}" aria-expanded="${!!open}"><span class="pos">${any&&s.thru?x.pos:''}</span>
+      <span class="nm">${esc(x.p.name)}<small>PH ${playingHcp(x.p,r)}, flight ${flightOf(x.p,r)}${s.thru&&!s.pu&&s.thru===18?`, ${s.gross} bruto`:''}</small></span>${thru}
+      <span class="pts num">${s.thru?s.pts:'–'}</span></button>`;
+    if (open){
+      h += `<div class="exp">`;
+      [[0,9],[9,18]].forEach(([a,b])=>{
+        h += `<div class="holes num">${s.info.slice(a,b).map((i,j)=>`<div><div class="hn">${a+j+1}</div>${mark(i.s,i.par)}<div class="hp">${i.pts===null?'':i.pts}</div></div>`).join('')}</div>`; });
+      h += `<div class="btns"><button class="btn sm alt" data-act="openp" data-p="${x.p.id}">Volledige scorekaart</button></div></div>`;
+    }
+  });
+  h += `</div>`;
+  if (rows.every(x=>x.rs[r-1].thru===18)) h += `<div class="note">Dagwinnaar op ${esc(c.short)}: <b>${esc(rows[0].p.name)}</b> met ${rows[0].main} punten.</div>`;
   return h;
 }
-function fmtHcp(v){ v=Number(v)||0; return v<0 ? '+'+Math.abs(v).toFixed(1) : v.toFixed(1); }
 
+/* ---- Score entry ---- */
 function viewScore(){
   const r = ui.round, c = course(r), fl = flights(r), grp = fl[ui.flight];
   let h = roundSeg(r,'round');
   h += `<div class="seg"><button class="${ui.flight==='A'?'on':''}" data-act="flight" data-v="A">Flight 1<small>${fl.A.map(p=>esc(first(p.name))).join(', ')||'leeg'}</small></button><button class="${ui.flight==='B'?'on':''}" data-act="flight" data-v="B">Flight 2<small>${fl.B.map(p=>esc(first(p.name))).join(', ')||'leeg'}</small></button></div>`;
-  if (!state.players.length) return h + `<div class="paper"><p>Er zijn nog geen spelers. Voeg ze toe onder Beheer.</p></div>`;
-  if (!grp.length) return h + `<div class="paper"><p>Deze flight is leeg. Verdeel de spelers onder Beheer.</p></div>`;
+  if (!state.players.length) return h + `<div class="card">Er zijn nog geen spelers. Voeg ze toe onder Beheer.</div>`;
+  if (!grp.length) return h + `<div class="card">Deze flight is leeg. Verdeel de spelers onder Beheer.</div>`;
   const hole = ui.hole, par = c.par[hole-1], si = c.si[hole-1];
-  const name = c.names ? c.names[hole-1] : '';
-  const yds = c.yds ? c.yds[hole-1] : null;
-  h += `<div class="paper"><div class="holehead"><div class="holenum">${hole}</div><div class="holeinfo">
-        <div class="nm">${esc(name || c.short)}</div>
-        <div class="facts"><span>Par <b>${par}</b></span><span>Index <b>${si}</b></span>${yds?`<span><b>${yds}</b> yards</span>`:''}</div></div></div>`;
+  const name = c.names ? c.names[hole-1] : c.short;
+  const yds = c.yds && c.yds[hole-1] ? c.yds[hole-1] : null;
+  h += `<div class="hole"><div class="holehead"><div class="holenum">${hole}</div><div class="holeinfo">
+        <div class="nm">${esc(name)}</div>
+        <div class="facts"><span>Par <b>${par}</b></span><span>Index <b>${si}</b></span>${yds?`<span><b>${Math.round(yds*YD)}</b> m</span>`:''}</div></div></div>`;
   grp.forEach(p=>{
     const i = holeInfo(p,r,hole), rs = roundStats(p,r);
-    const dots = i.rc>0 ? `+${i.rc} slag` : (i.rc<0 ? `−${-i.rc} slag` : 'geen slag');
-    const scTxt = i.s===undefined||i.s===null ? '–' : (i.s===0 ? 'streep' : i.s);
-    const cls = i.s===undefined||i.s===null ? 'empty' : (i.s===0?'pu':'');
-    const ptsCls = i.pts===null?'':('p'+Math.min(i.pts,4));
+    const st = i.rc>0 ? `${i.rc} ${i.rc===1?'slag':'slagen'}` : (i.rc<0 ? `geeft ${-i.rc}` : 'geen slag');
+    const scTxt = !has(i.s) ? '–' : (i.s===0 ? 'streep' : i.s);
+    const cls = !has(i.s) ? 'empty' : (i.s===0 ? 'pu' : (i.s < par ? 'b' : ''));
+    const pc = i.pts===null ? '' : 'p'+Math.min(i.pts,4);
     h += `<div class="prow">
-      <div class="pname">${esc(p.name)}<small><span class="dots">${dots}</span>, ${rs.pts} pnt na ${rs.thru}</small></div>
+      <div class="pname">${esc(p.name)}<small><span class="st">${st}</span>, ${rs.pts} pnt na ${rs.thru}</small></div>
       <button class="pm" data-act="dec" data-p="${p.id}" aria-label="Eén slag minder voor ${esc(p.name)}">−</button>
-      <button class="sc ${cls}" data-act="setpar" data-p="${p.id}" aria-label="Score ${esc(p.name)}">${scTxt}</button>
+      <button class="sc num ${cls}" data-act="setpar" data-p="${p.id}" aria-label="Score ${esc(p.name)}">${scTxt}</button>
       <button class="pm" data-act="inc" data-p="${p.id}" aria-label="Eén slag meer voor ${esc(p.name)}">+</button>
-      <div class="pts ${ptsCls}">${i.pts===null?'':i.pts}<small>${i.pts===null?'':'pnt'}</small></div>
-      <button class="pubtn" data-act="pickup" data-p="${p.id}">${i.s===0?'Streep weghalen':'Streep (opgepakt)'}</button>
+      <div class="ptsb num ${pc}">${i.pts===null?'':i.pts}<small>${i.pts===null?'':'pnt'}</small></div>
+      <button class="pu-link" data-act="pickup" data-p="${p.id}">${i.s===0?'Streep weghalen':'Streep'}</button>
     </div>`;
   });
-  h += `<div class="holenav"><button class="btn alt" data-act="hole" data-v="${Math.max(1,hole-1)}" ${hole===1?'disabled':''}>Vorige hole</button><button class="btn" data-act="hole" data-v="${Math.min(18,hole+1)}" ${hole===18?'disabled':''}>Volgende hole</button></div>`;
-  h += `<div class="strip">${Array.from({length:18},(_,i)=>i+1).map(n=>{
-      const cnt = grp.filter(p=>{const s=getS(p.id,r,n);return s!==undefined&&s!==null}).length;
-      return `<button class="${cnt===grp.length?'done':cnt?'part':''} ${n===hole?'cur':''}" data-act="hole" data-v="${n}">${n}</button>`;}).join('')}</div>`;
-  h += `</div>`;
+  h += `<div class="holenav"><button class="btn alt" data-act="hole" data-v="${Math.max(1,hole-1)}" ${hole===1?'disabled':''}>Vorige</button><button class="btn" data-act="hole" data-v="${Math.min(18,hole+1)}" ${hole===18?'disabled':''}>Volgende hole</button></div>`;
+  h += `<div class="strip num">${Array.from({length:18},(_,i)=>i+1).map(n=>{
+      const cnt = grp.filter(p=>has(getS(p.id,r,n))).length;
+      return `<button class="${cnt===grp.length?'done':cnt?'part':''} ${n===hole?'cur':''}" data-act="hole" data-v="${n}">${n}</button>`;}).join('')}</div></div>`;
   const pend = Object.keys(state.outbox).length;
   if (pend) h += `<div class="note">${pend} ${pend===1?'score staat':'scores staan'} veilig op deze telefoon en ${pend===1?'wordt':'worden'} verstuurd zodra er bereik is.</div>`;
   return h;
 }
-function first(n){ return String(n||'').split(' ')[0]; }
 
-function viewCards(){
+/* ---- Spelers ---- */
+function viewPlayers(){
   const ps = players();
-  if (!ps.length) return `<div class="paper"><p>Er zijn nog geen spelers. Voeg ze toe onder Beheer.</p></div>`;
-  if (!ui.cardPlayer || !pById(ui.cardPlayer)) ui.cardPlayer = ps[0].id;
-  const p = pById(ui.cardPlayer);
-  let h = `<label class="f" for="cp">Speler</label><select class="t" id="cp" data-chg="cardp">${ps.map(x=>`<option value="${x.id}" ${x.id===p.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select>`;
-  [1,2,3].forEach(r=>{
-    const c = course(r), rs = roundStats(p,r), ph = playingHcp(p,r);
-    h += `<h2>${c.dayname}, ${esc(c.short)}</h2><p class="small muted">Playing handicap ${ph}, par ${sum(c.par)}. ${rs.thru?`${rs.pts} punten${rs.gross&&!rs.pu&&rs.thru===18?`, ${rs.gross} bruto`:''}.`:'Nog niet gespeeld.'}</p>`;
-    [[1,9,'Uit'],[10,18,'In']].forEach(([a,b,lbl])=>{
-      let hh=`<th></th>`, par=`<td class="lbl">Par</td>`, si=`<td class="lbl">Index</td>`, g=`<td class="lbl">Score</td>`, pt=`<td class="lbl">Punten</td>`;
-      let sp=0, sg=0, spt=0, gOk=true;
-      for (let n=a;n<=b;n++){ const i=holeInfo(p,r,n); hh+=`<th>${n}</th>`; par+=`<td>${i.par}</td>`; si+=`<td>${i.si}${i.rc>0?`<sup style="color:var(--gold)">${'•'.repeat(Math.min(i.rc,2))}</sup>`:''}</td>`;
-        sp+=i.par; g+=`<td>${mark(i.s,i.par)}</td>`; pt+=`<td>${i.pts===null?'':i.pts}</td>`;
-        if (i.s>0) sg+=i.s; else gOk=false; spt+=i.pts||0; }
-      hh+=`<th>${lbl}</th>`; par+=`<td class="sum">${sp}</td>`; si+=`<td class="sum"></td>`; g+=`<td class="sum">${gOk?sg:''}</td>`; pt+=`<td class="sum">${spt}</td>`;
-      h += `<div class="cardwrap"><table class="card"><thead><tr>${hh}</tr></thead><tbody><tr>${par}</tr><tr>${si}</tr><tr class="g">${g}</tr><tr class="pt">${pt}</tr></tbody></table></div><div style="height:6px"></div>`;
-    });
+  if (!ps.length) return `<h2>Spelers</h2><div class="card">Er zijn nog geen spelers. Voeg ze toe onder Beheer.</div>`;
+  const rk = ranking('tot'), any = rk.some(r=>r.main>0 || r.rs.some(x=>x.thru));
+  let h = `<h2>Spelers</h2><div class="pgrid">`;
+  rk.sort((a,b)=>(a.p.sort||0)-(b.p.sort||0)).forEach(r=>{
+    h += `<button class="pcard" data-act="openp" data-p="${r.p.id}"><span class="mono">${esc(initials(r.p.name))}</span>
+      <div class="pn">${esc(r.p.name)}</div><div class="ps">Handicap ${fmtHcp(r.p.hcp)}</div>
+      <div class="pp">${any ? `${ordinal(r.pos)} plaats, ${r.main} punten` : `PH ${[1,2,3].map(x=>playingHcp(r.p,x)).join(' / ')}`}</div></button>`;
   });
+  return h + `</div><p class="tiny muted" style="margin:10px 2px">PH is de playing handicap op Lundin, Elie en Crail.</p>`;
+}
+function viewProfile(p){
+  const rk = ranking('tot'), me = rk.find(r=>r.p.id===p.id), any = rk.some(r=>r.rs.some(x=>x.thru));
+  const d = distribution(p), tot = sum(Object.values(d));
+  let h = `<button class="back" data-act="closep">‹ Alle spelers</button>
+    <div class="prof"><span class="mono lg">${esc(initials(p.name))}</span><div class="pn">${esc(p.name)}</div>
+    <div class="small muted" style="margin-top:6px">Handicapindex ${fmtHcp(p.hcp)}</div></div>
+    <div class="stats"><div class="stat"><b class="num">${any?me.pos:'–'}</b><span>Positie</span></div><div class="stat"><b class="num">${me.main}</b><span>Punten</span></div><div class="stat"><b class="num">${sum(me.rs.map(x=>x.thru))}</b><span>Holes</span></div></div>`;
+  h += `<div class="card">`;
+  [1,2,3].forEach(r=>{ const c=course(r), s=me.rs[r-1];
+    h += `<div class="rsum"><div class="c">${esc(c.short)}</div><div class="d">${c.dayname}, PH ${playingHcp(p,r)}, flight ${flightOf(p,r)}${s.thru===18&&!s.pu?`, ${s.gross} bruto`:''}</div>
+      <div class="v num">${s.thru?s.pts:'–'}<small>${s.thru===18?'punten':s.thru?`na ${s.thru} holes`:'nog te spelen'}</small></div></div>`; });
+  h += `</div>`;
+  if (tot){
+    const cols = [['e','Eagle of beter','#B08D4C'],['b','Birdie','#D8C18F'],['p','Par','#2F4B37'],['o','Bogey','#8A93A5'],['d','Dubbel+','#16294A'],['x','Streep','#C9C3B6']];
+    h += `<h3>Scoreverdeling</h3><div class="dist">${cols.map(([kk,,col])=>d[kk]?`<span style="width:${d[kk]/tot*100}%;background:${col}"></span>`:'').join('')}</div>
+      <div class="legend">${cols.filter(([kk])=>d[kk]).map(([kk,l,col])=>`<span><i style="background:${col}"></i>${l} ${d[kk]}</span>`).join('')}</div>`;
+  }
+  h += `<h3>Scorekaarten</h3>`;
+  [1,2,3].forEach(r=>{ const c=course(r), s=me.rs[r-1];
+    h += `<div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-family:var(--serif);font-size:19px;color:var(--midnight)">${esc(c.short)}</b><span class="small muted">${s.thru?`${s.pts} punten`:'Nog niet gespeeld'}</span></div>`;
+    [[1,9,'Uit'],[10,18,'In']].forEach(([a,b,lbl])=>{
+      let hh=`<th></th>`, par=`<td class="l">Par</td>`, si=`<td class="l">Index</td>`, g=`<td class="l">Score</td>`, pt=`<td class="l">Punten</td>`;
+      let sp=0, sg=0, spt=0, ok=true;
+      for (let n=a;n<=b;n++){ const i=s.info[n-1]; hh+=`<th>${n}</th>`; par+=`<td>${i.par}</td>`;
+        si+=`<td>${i.si}${i.rc>0?`<sup style="color:var(--gold)">${'•'.repeat(Math.min(i.rc,2))}</sup>`:''}</td>`;
+        sp+=i.par; g+=`<td>${has(i.s)?mark(i.s,i.par):''}</td>`; pt+=`<td>${i.pts===null?'':i.pts}</td>`;
+        if (i.s>0) sg+=i.s; else ok=false; spt+=i.pts||0; }
+      hh+=`<th>${lbl}</th>`; par+=`<td class="s">${sp}</td>`; si+=`<td class="s"></td>`; g+=`<td class="s">${ok?sg:''}</td>`; pt+=`<td class="s">${spt}</td>`;
+      h += `<div class="cardwrap"><table class="sc-t num"><thead><tr>${hh}</tr></thead><tbody><tr>${par}</tr><tr>${si}</tr><tr>${g}</tr><tr class="p">${pt}</tr></tbody></table></div>`;
+    });
+    h += `</div>`;
+  });
+  return h + `<p class="tiny muted">Stipjes bij de index zijn ontvangen handicapslagen.</p>`;
+}
+
+/* ---- Programma ---- */
+const LINKS_SVG = `<svg viewBox="0 0 320 120" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M0 92 C40 80 70 86 104 78 S170 66 208 74 S280 86 320 76" opacity=".9"/><path d="M0 104 C50 96 96 100 140 94 S230 86 320 92" opacity=".55"/><path d="M0 114 C60 110 120 112 180 108 S270 104 320 108" opacity=".35"/><path d="M226 74 V26"/><path d="M226 27 L248 34 L226 41" fill="currentColor" stroke="none"/><path d="M20 60 h60 M34 54 h34" opacity=".35"/></svg>`;
+function viewProg(){
+  let h = `<div class="hero"><img src="logo.webp" alt="Golf in Fife, Scotland" width="190" height="190"></div>
+  <p class="lead" style="text-align:center;margin:8px 6px 4px">Zes man, drie dagen, drie historische linksbanen en 54 holes in het Kingdom of Fife. Met de Dunhill Links als toegift.</p>
+  <h2>Het weekend</h2>
+  <div class="tl">
+    <div class="d"><h3>Vrijdag 2 oktober</h3><p>KLM naar Edinburgh, landing 08.30 uur, en door naar Fife.</p><p><b>Lundin Golf Club</b>, afslag 11.00 en 11.10 uur.</p><p>Middag Alfred Dunhill Links in St Andrews of Kingsbarns. Diner bij The 19th Hole in Elie of in St Andrews.</p></div>
+    <div class="d"><h3>Zaterdag 3 oktober</h3><p><b>The Golf House Club, Elie</b>, afslag 11.00 en 11.10 uur.</p><p>Champagnelunch op de club, diner in de Kinneuchar Inn en live muziek in Station Buffet.</p></div>
+    <div class="d" style="padding-bottom:4px"><h3>Zondag 4 oktober</h3><p><b>Crail Golfing Society, Balcomie Links</b>.</p><p>Afsluitende lunch op de club en door naar Edinburgh Airport voor de vlucht naar huis.</p></div>
+  </div>
+  <h2>De banen</h2>`;
+  [1,2,3].forEach(r=>{
+    const c = course(r), photo = state.photos[r] && state.photos[r].data;
+    h += `<article class="course"><div class="photo">${photo?`<img src="${photo}" alt="${esc(c.name)}" loading="lazy">`:`<div class="ph">${LINKS_SVG}</div>`}
+      <div class="cap"><div class="dt">${c.day}, ${esc(c.tees)}</div><div class="cn">${esc(c.name)}</div></div></div>
+      <div class="cbody">${c.member?`<div class="member">Lid van de club: ${esc(c.member)}</div>`:''}
+      <div class="kv num"><div><b>${sum(c.par)}</b><span>Par</span></div><div><b>${meters(c).toLocaleString('nl-NL')}</b><span>Meter, geel</span></div><div><b>${c.slope}</b><span>Slope</span></div>
+        <div><b>${String(c.cr).replace('.',',')}</b><span>Course rating</span></div><div><b>${c.par.filter(x=>x===3).length}/${c.par.filter(x=>x===4).length}/${c.par.filter(x=>x===5).length}</b><span>Par 3/4/5</span></div><div><b>${esc(String(c.founded).match(/\d{4}/)?String(c.founded).match(/\d{4}/)[0]:'')}</b><span>Opgericht</span></div></div>
+      <p style="font-size:15px;color:#3F4149">${esc(c.desc)}</p>
+      <p class="tiny muted">Architect: ${esc(c.architect)}.</p>
+      <details class="fold ngf"><summary>Gegevens voor je NGF-scorekaart</summary>
+        <dl><dt>Club</dt><dd>${esc(c.name)}</dd><dt>Land</dt><dd>Schotland</dd><dt>Datum</dt><dd>${c.day} 2026</dd><dt>Tee</dt><dd>Geel, heren</dd>
+          <dt>Holes</dt><dd>18</dd><dt>Par</dt><dd>${sum(c.par)}</dd><dt>Course rating</dt><dd>${String(c.cr).replace('.',',')}</dd><dt>Slope rating</dt><dd>${c.slope}</dd><dt>Lengte</dt><dd>${meters(c).toLocaleString('nl-NL')} m</dd></dl>
+        ${c.check?`<div class="note warn">${esc(c.check)}</div>`:''}
+        <div class="cardwrap"><table class="sc-t num"><thead><tr><th></th>${Array.from({length:9},(_,i)=>`<th>${i+1}</th>`).join('')}<th>Uit</th></tr></thead><tbody>
+          ${ngfRows(c,0)}</tbody></table></div>
+        <div class="cardwrap"><table class="sc-t num"><thead><tr><th></th>${Array.from({length:9},(_,i)=>`<th>${i+10}</th>`).join('')}<th>In</th></tr></thead><tbody>
+          ${ngfRows(c,9)}</tbody></table></div>
+        <div class="btns"><button class="btn sm alt" data-act="copyngf" data-r="${r}">Kopieer gegevens</button></div>
+      </details></div></article>`;
+  });
+  h += `<h2>Spelregels</h2><div class="card" style="font-size:15px">
+    <p>Individuele Stableford over drie rondes van 18 holes, met 100% van de playing handicap. De meeste punten na 54 holes wint.</p>
+    <p>Playing handicap is handicapindex × slope ÷ 113 + (course rating − par), afgerond. Iedereen speelt van de gele tees.</p>
+    <p>Per hole: 2 punten voor netto par, 1 meer per slag eronder, 1 minder per slag erboven. Een streep is 0 punten.</p>
+    <p style="margin-bottom:0">Bij gelijke stand beslist de laatste ronde, daarna de laatste 9, 6, 3 en 1 hole van die ronde.</p></div>`;
   return h;
 }
-function mark(s, par){
-  if (s===undefined||s===null) return ''; if (s===0) return '–';
-  const d = s-par, c = d<=-2?'e':d===-1?'b':d===1?'o':d>=2?'d':'';
-  return `<span class="mk ${c}">${s}</span>`;
+function ngfRows(c, o){
+  const par=c.par.slice(o,o+9), si=c.si.slice(o,o+9), m=c.yds?c.yds.slice(o,o+9).map(y=>y?Math.round(y*YD):''):Array(9).fill('');
+  const mt = m.every(x=>x!=='') ? sum(m) : '';
+  return `<tr><td class="l">Par</td>${par.map(x=>`<td>${x}</td>`).join('')}<td class="s">${sum(par)}</td></tr>
+    <tr><td class="l">Index</td>${si.map(x=>`<td>${x}</td>`).join('')}<td class="s"></td></tr>
+    <tr><td class="l">Meter</td>${m.map(x=>`<td>${x||'–'}</td>`).join('')}<td class="s">${mt}</td></tr>`;
+}
+function ngfText(r){
+  const c = course(r);
+  return [`${c.name}, Schotland`, `${c.day} 2026, gele tee (heren), 18 holes`, `Par ${sum(c.par)}, course rating ${c.cr}, slope ${c.slope}, ${meters(c)} m`,
+    'Hole: '+c.par.map((_,i)=>i+1).join(' '), 'Par:  '+c.par.join(' '), 'SI:   '+c.si.join(' ')].join('\n');
 }
 
-function viewProg(){
-  return `<h2>Het weekend</h2>
-  <div class="day"><h3>Vrijdag 2 oktober</h3><p>KLM naar Edinburgh, landing 08.30 uur. Auto ophalen en door naar Fife.</p>
-  <p><b>Lundin Golf Club</b>, afslag 11.00 en 11.10 uur, twee flights van drie. Daarna de Alfred Dunhill Links Championship in St Andrews of Kingsbarns. Diner bij The 19th Hole in Elie of in St Andrews.</p></div>
-  <div class="day"><h3>Zaterdag 3 oktober</h3><p><b>The Golf House Club, Elie</b>, afslag 11.00 en 11.10 uur. Champagnelunch op de club, diner in de Kinneuchar Inn en afsluiten in Station Buffet.</p></div>
-  <div class="day"><h3>Zondag 4 oktober</h3><p><b>Crail Golfing Society, Balcomie Links</b>. Lunch op de club en daarna naar Edinburgh Airport voor de KLM-vlucht naar huis.</p></div>
-  <h2>Spelregels</h2>
-  <div class="paper small">
-    <p>Individuele Stableford over drie rondes van 18 holes, met 100% van de playing handicap. De meeste punten na 54 holes wint.</p>
-    <p>Playing handicap = handicapindex × slope ÷ 113 + (course rating − par), afgerond. Iedereen speelt van de gele tees.</p>
-    <p>Punten per hole: 2 voor netto par, 1 meer per slag eronder en 1 minder per slag erboven. Opgepakt telt als 0 punten.</p>
-    <p>Bij gelijke stand beslist de score van de laatste ronde, daarna de laatste 9, 6, 3 en 1 hole van die ronde.</p>
-  </div>`;
-}
-
+/* ---- Beheer ---- */
 function viewPin(){
-  return `<h2>Beheer</h2><div class="paper"><p>Voer de pincode in om spelers, flights en banen te beheren.</p>
+  return `<h2>Beheer</h2><div class="card"><p>Voer de pincode in om spelers, flights en banen te beheren.</p>
   <label class="f" for="pin">Pincode</label><input class="t" id="pin" inputmode="numeric" autocomplete="off">
   <div class="btns"><button class="btn" data-act="unlock">Openen</button></div></div>`;
 }
-
 function viewAdmin(){
   const ps = players();
-  let h = `<h2>Spelers</h2><div class="paper plist">`;
+  let h = `<h2>Spelers</h2><div class="card plist">`;
   ps.forEach(p=>{
     h += `<div class="pl"><input class="t" value="${esc(p.name)}" data-chg="pname" data-p="${p.id}" aria-label="Naam">
-      <input class="t" value="${fmtHcp(p.hcp)}" inputmode="decimal" data-chg="phcp" data-p="${p.id}" aria-label="Handicapindex">
+      <input class="t num" value="${fmtHcp(p.hcp)}" inputmode="decimal" data-chg="phcp" data-p="${p.id}" aria-label="Handicapindex">
       <button class="x" data-act="pdel" data-p="${p.id}" aria-label="Verwijder ${esc(p.name)}">×</button></div>
       <div class="ch">Playing handicap: ${[1,2,3].map(r=>`${course(r).short} ${playingHcp(p,r)}`).join(', ')}</div>`;
   });
-  h += `<p class="small muted">Vul de handicapindex in, bijvoorbeeld 14.2. Een plushandicap schrijf je als +1.5.</p>
+  h += `<p class="small muted">Vul de handicapindex in, bijvoorbeeld 14,2. Een plushandicap schrijf je als +1,5.</p>
     <div class="btns"><button class="btn sm" data-act="padd">Speler toevoegen</button></div></div>`;
 
-  h += `<h2>Flights</h2><div class="paper">`;
+  h += `<h2>Flights</h2><div class="card">`;
   [1,2,3].forEach(r=>{ const fl=flights(r), c=course(r);
-    h += `<h3>${c.dayname}, ${esc(c.short)}</h3>`;
+    h += `<h3 style="margin-top:${r===1?0:14}px">${esc(c.short)}, ${c.dayname.toLowerCase()}</h3>`;
     ps.forEach(p=>{ const g = fl.A.includes(p)?'A':'B';
       h += `<div class="fl"><span>${esc(p.name)}</span><div class="seg"><button class="${g==='A'?'on':''}" data-act="fset" data-r="${r}" data-p="${p.id}" data-v="A">1</button><button class="${g==='B'?'on':''}" data-act="fset" data-r="${r}" data-p="${p.id}" data-v="B">2</button></div></div>`; });
   });
@@ -435,24 +637,28 @@ function viewAdmin(){
 
   h += `<h2>Banen</h2>`;
   [1,2,3].forEach(r=>{ const c=course(r); const siOk = [...c.si].sort((a,b)=>a-b).join()===Array.from({length:18},(_,i)=>i+1).join();
-    h += `<div class="paper"><h3 style="margin-top:0">${esc(c.name)}</h3><p class="small muted">${c.day}, gele tees, par ${sum(c.par)}</p>`;
+    const photo = state.photos[r] && state.photos[r].data;
+    h += `<div class="card"><h3 style="margin-top:0">${esc(c.name)}</h3><p class="small muted">${c.day}, gele tees, par ${sum(c.par)}</p>`;
     if (c.check) h += `<div class="note warn">${esc(c.check)}</div>`;
     if (!siOk) h += `<div class="note warn">De stroke indexen zijn niet uniek 1 tot en met 18. Controleer de invoer.</div>`;
-    h += `<div class="row2"><div><label class="f">Course rating</label><input class="t" inputmode="decimal" value="${c.cr}" data-chg="ccr" data-r="${r}"></div>
-          <div><label class="f">Slope</label><input class="t" inputmode="numeric" value="${c.slope}" data-chg="cslope" data-r="${r}"></div></div>
-          <details style="margin-top:10px"><summary>Par en stroke index per hole</summary><div class="cgrid" style="margin-top:8px"><span class="h">Hole</span><span class="h">Par</span><span class="h">Index</span><span class="h">Yards</span>`;
-    for (let n=1;n<=18;n++) h += `<span class="h">${n}</span><input inputmode="numeric" value="${c.par[n-1]}" data-chg="cpar" data-r="${r}" data-h="${n}"><input inputmode="numeric" value="${c.si[n-1]}" data-chg="csi" data-r="${r}" data-h="${n}"><input inputmode="numeric" value="${c.yds?c.yds[n-1]:''}" data-chg="cyds" data-r="${r}" data-h="${n}">`;
+    h += `<label class="f">Foto voor het programma</label>${photo?`<img class="thumb" src="${photo}" alt="">`:''}
+      <div class="btns"><button class="btn sm alt" data-act="photo" data-r="${r}">${photo?'Andere foto kiezen':'Foto kiezen'}</button>${photo?`<button class="btn sm red" data-act="photodel" data-r="${r}">Foto verwijderen</button>`:''}</div>
+      <div class="row2" style="margin-top:6px"><div><label class="f">Course rating</label><input class="t num" inputmode="decimal" value="${c.cr}" data-chg="ccr" data-r="${r}"></div>
+          <div><label class="f">Slope</label><input class="t num" inputmode="numeric" value="${c.slope}" data-chg="cslope" data-r="${r}"></div></div>
+          <details class="fold"><summary>Par, index en yards per hole</summary><div class="cgrid num" style="margin-top:8px"><span class="h">Hole</span><span class="h">Par</span><span class="h">Index</span><span class="h">Yards</span>`;
+    for (let n=1;n<=18;n++) h += `<span class="h">${n}</span><input inputmode="numeric" value="${c.par[n-1]}" data-chg="cpar" data-r="${r}" data-h="${n}"><input inputmode="numeric" value="${c.si[n-1]}" data-chg="csi" data-r="${r}" data-h="${n}"><input inputmode="numeric" value="${c.yds&&c.yds[n-1]?c.yds[n-1]:''}" data-chg="cyds" data-r="${r}" data-h="${n}">`;
     h += `</div></details><div class="btns"><button class="btn sm alt" data-act="cconfirm" data-r="${r}">${c.check?'Kaart gecontroleerd':'Controle-melding tonen'}</button><button class="btn sm red" data-act="creset" data-r="${r}">Standaardwaarden</button></div></div>`;
   });
+  h += `<input type="file" id="photofile" accept="image/*" hidden>`;
 
-  h += `<h2>Back-up en herstel</h2><div class="paper">
-    <p class="small">Een back-up bevat spelers, flights, baninstellingen en alle scores. Maak er na elke ronde een.</p>
+  h += `<h2>Back-up en herstel</h2><div class="card">
+    <p class="small">Een back-up bevat spelers, flights, baninstellingen, foto’s en alle scores. Maak er na elke ronde een.</p>
     <div class="btns"><button class="btn sm" data-act="backup">Back-up downloaden</button>
     <button class="btn sm alt" data-act="restore">Back-up terugzetten</button></div>
     <input type="file" id="restorefile" accept="application/json,.json" hidden>
-    <p class="small muted" style="margin-top:10px">Terugzetten vervangt alle gegevens op deze telefoon én in de online database.</p></div>`;
+    <p class="tiny muted" style="margin-top:10px">Terugzetten vervangt alle gegevens op deze telefoon én in de online database.</p></div>`;
 
-  h += `<h2>Gegevens</h2><div class="paper">
+  h += `<h2>Gegevens</h2><div class="card">
     <p class="small">Laatste synchronisatie: ${state.lastSync?new Date(state.lastSync).toLocaleString('nl-NL'):'nog niet'}. Wachtende scores: ${Object.keys(state.outbox).length}.</p>
     <div class="btns"><button class="btn sm" data-act="syncnow">Nu synchroniseren</button><button class="btn sm red" data-act="resetscores">Alle scores wissen</button></div>
     <label class="f" for="newpin">Nieuwe pincode</label><div class="row2"><input class="t" id="newpin" inputmode="numeric"><button class="btn sm alt" data-act="setpin">Pincode opslaan</button></div>
@@ -465,6 +671,7 @@ function setScore(pid, val){
   const kk = k(pid, ui.round, ui.hole);
   state.scores[kk] = { s: val, t: new Date().toISOString() };
   state.outbox[kk] = true; save(); render(); schedulePush();
+  if (navigator.vibrate) navigator.vibrate(8);
 }
 function markDirty(what){ state.dirty[what] = true; save(); schedulePush(); }
 function setCourse(r, patch){
@@ -473,23 +680,34 @@ function setCourse(r, patch){
   cs[r] = Object.assign({}, cs[r]||{}, { par:[...cur.par], si:[...cur.si], yds: cur.yds?[...cur.yds]:null, cr:cur.cr, slope:cur.slope }, patch);
   markDirty('settings');
 }
+function firstOpenHole(){
+  const grp = flights(ui.round)[ui.flight];
+  for (let n=1;n<=18;n++) if (grp.some(p=>!has(getS(p.id,ui.round,n)))) return n;
+  return 18;
+}
+let photoRound = null;
 
 document.addEventListener('click', async e=>{
   const tab = e.target.closest('[data-tab]');
-  if (tab){ ui.tab = tab.dataset.tab; sessionStorage.setItem('gif_tab', ui.tab); render(); window.scrollTo(0,0); return; }
+  if (tab){ ui.tab = tab.dataset.tab; if (ui.tab==='players' && tab.classList.contains('on')) ui.player=null; sessionStorage.setItem('gif_tab', ui.tab); render(); window.scrollTo(0,0); return; }
   if (e.target.closest('#sync')){ sync(true); return; }
   const b = e.target.closest('[data-act]'); if (!b) return;
   const a = b.dataset.act, v = b.dataset.v, pid = b.dataset.p;
   const par = course(ui.round).par[ui.hole-1];
   switch(a){
-    case 'bview': ui.boardView = v; render(); break;
+    case 'bview': ui.boardView = v; sessionStorage.setItem('gif_bview', v); render(); break;
+    case 'cmode': ui.courseMode = v; render(); break;
+    case 'exp': ui.expanded[pid] = !ui.expanded[pid]; render(); break;
+    case 'openp': ui.player = pid; ui.tab='players'; sessionStorage.setItem('gif_tab','players'); render(); window.scrollTo(0,0); break;
+    case 'closep': ui.player = null; render(); window.scrollTo(0,0); break;
     case 'round': ui.round = Number(v); ui.hole = firstOpenHole(); render(); break;
     case 'flight': ui.flight = v; ui.hole = firstOpenHole(); render(); break;
     case 'hole': ui.hole = Number(v); render(); break;
-    case 'setpar': { const s=getS(pid,ui.round,ui.hole); if (s===undefined||s===null) setScore(pid, par); break; }
-    case 'inc': { const s=getS(pid,ui.round,ui.hole); setScore(pid, (s===undefined||s===null||s===0) ? par : Math.min(15, s+1)); break; }
-    case 'dec': { const s=getS(pid,ui.round,ui.hole); setScore(pid, (s===undefined||s===null||s===0) ? par-1 : Math.max(1, s-1)); break; }
+    case 'setpar': { const s=getS(pid,ui.round,ui.hole); if (!has(s)) setScore(pid, par); break; }
+    case 'inc': { const s=getS(pid,ui.round,ui.hole); setScore(pid, (!has(s)||s===0) ? par : Math.min(15, s+1)); break; }
+    case 'dec': { const s=getS(pid,ui.round,ui.hole); setScore(pid, (!has(s)||s===0) ? par-1 : Math.max(1, s-1)); break; }
     case 'pickup': { const s=getS(pid,ui.round,ui.hole); setScore(pid, s===0 ? null : 0); break; }
+    case 'copyngf': { const t=ngfText(Number(b.dataset.r)); try{ await navigator.clipboard.writeText(t); toast('Gegevens gekopieerd'); }catch(err){ toast('Kopiëren lukt niet op dit toestel'); } break; }
     case 'unlock': { const pin = $('#pin').value.trim(); if (pin === String(state.settings.pin||DEFAULT_PIN)){ ui.admin=true; sessionStorage.setItem('gif_admin','1'); render(); } else toast('Onjuiste pincode'); break; }
     case 'lock': ui.admin=false; sessionStorage.removeItem('gif_admin'); render(); break;
     case 'padd': { const ps=players(); state.players.push({ id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6), name:'Speler '+(ps.length+1), hcp:18, sort:(ps.length?Math.max(...ps.map(p=>p.sort||0))+1:0) }); markDirty('players'); render(); break; }
@@ -502,6 +720,8 @@ document.addEventListener('click', async e=>{
       fl[b.dataset.r][pid] = v; markDirty('settings'); render(); break; }
     case 'cconfirm': { const r=Number(b.dataset.r); setCourse(r, { check: course(r).check ? '' : (DEFAULT_COURSES[r].check||'Controleer de kaart.') }); render(); break; }
     case 'creset': { const r=Number(b.dataset.r); if (!confirm('Baangegevens terugzetten naar de standaardwaarden?')) break; const cs=state.settings.courses||{}; delete cs[r]; state.settings.courses=cs; markDirty('settings'); render(); break; }
+    case 'photo': photoRound = Number(b.dataset.r); $('#photofile').click(); break;
+    case 'photodel': { const r=Number(b.dataset.r); if (!confirm('Foto verwijderen?')) break; state.photos[r]={data:null,t:new Date().toISOString()}; state.photoDirty[r]=true; save(); render(); sync(); break; }
     case 'backup': downloadBackup(); break;
     case 'restore': $('#restorefile').click(); break;
     case 'syncnow': sync(true); break;
@@ -509,38 +729,54 @@ document.addEventListener('click', async e=>{
     case 'setpin': { const np=$('#newpin').value.trim(); if (np.length<4){ toast('Kies minimaal 4 cijfers'); break; } state.settings.pin=np; markDirty('settings'); toast('Pincode opgeslagen'); render(); break; }
   }
 });
-document.addEventListener('change', e=>{
+document.addEventListener('change', async e=>{
   const el = e.target;
   if (el.id==='restorefile'){ const f=el.files[0]; if (f) restoreFrom(f); el.value=''; return; }
+  if (el.id==='photofile'){ const f=el.files[0]; el.value=''; if (!f || !photoRound) return;
+    try{ const data = await compressImage(f); state.photos[photoRound]={data, t:new Date().toISOString()}; state.photoDirty[photoRound]=true; save(); render(); toast('Foto opgeslagen'); sync(); }
+    catch(err){ toast('Deze foto kon niet worden gelezen'); } return; }
   const c = el.dataset.chg; if (!c) return;
   const p = el.dataset.p ? pById(el.dataset.p) : null, r = Number(el.dataset.r), h = Number(el.dataset.h);
-  const num = x => Number(String(x).replace(',', '.').replace('+','-'));
+  const num = x => { x=String(x).trim().replace(',', '.'); return x.startsWith('+') ? -Number(x.slice(1)) : Number(x); };
   switch(c){
-    case 'cardp': ui.cardPlayer = el.value; render(); break;
     case 'pname': if (p){ p.name = el.value.trim() || p.name; markDirty('players'); render(); } break;
-    case 'phcp': if (p){ const n = num(el.value.trim()); if (isNaN(n) || n>54 || n<-10){ toast('Ongeldige handicap'); render(); break; } p.hcp = Math.round(n*10)/10; markDirty('players'); render(); } break;
-    case 'ccr': { const n=num(el.value); if (!isNaN(n)) setCourse(r,{cr:n}); render(); break; }
+    case 'phcp': if (p){ const n = num(el.value); if (isNaN(n) || n>54 || n<-10){ toast('Ongeldige handicap'); render(); break; } p.hcp = Math.round(n*10)/10; markDirty('players'); render(); } break;
+    case 'ccr': { const n=num(el.value); if (!isNaN(n) && n>50 && n<90) setCourse(r,{cr:n}); else toast('Course rating ligt tussen 50 en 90'); render(); break; }
     case 'cslope': { const n=parseInt(el.value,10); if (n>=55&&n<=155) setCourse(r,{slope:n}); else toast('Slope ligt tussen 55 en 155'); render(); break; }
     case 'cpar': case 'csi': case 'cyds': {
       const cur = course(r), n = parseInt(el.value,10);
-      if (c==='cpar'){ if (n<3||n>6){ toast('Par moet 3 tot 6 zijn'); render(); break; } const a=[...cur.par]; a[h-1]=n; setCourse(r,{par:a}); }
+      if (c==='cpar'){ if (!(n>=3&&n<=6)){ toast('Par moet 3 tot 6 zijn'); render(); break; } const a=[...cur.par]; a[h-1]=n; setCourse(r,{par:a}); }
       if (c==='csi'){ if (!(n>=1&&n<=18)){ toast('Index moet 1 tot 18 zijn'); render(); break; } const a=[...cur.si]; a[h-1]=n; setCourse(r,{si:a}); }
       if (c==='cyds'){ const a = cur.yds?[...cur.yds]:Array(18).fill(null); a[h-1]= isNaN(n)?null:n; setCourse(r,{yds:a}); }
       render(); break; }
   }
 });
-function firstOpenHole(){
-  const grp = flights(ui.round)[ui.flight];
-  for (let n=1;n<=18;n++) if (grp.some(p=>{const s=getS(p.id,ui.round,n);return s===undefined||s===null})) return n;
-  return 18;
+function compressImage(file){
+  return new Promise((res, rej)=>{
+    const img = new Image(), url = URL.createObjectURL(file);
+    img.onload = ()=>{ const max=1280, s=Math.min(1, max/Math.max(img.width,img.height));
+      const cv=document.createElement('canvas'); cv.width=Math.round(img.width*s); cv.height=Math.round(img.height*s);
+      cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height); URL.revokeObjectURL(url); res(cv.toDataURL('image/jpeg',0.74)); };
+    img.onerror = ()=>{ URL.revokeObjectURL(url); rej(new Error('img')); };
+    img.src = url;
+  });
+}
+
+/* Keep the screen awake while entering scores */
+let wakeLock = null;
+async function wake(){
+  try{
+    if (ui.tab==='score' && 'wakeLock' in navigator && !wakeLock && !document.hidden){ wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', ()=>{ wakeLock=null; }); }
+    else if (ui.tab!=='score' && wakeLock){ await wakeLock.release(); wakeLock=null; }
+  }catch(e){}
 }
 
 /* ============ Backup / restore ============ */
 function downloadBackup(){
-  const data = { app:'golf-in-fife', version:1, exported_at:new Date().toISOString(),
-    players: players(), settings: state.settings,
+  const data = { app:'golf-in-fife', version:2, exported_at:new Date().toISOString(),
+    players: players(), settings: state.settings, photos: Object.fromEntries(Object.entries(state.photos).filter(([,v])=>v&&v.data).map(([r,v])=>[r,v.data])),
     scores: Object.entries(state.scores).map(([kk,v])=>{ const [player_id,round_no,hole]=kk.split('|'); return { player_id, round_no:+round_no, hole:+hole, strokes:v.s, updated_at:v.t }; }) };
-  const blob = new Blob([JSON.stringify(data,null,1)], {type:'application/json'});
+  const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
   a.download = 'golf-in-fife-backup-'+new Date().toISOString().slice(0,16).replace(/[:T]/g,'-')+'.json';
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
@@ -554,6 +790,7 @@ async function restoreFrom(file){
     const now = new Date().toISOString();
     state.players = d.players; state.settings = d.settings || {}; state.scores = {}; state.outbox = {};
     (d.scores||[]).forEach(s=>{ const kk=k(s.player_id,s.round_no,s.hole); state.scores[kk]={ s:s.strokes, t:now }; state.outbox[kk]=true; });
+    Object.entries(d.photos||{}).forEach(([r,data])=>{ state.photos[r]={data,t:now}; state.photoDirty[r]=true; });
     state.dirty = {players:true, settings:true}; state.deleted = []; state.op = 'replace';
     save(); render(); toast('Back-up teruggezet'); sync(true);
   }catch(err){ toast(err.message || 'Back-up kon niet worden gelezen'); }
@@ -567,28 +804,31 @@ async function api(path, opts={}){
   if (!res.ok){ const t = await res.text(); const err = new Error(t || res.statusText); err.status = res.status; throw err; }
   const txt = await res.text(); return txt ? JSON.parse(txt) : null;
 }
+const UPSERT = {Prefer:'resolution=merge-duplicates,return=minimal'};
 async function sync(manual){
   if (syncing) return; if (!navigator.onLine){ syncErr='offline'; renderSync(); if (manual) toast('Geen verbinding, scores blijven bewaard'); return; }
   syncing = true; renderSync();
   try{
-    // 1. Whole-database operations (restore / reset)
     if (state.op==='replace'){ await api('/gif_players?id=neq.__none__', {method:'DELETE'}); state.deleted=[]; }
     if (state.op==='resetscores'){ await api('/gif_scores?round_no=gte.1', {method:'DELETE'}); }
-    // 2. Players
     if (state.deleted.length){ await api('/gif_players?id=in.('+state.deleted.map(encodeURIComponent).join(',')+')', {method:'DELETE'}); state.deleted=[]; }
     if (state.dirty.players){
-      if (state.players.length) await api('/gif_players', {method:'POST', headers:{Prefer:'resolution=merge-duplicates,return=minimal'},
+      if (state.players.length) await api('/gif_players', {method:'POST', headers:UPSERT,
         body: JSON.stringify(state.players.map(p=>({id:p.id,name:p.name,hcp:p.hcp,sort:p.sort||0,updated_at:new Date().toISOString()}))) });
       state.dirty.players = false;
     }
-    // 3. Settings
     if (state.dirty.settings){
       const s = state.settings, rows = ['courses','flights','pin'].filter(x=>s[x]!==undefined).map(x=>({key:x,value:s[x],updated_at:new Date().toISOString()}));
-      if (rows.length) await api('/gif_settings', {method:'POST', headers:{Prefer:'resolution=merge-duplicates,return=minimal'}, body: JSON.stringify(rows)});
+      if (rows.length) await api('/gif_settings', {method:'POST', headers:UPSERT, body: JSON.stringify(rows)});
       state.dirty.settings = false;
     }
+    for (const r of Object.keys(state.photoDirty)){
+      const ph = state.photos[r];
+      if (ph && ph.data) await api('/gif_settings', {method:'POST', headers:UPSERT, body: JSON.stringify([{key:'photo_'+r, value:{data:ph.data}, updated_at:ph.t}])});
+      else { await api('/gif_settings?key=eq.photo_'+r, {method:'DELETE'}); delete state.photos[r]; }
+      delete state.photoDirty[r];
+    }
     state.op = null; save();
-    // 4. Scores (last write wins per hole, enforced in the database)
     const keys = Object.keys(state.outbox);
     if (keys.length){
       const sent = {}; const rows = keys.map(kk=>{ const [player_id,r,h]=kk.split('|'); const v=state.scores[kk]; sent[kk]=v.t;
@@ -597,14 +837,21 @@ async function sync(manual){
       keys.forEach(kk=>{ if (state.scores[kk] && state.scores[kk].t===sent[kk]) delete state.outbox[kk]; });
       save();
     }
-    // 5. Pull
-    const [ps, sc, st] = await Promise.all([ api('/gif_players?select=*&order=sort'), api('/gif_scores?select=*'), api('/gif_settings?select=*') ]);
+    const [ps, sc, st, phs] = await Promise.all([ api('/gif_players?select=*&order=sort'), api('/gif_scores?select=*'),
+      api('/gif_settings?select=*&key=not.like.photo*'), api('/gif_settings?select=key,updated_at&key=like.photo*') ]);
     if (!state.dirty.players && !state.deleted.length) state.players = ps.map(p=>({id:p.id,name:p.name,hcp:Number(p.hcp),sort:p.sort}));
     if (!state.dirty.settings){ const s={}; st.forEach(x=>s[x.key]=x.value); state.settings = s; }
     const server = {};
     sc.forEach(row=>{ const kk=k(row.player_id,row.round_no,row.hole); server[kk]=true; const loc=state.scores[kk];
       if (!loc || new Date(row.updated_at) > new Date(loc.t)){ state.scores[kk] = {s:row.strokes, t:row.updated_at}; delete state.outbox[kk]; } });
     Object.keys(state.scores).forEach(kk=>{ if (!server[kk] && !state.outbox[kk]) delete state.scores[kk]; });
+    const seen = {};
+    for (const row of phs){ const r=row.key.replace('photo_',''); seen[r]=true;
+      if (state.photoDirty[r]) continue;
+      if (!state.photos[r] || state.photos[r].t !== row.updated_at){
+        const got = await api('/gif_settings?select=value,updated_at&key=eq.'+row.key);
+        if (got && got[0]) state.photos[r] = {data:got[0].value.data, t:got[0].updated_at}; } }
+    Object.keys(state.photos).forEach(r=>{ if (!seen[r] && !state.photoDirty[r]) delete state.photos[r]; });
     state.lastSync = new Date().toISOString(); syncErr = null; save();
     if (manual) toast('Alles gesynchroniseerd');
   }catch(err){
@@ -619,18 +866,20 @@ async function sync(manual){
 }
 function renderSync(){
   const el = $('#sync'), pend = Object.keys(state.outbox).length; let cls='', txt='';
-  if (syncing) { cls='wait'; txt='Bezig'; }
+  const live = [1,2,3].some(isLive);
+  if (syncing && !state.lastSync) { cls='wait'; txt='Laden'; }
   else if (!navigator.onLine || syncErr==='offline'){ cls='off'; txt = pend ? `Offline, ${pend} wachtend` : 'Offline'; }
   else if (syncErr==='schema'){ cls='off'; txt='Database mist'; }
-  else if (syncErr){ cls='wait'; txt = pend ? `${pend} wachtend` : 'Opnieuw proberen'; }
   else if (pend){ cls='wait'; txt=`${pend} wachtend`; }
+  else if (syncErr){ cls='wait'; txt='Opnieuw proberen'; }
+  else if (live){ cls='live'; txt='Live'; }
   else { txt='Bijgewerkt'; }
-  el.className = 'sync '+cls; el.querySelector('span').textContent = txt;
+  el.className = 'pill '+cls; el.querySelector('span').textContent = txt;
 }
 window.addEventListener('online', ()=>{ syncErr=null; sync(); });
 window.addEventListener('offline', ()=>{ syncErr='offline'; renderSync(); });
-document.addEventListener('visibilitychange', ()=>{ if (!document.hidden) sync(); });
-setInterval(()=>{ if (!document.hidden) sync(); }, 20000);
+document.addEventListener('visibilitychange', ()=>{ if (!document.hidden){ sync(); wake(); } });
+setInterval(()=>{ if (!document.hidden) sync(); }, 15000);
 
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(()=>{});
 
