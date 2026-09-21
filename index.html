@@ -8,8 +8,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Golf in Fife">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icon.svg">
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>Golf in Fife</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,10 +32,12 @@ button{cursor:pointer}
 /* Header */
 .top{position:sticky;top:0;z-index:10;background:var(--navy);color:#fff;border-bottom:3px solid var(--gold);
   padding:calc(env(safe-area-inset-top,0px) + 12px) 18px 12px}
-.top-in{max-width:560px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.top-in{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:11px;flex:1;min-width:0}
+.brand img{width:48px;height:48px;border-radius:50%;background:#F8F6EF;box-shadow:0 0 0 2px var(--gold);flex:none}
 .top h1{font-family:var(--fell);font-weight:400;font-size:31px;line-height:1;margin:0}
 .top .sub{font-size:14px;color:#C3CCDD;margin-top:4px}
-.sync{flex:none;display:flex;align-items:center;gap:6px;font-size:13px;background:rgba(255,255,255,.1);border:0;border-radius:999px;padding:5px 11px;color:#fff}
+.sync{flex:none;align-self:center;display:flex;align-items:center;gap:6px;font-size:13px;background:rgba(255,255,255,.1);border:0;border-radius:999px;padding:5px 11px;color:#fff}
 .sync i{width:8px;height:8px;border-radius:50%;background:#7FB069;display:block}
 .sync.wait i{background:var(--goldlt)}
 .sync.off i{background:#E07A6E}
@@ -57,6 +59,7 @@ p{margin:6px 0}
 
 /* The leaderboard: manual scoreboard */
 .board{background:var(--navy);border:2px solid var(--gold);border-radius:4px;padding:10px 8px 12px;box-shadow:0 2px 0 #0c1a33}
+.hero{display:block;width:min(180px,48vw);height:auto;margin:2px auto 14px;border-radius:50%;filter:drop-shadow(0 3px 6px rgba(18,38,74,.18))}
 .board-title{font-family:var(--fell);color:#fff;font-size:22px;text-align:center;margin:0 0 2px}
 .board-sub{color:var(--goldlt);text-align:center;font-size:13px;margin:0 0 8px}
 .board table{width:100%;border-collapse:separate;border-spacing:3px}
@@ -163,10 +166,10 @@ input.t,select.t{width:100%;border:1px solid var(--rule);border-radius:6px;paddi
 <body>
 <header class="top">
   <div class="top-in">
-    <div>
+    <div class="brand"><img src="logo.webp" alt="" width="48" height="48"><div>
       <h1>Golf in Fife</h1>
-      <div class="sub">Lundin, Elie en Crail, 2–4 oktober</div>
-    </div>
+      <div class="sub">Lundin, Elie en Crail, 2–4&nbsp;oktober</div>
+    </div></div>
     <button class="sync" id="sync" aria-live="polite"><i></i><span>Laden</span></button>
   </div>
 </header>
@@ -289,11 +292,11 @@ function roundSeg(cur, act){
 
 function viewBoard(){
   const opts = [['tot','Totaal'],['1','Vrijdag'],['2','Zaterdag'],['3','Zondag']];
-  let h = `<div class="seg">${opts.map(([v,l])=>`<button class="${ui.boardView===v?'on':''}" data-act="bview" data-v="${v}">${l}</button>`).join('')}</div>`;
+  let h = `<img class="hero" src="logo.webp" alt="Golf in Fife, Scotland" width="230" height="230"><div class="seg">${opts.map(([v,l])=>`<button class="${ui.boardView===v?'on':''}" data-act="bview" data-v="${v}">${l}</button>`).join('')}</div>`;
   const rows = ranking(ui.boardView);
   const anyScore = rows.some(r=>r.rs.some(x=>x.thru>0));
   if (ui.boardView==='tot'){
-    h += `<div class="board"><p class="board-title">Golf in Fife</p><p class="board-sub">Stableford, 54 holes, volledige handicap</p>`;
+    h += `<div class="board"><p class="board-title">Klassement</p><p class="board-sub">Stableford, 54 holes, volledige handicap</p>`;
     if (!rows.length) h += `<div class="empty">Voeg de spelers toe onder Beheer.</div>`;
     else {
       h += `<table><thead><tr><th></th><th class="l">Speler</th><th>Vr</th><th>Za</th><th>Zo</th><th>Tot</th></tr></thead><tbody>`;
