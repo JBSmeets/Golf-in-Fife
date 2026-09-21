@@ -1,0 +1,10 @@
+{
+  "name": "Golf in Fife",
+  "short_name": "Golf in Fife",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#E8EBE3",
+  "theme_color": "#12264A",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
