@@ -197,6 +197,7 @@ table.sc-t{border-collapse:collapse;font-size:13px;min-width:100%}
 table.sc-t th,table.sc-t td{border-bottom:1px solid var(--hair2);text-align:center;padding:5px 0;min-width:27px}
 table.sc-t th{color:var(--muted);font-weight:500;font-size:11px}
 table.sc-t td.l{text-align:left;padding-left:2px;color:var(--muted);min-width:46px;font-size:12px}
+table.sc-t .rc{display:block;font-size:10px;font-weight:600;color:var(--golddk);line-height:1;margin-top:1px}
 table.sc-t tr.p td{color:var(--green);font-weight:600}
 table.sc-t td.s{font-weight:600;color:var(--midnight);background:#F6F1E6}
 details.fold{border-top:1px solid var(--hair2);padding-top:8px;margin-top:8px}
@@ -231,6 +232,8 @@ details.fold[open] summary::after{content:' −';}
 .kv div:nth-last-child(-n+3){border-bottom:0}
 .kv b{display:block;font-size:18px;font-weight:600;color:var(--midnight);line-height:1.15}
 .kv span{font-size:11px;color:var(--muted)}
+.site{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:10px 0 2px;padding:12px 14px;border:1px solid var(--hair);border-radius:12px;color:var(--midnight);text-decoration:none;font-weight:500;font-size:15px;background:#FBF9F4}
+.site span{color:var(--golddk)}
 .ngf{font-size:14px}
 .ngf dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:8px 0}
 .ngf dt{color:var(--muted)} .ngf dd{margin:0;font-weight:500}
@@ -282,10 +285,10 @@ input.t,select.t{width:100%;border:1px solid var(--hair);border-radius:10px;padd
 <main id="view"></main>
 
 <nav class="tabs"><div class="tabs-in" id="tabs">
+  <button data-tab="prog"><svg viewBox="0 0 24 24"><path d="M4 5.5C6.5 4 9.5 4 12 5.5v14C9.5 18 6.5 18 4 19.5z"/><path d="M20 5.5C17.5 4 14.5 4 12 5.5v14c2.5-1.5 5.5-1.5 8 0z"/></svg>Programma</button>
   <button data-tab="board"><svg viewBox="0 0 24 24"><path d="M5 20V11M12 20V5M19 20v-6M3 20h18"/></svg>Stand</button>
   <button data-tab="score"><svg viewBox="0 0 24 24"><path d="M7 21V3.5l10 3.8-10 3.8"/><path d="M4 21h10"/></svg>Score</button>
   <button data-tab="players"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19.5c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="17" cy="9" r="2.4"/><path d="M16 14.6c2.4-.2 4.1 1.3 4.6 4"/></svg>Spelers</button>
-  <button data-tab="prog"><svg viewBox="0 0 24 24"><path d="M4 5.5C6.5 4 9.5 4 12 5.5v14C9.5 18 6.5 18 4 19.5z"/><path d="M20 5.5C17.5 4 14.5 4 12 5.5v14c2.5-1.5 5.5-1.5 8 0z"/></svg>Programma</button>
   <button data-tab="admin"><svg viewBox="0 0 24 24"><path d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"/><path d="M19.4 13.5l1.6 1.2-1.8 3.1-1.9-.7a7 7 0 0 1-1.9 1.1L15 20h-3.6l-.3-1.8a7 7 0 0 1-1.9-1.1l-1.9.7-1.8-3.1 1.6-1.2a7 7 0 0 1 0-2.2L5.5 10l1.8-3.1 1.9.7a7 7 0 0 1 1.9-1.1L11.4 4H15l.3 2.5a7 7 0 0 1 1.9 1.1l1.9-.7L20.9 10l-1.6 1.3a7 7 0 0 1 .1 2.2z"/></svg>Beheer</button>
 </div></nav>
 <div id="toast" role="status"></div>
@@ -305,14 +308,14 @@ const DEFAULT_COURSES = {
       si: [5,11,14,1,18,9,16,7,3, 10,2,17,8,15,4,13,12,6],
       yds:[403,339,312,415,128,325,266,355,546, 348,447,140,490,170,417,280,330,427], totalYds:6138,
       names:null, cr:70.2, slope:130, check:'',
-      founded:'1868', architect:'Old Tom Morris, James Braid (1909)', member:'Flup', memberLabel:'De baan van Flup',
+      founded:'1868', architect:'Old Tom Morris, James Braid (1909)', member:'Flup', url:'https://lundingolfclub.co.uk/',
       desc:'Een klassieke Fife-links tussen Lundin Links en Lower Largo, aan de Firth of Forth. De eerste vijf en de laatste vier holes zijn pure links langs de kust; daartussen steek je de oude spoorlijn over naar negen holes die James Braid in 1909 toevoegde. Verwacht burns, blinde tee shots, out of bounds langs de voormalige spoorbaan en greens die tot de beste van de regio horen. Lundin was jarenlang kwalificatiebaan voor The Open in St Andrews.' },
   2:{ name:'The Golf House Club, Elie', short:'Elie', dayname:'Zaterdag', day:'Zaterdag 3 oktober', date:'2026-10-03', tees:'11.00 en 11.10 uur',
       par:[4,4,3,4,4,4,4,4,4, 4,3,4,4,4,4,4,4,4],
       si: [12,3,17,6,13,7,15,1,10, 9,18,2,11,5,16,4,14,8],
       yds:null, totalYds:6009, names:null, cr:69.3, slope:121,
       check:'Stroke index per hole komt van de witte kaart. Controleer hem tegen de gele scorekaart van de club.',
-      founded:'Clubhuis 1875, golf sinds de 16e eeuw', architect:'Old Tom Morris, James Braid', member:'', memberLabel:'',
+      founded:'Clubhuis 1875, golf sinds de 16e eeuw', architect:'Old Tom Morris, James Braid', member:'Mathijs', url:'https://www.golfhouseclub.co.uk/',
       desc:'Op deze links wordt al eeuwen gegolfd en de club behoort tot de oudste ter wereld. Elie telt geen enkele par 5 en maar twee par 3’s, en is daardoor een baan van precisie in plaats van lengte. Op de eerste hole sla je blind over een heuvel; de starter kijkt met een periscoop uit een Royal Navy-onderzeeër of de fairway vrij is. Hole 10 tot en met 13 liggen spectaculair langs de zee.' },
   3:{ name:'Crail Golfing Society, Balcomie Links', short:'Crail', dayname:'Zondag', day:'Zondag 4 oktober', date:'2026-10-04', tees:'tijd volgt',
       par:[4,5,3,4,4,3,4,4,4, 4,5,5,3,3,4,3,4,3],
@@ -322,7 +325,7 @@ const DEFAULT_COURSES = {
              'Castle Yetts','Lang Whang','The Burn','Craighead','The Cave','Mill Dam','Spion Kop','Road Hole','The Quarry'],
       cr:67.6, slope:118,
       check:'Alleen hole 5 (SI 1) is bevestigd. De overige stroke indexen, rating en slope zijn voorlopig. Neem ze over van de scorekaart op de club.',
-      founded:'1786, links 1895', architect:'Old Tom Morris', member:'Serge', memberLabel:'De baan van Serge',
+      founded:'1786, links 1895', architect:'Old Tom Morris', member:'Serge', url:'https://crailgolfingsociety.co.uk/golf/balcomie-links/',
       desc:'De Crail Golfing Society is de zevende oudste golfclub ter wereld. Old Tom Morris legde Balcomie in 1895 aan op het uiterste oostpunt van Fife, met de Noordzee op vrijwel elke hole in beeld. Par 69 met zes par 3’s: kort op papier, maar de wind maakt het verschil. Let op Hell’s Hole (5), een dogleg rond de baai, en The Cave (14), een par 3 die diep naar de kust afdaalt. Het clubhuis kijkt uit over de laatste holes.' }
 };
 
@@ -332,7 +335,7 @@ let state = load();
 function load(){ try{ const s = JSON.parse(localStorage.getItem(LS)); return s ? Object.assign(blank(), s) : blank(); }catch(e){ return blank(); } }
 function save(){ try{ localStorage.setItem(LS, JSON.stringify(state)); }catch(e){ toast('Opslag op deze telefoon is vol'); } }
 
-const ui = { tab: sessionStorage.getItem('gif_tab') || 'board', round: defaultRound(), flight:'A', hole:1,
+const ui = { tab: sessionStorage.getItem('gif_tab') || 'prog', round: defaultRound(), flight:'A', hole:1,
   boardView: sessionStorage.getItem('gif_bview') || 'tot', courseMode:'list', expanded:{}, player:null,
   admin: sessionStorage.getItem('gif_admin')==='1' };
 function todayIso(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
@@ -541,12 +544,13 @@ function viewProfile(p){
   }
   h += `<h3>Scorekaarten</h3>`;
   [1,2,3].forEach(r=>{ const c=course(r), s=me.rs[r-1];
-    h += `<div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-family:var(--serif);font-size:19px;color:var(--midnight)">${esc(c.short)}</b><span class="small muted">${s.thru?`${s.pts} punten`:'Nog niet gespeeld'}</span></div>`;
+    h += `<div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-family:var(--serif);font-size:19px;color:var(--midnight)">${esc(c.short)}</b><span class="small muted">${s.thru?`${s.pts} punten`:'Nog niet gespeeld'}</span></div><div class="tiny muted">Playing handicap ${playingHcp(p,r)}. Bij de par staat hoeveel slagen je op die hole krijgt.</div>`;
     [[1,9,'Uit'],[10,18,'In']].forEach(([a,b,lbl])=>{
       let hh=`<th></th>`, par=`<td class="l">Par</td>`, si=`<td class="l">Index</td>`, g=`<td class="l">Score</td>`, pt=`<td class="l">Punten</td>`;
       let sp=0, sg=0, spt=0, ok=true;
-      for (let n=a;n<=b;n++){ const i=s.info[n-1]; hh+=`<th>${n}</th>`; par+=`<td>${i.par}</td>`;
-        si+=`<td>${i.si}${i.rc>0?`<sup style="color:var(--gold)">${'•'.repeat(Math.min(i.rc,2))}</sup>`:''}</td>`;
+      for (let n=a;n<=b;n++){ const i=s.info[n-1]; hh+=`<th>${n}</th>`;
+        par+=`<td>${i.par}${i.rc?`<span class="rc">${i.rc>0?'+':'−'}${Math.abs(i.rc)}</span>`:''}</td>`;
+        si+=`<td>${i.si}</td>`;
         sp+=i.par; g+=`<td>${has(i.s)?mark(i.s,i.par):''}</td>`; pt+=`<td>${i.pts===null?'':i.pts}</td>`;
         if (i.s>0) sg+=i.s; else ok=false; spt+=i.pts||0; }
       hh+=`<th>${lbl}</th>`; par+=`<td class="s">${sp}</td>`; si+=`<td class="s"></td>`; g+=`<td class="s">${ok?sg:''}</td>`; pt+=`<td class="s">${spt}</td>`;
@@ -554,7 +558,7 @@ function viewProfile(p){
     });
     h += `</div>`;
   });
-  return h + `<p class="tiny muted">Stipjes bij de index zijn ontvangen handicapslagen.</p>`;
+  return h;
 }
 
 /* ---- Programma ---- */
@@ -578,6 +582,7 @@ function viewProg(){
         <div><b>${String(c.cr).replace('.',',')}</b><span>Course rating</span></div><div><b>${c.par.filter(x=>x===3).length}/${c.par.filter(x=>x===4).length}/${c.par.filter(x=>x===5).length}</b><span>Par 3/4/5</span></div><div><b>${esc(String(c.founded).match(/\d{4}/)?String(c.founded).match(/\d{4}/)[0]:'')}</b><span>Opgericht</span></div></div>
       <p style="font-size:15px;color:#3F4149">${esc(c.desc)}</p>
       <p class="tiny muted">Architect: ${esc(c.architect)}.</p>
+      ${c.url?`<a class="site" href="${esc(c.url)}" target="_blank" rel="noopener">Website van ${esc(c.short)}<span aria-hidden="true">↗</span></a>`:''}
       <details class="fold ngf"><summary>Gegevens voor je NGF-scorekaart</summary>
         <dl><dt>Club</dt><dd>${esc(c.name)}</dd><dt>Land</dt><dd>Schotland</dd><dt>Datum</dt><dd>${c.day} 2026</dd><dt>Tee</dt><dd>Geel, heren</dd>
           <dt>Holes</dt><dd>18</dd><dt>Par</dt><dd>${sum(c.par)}</dd><dt>Course rating</dt><dd>${String(c.cr).replace('.',',')}</dd><dt>Slope rating</dt><dd>${c.slope}</dd><dt>Lengte</dt><dd>${meters(c).toLocaleString('nl-NL')} m</dd></dl>
