@@ -261,7 +261,7 @@ details.fold[open] summary::after{content:' −';}
 .rc-dh .num{font-size:17px}
 .rc-m{display:grid;grid-template-columns:1fr 104px 1fr;align-items:center;gap:8px;width:100%;padding:12px 12px;border:0;border-top:1px solid var(--hair2);background:none;text-align:left}
 .rc-dh + .rc-m{border-top:0}
-.rc-p{font-family:var(--serif);font-weight:600;font-size:18px;line-height:1.15;color:var(--midnight)}
+.rc-p{font-family:var(--serif);font-weight:600;font-size:18px;line-height:1.15;color:var(--ink,var(--midnight))}
 .rc-p.r{text-align:right}
 .rc-p.lost{color:#A4AFBC} .rc-p.won{text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:3px}
 .rc-s{background:var(--tc);color:var(--tf);border:1.5px solid var(--tb);border-radius:10px;padding:7px 4px;text-align:center;line-height:1.05}
@@ -309,6 +309,11 @@ details.fold[open] summary::after{content:' −';}
 .mvs{text-align:center;font-size:12px;color:var(--muted);padding:6px 0}
 .btns.col{flex-direction:column}
 .btns.col .btn{width:100%}
+.tdot{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--tc);border:2px solid var(--tf);margin-right:7px;vertical-align:1px;flex:none}
+.hrow .tdot{border-color:var(--tf)}
+.mono[data-team]{background:var(--tc);color:var(--tf);box-shadow:inset 0 0 0 2px var(--tc),inset 0 0 0 3.5px var(--tf)}
+.mono[data-team="B"]{box-shadow:0 0 0 1.5px #C9A34A,inset 0 0 0 3px #fff,inset 0 0 0 4.5px #C9A34A}
+.tname{font-weight:600}
 .stats-card{padding:4px 14px}
 .srow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--hair2)}
 .srow:first-child{border-top:0}
@@ -531,6 +536,8 @@ function statList(items){ return items.map(x=>`<div class="srow"><div><div class
 const TEAMCOL = {A:'#005EB8', B:'#A67C1B'};   /* tekstkleur per team: Schots blauw en goud (voor het witte team) */
 const TEAMBG  = {A:'#005EB8', B:'#FFFFFF'};
 const TEAMFG  = {A:'#E6C35C', B:'#A67C1B'};
+const tdot = pid => { const t = isTeams() && teamOf(pid); return t ? `<span class="tdot" style="${teamStyle(t)}" title="${esc(teamName(t))}"></span>` : ''; };
+const monoStyle = pid => { const t = isTeams() && teamOf(pid); return t ? ` style="${teamStyle(t)}" data-team="${t}"` : ''; };
 const teamStyle = t => `--tc:${TEAMBG[t]};--tf:${TEAMFG[t]};--tb:${t==='B'?'#C9A34A':TEAMBG[t]}`;
 const isTeams = () => state.settings.mode==='teams';
 function teamOf(pid){ return ((state.settings.teams||{}).members||{})[pid] || null; }
@@ -637,9 +644,9 @@ function viewTeams(){
       const sub = !s.valid ? '' : s.done ? (s.winner==='H'?'½ – ½':`${teamName(s.winner)} wint`) : s.thru ? `na ${s.thru}` : m.type==='fourball'?'Fourball':'Single';
       const wA = s.done && s.winner==='A', wB = s.done && s.winner==='B';
       h += `<button class="rc-m" data-act="rcexp" data-v="${key}">
-        <span class="rc-p ${wB?'lost':''} ${wA?'won':''}">${sideNames(m.a).map(esc).join('<br>')||'–'}</span>
+        <span class="rc-p ${wB?'lost':''} ${wA?'won':''}" style="--ink:${TEAMCOL.A}">${sideNames(m.a).map(esc).join('<br>')||'–'}</span>
         <span class="rc-s" style="${pst}"><b>${label}</b><small>${sub}</small></span>
-        <span class="rc-p r ${wA?'lost':''} ${wB?'won':''}">${sideNames(m.b).map(esc).join('<br>')||'–'}</span></button>`;
+        <span class="rc-p r ${wA?'lost':''} ${wB?'won':''}" style="--ink:${TEAMCOL.B}">${sideNames(m.b).map(esc).join('<br>')||'–'}</span></button>`;
       if (ui.expanded[key] && s.valid){
         h += `<div class="rc-x"><div class="rc-holes num">${Array.from({length:18},(_,j)=>{ const x=s.holes[j]; return `<span class="${x?'h'+x:''}" title="Hole ${j+1}">${j+1}</span>`; }).join('')}</div>
           <p class="tiny muted" style="margin:8px 0 0">Slagen in deze partij: ${[...m.a,...m.b].map(id=>`${esc(first(pById(id).name))} ${s.strokes[id]}`).join(', ')}. ${m.type==='fourball'?'Fourball met 90% van de playing handicap,':'Single met 100% van de playing handicap,'} de laagste speelt van 0.</p></div>`;
@@ -665,7 +672,7 @@ function viewBoard(){
     else {
       h += `<div class="hrow head"><span></span><span style="text-align:left">Speler</span><span>Lun</span><span>Elie</span><span>Crail</span><span style="text-align:right">Tot</span></div>`;
       rows.forEach(r=>{
-        h += `<button class="hrow ${r.pos===1&&any?'first':''}" data-act="openp" data-p="${r.p.id}"><span class="pos">${any?r.pos:''}</span><span class="nm">${esc(first(r.p.name))}<small>hcp ${fmtHcp(r.p.hcp)}</small></span>`;
+        h += `<button class="hrow ${r.pos===1&&any?'first':''}" data-act="openp" data-p="${r.p.id}"><span class="pos">${any?r.pos:''}</span><span class="nm">${tdot(r.p.id)}${esc(first(r.p.name))}<small>hcp ${fmtHcp(r.p.hcp)}</small></span>`;
         r.rs.forEach(x=>{ h += x.thru ? `<span class="rd num">${x.pts}${x.thru<18?`<sup>${x.thru}</sup>`:''}</span>` : `<span class="rd none">–</span>`; });
         h += `<span class="tot num">${any?r.main:'–'}</span></button>`;
       });
@@ -686,7 +693,7 @@ function viewBoard(){
     h += `<div class="mx"><table class="num"><thead><tr><th class="sticky">Hole</th>${c.par.map((_,i)=>`<th>${i+1}</th>`).join('')}<th>Pnt</th></tr>
       <tr><th class="sticky">Par</th>${c.par.map(x=>`<th>${x}</th>`).join('')}<th></th></tr></thead><tbody>`;
     rows.forEach(x=>{ const s=x.rs[r-1];
-      h += `<tr><td class="sticky">${esc(first(x.p.name))}</td>${s.info.map(i=>`<td>${has(i.s)?mark(i.s,i.par):'<span class="mk n">·</span>'}</td>`).join('')}<td class="tot">${s.thru?s.pts:'–'}</td></tr>`; });
+      h += `<tr><td class="sticky">${tdot(x.p.id)}${esc(first(x.p.name))}</td>${s.info.map(i=>`<td>${has(i.s)?mark(i.s,i.par):'<span class="mk n">·</span>'}</td>`).join('')}<td class="tot">${s.thru?s.pts:'–'}</td></tr>`; });
     h += `</tbody></table></div><div class="mkey"><span><span class="mk e"></span>Eagle</span><span><span class="mk b"></span>Birdie</span><span><span class="mk" style="border:1px solid var(--hair);border-radius:50%"></span>Par</span><span><span class="mk o"></span>Bogey</span><span><span class="mk d"></span>Dubbel+</span></div>`;
     return h;
   }
@@ -694,7 +701,7 @@ function viewBoard(){
   rows.forEach(x=>{ const s=x.rs[r-1], open=ui.expanded[x.p.id];
     const thru = s.thru===18 ? '<span class="thru f">F</span>' : s.thru ? `<span class="thru on num">${s.last}</span>` : '<span class="thru">–</span>';
     h += `<button class="lrow" data-act="exp" data-p="${x.p.id}" aria-expanded="${!!open}"><span class="pos">${any&&s.thru?x.pos:''}</span>
-      <span class="nm">${esc(x.p.name)}<small>PH ${playingHcp(x.p,r)}, flight ${flightOf(x.p,r)}${s.thru&&!s.pu&&s.thru===18?`, ${s.gross} bruto`:''}</small></span>${thru}
+      <span class="nm">${tdot(x.p.id)}${esc(x.p.name)}<small>${isTeams()&&teamOf(x.p.id)?`<b class="tname" style="color:${TEAMCOL[teamOf(x.p.id)]}">${esc(teamName(teamOf(x.p.id)))}</b>, `:''}PH ${playingHcp(x.p,r)}, flight ${flightOf(x.p,r)}${s.thru&&!s.pu&&s.thru===18?`, ${s.gross} bruto`:''}</small></span>${thru}
       <span class="pts num">${s.thru?s.pts:'–'}</span></button>`;
     if (open){
       h += `<div class="exp">`;
@@ -734,7 +741,8 @@ function viewScore(){
     const scTxt = !has(i.s) ? '–' : (i.s===0 ? 'streep' : i.s);
     const cls = !has(i.s) ? 'empty' : (i.s===0 ? 'pu' : (i.s < par ? 'b' : ''));
     const pc = i.pts===null ? '' : 'p'+Math.min(i.pts,4);
-    h += `<div class="prow">
+    const tt = isTeams() && teamOf(p.id);
+    h += `<div class="prow" ${tt?`style="box-shadow:inset 4px 0 0 ${tt==='A'?'#005EB8':'#C9A34A'}"`:''}>
       <div class="pname">${esc(first(p.name))}<small><span class="st">${st}</span>, ${rs.pts} pnt na ${rs.thru}</small></div>
       <button class="pm" data-act="dec" data-p="${p.id}" aria-label="Eén slag minder voor ${esc(p.name)}">−</button>
       <button class="sc num ${cls}" data-act="setpar" data-p="${p.id}" aria-label="Score ${esc(p.name)}">${scTxt}</button>
@@ -747,7 +755,7 @@ function viewScore(){
     const mine = matches(r).filter(m=>[...m.a,...m.b].some(id=>grp.some(p=>p.id===id)));
     mine.forEach(m=>{ const s=matchState(m,r); if (!s.valid) return;
       const lead = s.leader==='A'||s.leader==='B' ? s.leader : null;
-      h += `<div class="mline"><span>${sideNames(m.a).map(esc).join(' & ')} <i>tegen</i> ${sideNames(m.b).map(esc).join(' & ')}</span><b style="color:${lead?TEAMCOL[lead]:'var(--muted)'}">${s.thru ? (s.done ? (s.winner==='H'?'Gelijk':`${esc(teamName(s.winner))} ${s.text}`) : (lead?`${esc(teamName(lead))} ${s.text}`:'AS')) : 'Nog niet gestart'}</b></div>`; });
+      h += `<div class="mline"><span><b style="color:${TEAMCOL.A}">${sideNames(m.a).map(esc).join(' & ')}</b> <i>tegen</i> <b style="color:${TEAMCOL.B}">${sideNames(m.b).map(esc).join(' & ')}</b></span><b style="color:${lead?TEAMCOL[lead]:'var(--muted)'}">${s.thru ? (s.done ? (s.winner==='H'?'Gelijk':`${esc(teamName(s.winner))} ${s.text}`) : (lead?`${esc(teamName(lead))} ${s.text}`:'AS')) : 'Nog niet gestart'}</b></div>`; });
   }
   h += `<div class="holenav"><button class="btn alt" data-act="hole" data-v="${Math.max(1,hole-1)}" ${hole===1?'disabled':''}>Vorige</button><button class="btn" data-act="hole" data-v="${Math.min(18,hole+1)}" ${hole===18?'disabled':''}>Volgende hole</button></div>`;
   h += `<div class="strip num">${Array.from({length:18},(_,i)=>i+1).map(n=>{
@@ -766,8 +774,8 @@ function viewPlayers(){
   const rk = ranking('tot'), any = rk.some(r=>r.main>0 || r.rs.some(x=>x.thru));
   let h = `<h2>Spelers</h2><div class="pgrid">`;
   rk.sort((a,b)=>(a.p.sort||0)-(b.p.sort||0)).forEach(r=>{
-    h += `<button class="pcard" data-act="openp" data-p="${r.p.id}"><span class="mono">${esc(initials(r.p.name))}</span>
-      <div class="pn">${esc(r.p.name)}</div><div class="ps">Handicap ${fmtHcp(r.p.hcp)}</div>
+    h += `<button class="pcard" data-act="openp" data-p="${r.p.id}"><span class="mono"${monoStyle(r.p.id)}>${esc(initials(r.p.name))}</span>
+      <div class="pn">${esc(r.p.name)}</div><div class="ps">${isTeams()&&teamOf(r.p.id)?`<b class="tname" style="color:${TEAMCOL[teamOf(r.p.id)]}">${esc(teamName(teamOf(r.p.id)))}</b>, `:''}handicap ${fmtHcp(r.p.hcp)}</div>
       <div class="pp">${any ? `${ordinal(r.pos)} plaats, ${r.main} punten` : `PH ${[1,2,3].map(x=>playingHcp(r.p,x)).join(' / ')}`}</div></button>`;
   });
   return h + `</div><p class="tiny muted" style="margin:10px 2px">PH is de playing handicap op Lundin, Elie en Crail.</p>`;
@@ -776,7 +784,7 @@ function viewProfile(p){
   const rk = ranking('tot'), me = rk.find(r=>r.p.id===p.id), any = rk.some(r=>r.rs.some(x=>x.thru));
   const d = distribution(p), tot = sum(Object.values(d));
   let h = `<button class="back" data-act="closep">‹ Alle spelers</button>
-    <div class="prof"><span class="mono lg">${esc(initials(p.name))}</span><div class="pn">${esc(p.name)}</div>
+    <div class="prof"><span class="mono lg"${monoStyle(p.id)}>${esc(initials(p.name))}</span><div class="pn">${esc(p.name)}</div>
     <div class="small muted" style="margin-top:6px">Handicapindex ${fmtHcp(p.hcp)}</div>${isTeams()&&teamOf(p.id)?`<div class="tbadge" style="${teamStyle(teamOf(p.id))}">${esc(teamName(teamOf(p.id)))}</div>`:''}</div>
     <div class="stats"><div class="stat"><b class="num">${any?me.pos:'–'}</b><span>Positie</span></div><div class="stat"><b class="num">${me.main}</b><span>Punten</span></div><div class="stat"><b class="num">${sum(me.rs.map(x=>x.thru))}</b><span>Holes</span></div></div>`;
   h += `<div class="card">`;
@@ -910,7 +918,7 @@ function viewAdmin(){
   }
   h += `<h2>Spelers</h2><div class="card plist">`;
   ps.forEach(p=>{
-    h += `<div class="pl"><input class="t" value="${esc(p.name)}" data-chg="pname" data-p="${p.id}" aria-label="Naam">
+    h += `<div class="pl" ${isTeams()&&teamOf(p.id)?`style="border-left:4px solid ${TEAMBG[teamOf(p.id)]==='#FFFFFF'?'#C9A34A':TEAMBG[teamOf(p.id)]};padding-left:8px"`:''}><input class="t" value="${esc(p.name)}" data-chg="pname" data-p="${p.id}" aria-label="Naam">
       <input class="t num" value="${fmtHcp(p.hcp)}" inputmode="decimal" data-chg="phcp" data-p="${p.id}" aria-label="Handicapindex">
       <button class="x" data-act="pdel" data-p="${p.id}" aria-label="Verwijder ${esc(p.name)}">×</button></div>
       <div class="ch">Playing handicap: ${[1,2,3].map(r=>`${course(r).short} ${playingHcp(p,r)}`).join(', ')}</div>`;
@@ -922,7 +930,7 @@ function viewAdmin(){
   [1,2,3].forEach(r=>{ const fl=flights(r), c=course(r);
     h += `<h3 style="margin-top:${r===1?0:14}px">${esc(c.short)}, ${c.dayname.toLowerCase()}</h3>`;
     ps.forEach(p=>{ const g = fl.A.includes(p)?'A':'B';
-      h += `<div class="fl"><span>${esc(p.name)}</span><div class="seg"><button class="${g==='A'?'on':''}" data-act="fset" data-r="${r}" data-p="${p.id}" data-v="A">1</button><button class="${g==='B'?'on':''}" data-act="fset" data-r="${r}" data-p="${p.id}" data-v="B">2</button></div></div>`; });
+      h += `<div class="fl"><span>${tdot(p.id)}${esc(p.name)}</span><div class="seg"><button class="${g==='A'?'on':''}" data-act="fset" data-r="${r}" data-p="${p.id}" data-v="A">1</button><button class="${g==='B'?'on':''}" data-act="fset" data-r="${r}" data-p="${p.id}" data-v="B">2</button></div></div>`; });
   });
   h += `</div>`;
 
