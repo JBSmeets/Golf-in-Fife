@@ -272,6 +272,25 @@ details.fold[open] summary::after{content:' −';}
 .rc-holes{display:grid;grid-template-columns:repeat(9,1fr);gap:4px}
 .rc-holes span{height:24px;border-radius:6px;background:#E6ECF4;color:var(--faint);font-size:11px;display:flex;align-items:center;justify-content:center}
 .rc-holes .hA{background:#005EB8;color:#E6C35C;font-weight:600} .rc-holes .hB{background:#fff;color:#A67C1B;box-shadow:inset 0 0 0 1.5px #C9A34A;font-weight:600} .rc-holes .hH{background:#C9C3B6;color:#fff}
+.lrow.ir{grid-template-columns:34px 1fr 54px 44px}
+.wgv{justify-self:center;font-size:14px;color:var(--muted);font-weight:500}
+.h2h{overflow-x:auto;background:var(--card);border:1px solid var(--hair);border-radius:var(--r)}
+.h2h table{border-collapse:separate;border-spacing:0;width:100%}
+.h2h th,.h2h td{padding:8px 6px;text-align:center;border-bottom:1px solid var(--hair2);border-right:1px solid var(--hair2)}
+.h2h tr:last-child th,.h2h tr:last-child td{border-bottom:0}
+.h2h th.colB{background:#fff;color:#A67C1B;font-family:var(--serif);font-size:16px;font-weight:600;box-shadow:inset 0 -3px 0 #C9A34A}
+.h2h th.rowA{background:#005EB8;color:#E6C35C;font-family:var(--serif);font-size:16px;font-weight:600;text-align:left;white-space:nowrap}
+.h2h th.corner{background:#F7F9FC}
+.hc{display:inline-flex;align-items:baseline;justify-content:center;min-width:30px;height:24px;line-height:24px;border-radius:6px;font-style:normal;font-size:12px;font-weight:600;margin:2px;padding:0 3px}
+.hc sub{font-size:8px;font-weight:500;margin-left:1px;vertical-align:baseline}
+.hc.A{background:#005EB8;color:#E6C35C}
+.hc.B{background:#fff;color:#A67C1B;box-shadow:inset 0 0 0 1.5px #C9A34A}
+.hc.h{background:#C3CDD9;color:#fff}
+.hc.live{background:#fff;color:var(--golddk);box-shadow:inset 0 0 0 1.5px var(--gold);border-style:dashed}
+.hc.n{background:#EEF3F9;color:var(--faint)}
+.nomeet{color:var(--claret);font-weight:600}
+.h2h-key{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--muted);margin:8px 2px 0;align-items:center}
+.h2h-key span{display:inline-flex;align-items:center;gap:2px}
 .rc-roster{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:14px;margin-top:4px}
 .rc-roster div{background:var(--card);border:1px solid var(--hair);border-radius:12px;padding:10px 12px}
 .rc-roster .r{text-align:right}
@@ -322,7 +341,13 @@ details.fold[open] summary::after{content:' −';}
 .tm-grid{display:grid;grid-template-columns:1fr 38px 1fr;align-items:center;gap:4px}
 .tm-grid > div{min-width:0}
 .tm-vs{text-align:center;font-size:12px;color:var(--muted);font-style:italic}
-.tm .fc-p{height:58px}
+.tpan{border-radius:12px;padding:6px 6px 2px}
+.tpan em{display:block;font-style:normal;font-family:var(--serif);font-weight:600;font-size:13px;margin:0 4px 2px}
+.tpan.A{background:#005EB8} .tpan.A em{color:#E6C35C}
+.tpan.B{background:#fff;box-shadow:inset 0 0 0 1.5px #C9A34A} .tpan.B em{color:#A67C1B}
+.tm .fc-p{height:56px;margin:0 0 4px}
+.tpan.A .fc-p{background:rgba(255,255,255,.12);border:1px solid rgba(230,195,92,.55)} .tpan.A .fc-p span{color:#E6C35C} .tpan.A .fc-p small{color:#DCE9F8}
+.tpan.B .fc-p{background:#FBF7EC;border:1px solid #E6D4A6} .tpan.B .fc-p span{color:#A67C1B}
 .fmt-card{padding:10px 14px}
 .fmt-card summary{margin:0;border:0}
 .fmt-card.fold{border-top:1px solid var(--hair)}
@@ -605,17 +630,45 @@ const isTeams = () => state.settings.mode==='teams';
 function teamOf(pid){ return ((state.settings.teams||{}).members||{})[pid] || null; }
 function teamName(t){ const n=(state.settings.teams||{}).names||{}; return n[t] || (t==='A'?'Team Forth':'Team Tay'); }
 function teamPlayers(t){ return players().filter(p=>teamOf(p.id)===t); }
-function dayFormat(r){ return ((state.settings.formats||{})[r]) || (r===3?'singles':'fourball'); }
+function dayFormat(r){ return 'fourball'; }   /* elke dag: 1 fourball + 1 single */
 const FORMAT = { fourball:'Fourball', singles:'Singles' };
+/* Rotatie voor 3 tegen 3: dag r speelt speler r van elk team de single, de rest de fourball.
+   Na drie dagen heeft iedereen minstens één keer tegen iedere tegenstander gespeeld. */
 function defaultMatches(r){
-  const A=teamPlayers('A').map(p=>p.id), B=teamPlayers('B').map(p=>p.id), n=Math.max(A.length,B.length);
-  if (dayFormat(r)==='singles') return Array.from({length:n},(_,i)=>({type:'single',a:[A[i]||''],b:[B[i]||'']}));
-  const m=[{type:'fourball',a:[A[0]||'',A[1]||''],b:[B[0]||'',B[1]||'']}];
+  const A=teamPlayers('A').map(p=>p.id), B=teamPlayers('B').map(p=>p.id);
+  if (A.length===3 && B.length===3){ const i=r-1;
+    return [{type:'fourball', a:A.filter((_,j)=>j!==i), b:B.filter((_,j)=>j!==i)}, {type:'single', a:[A[i]], b:[B[i]]}]; }
+  const n=Math.max(A.length,B.length), m=[{type:'fourball',a:[A[0]||'',A[1]||''],b:[B[0]||'',B[1]||'']}];
   for (let i=2;i<n;i++) m.push({type:'single',a:[A[i]||''],b:[B[i]||'']});
   return m;
 }
-function matches(r){ const m=(state.settings.matches||{})[r]; return (m && m.length) ? m : defaultMatches(r); }
-function matchPH(pid, r, type){ const p=pById(pid); if (!p) return 0; const ph=playingHcp(p,r); return type==='fourball' ? Math.round(ph*0.9) : ph; }
+function matches(r){ const m=(state.settings.matches||{})[r]; return (m && m.length && m.some(x=>x.type==='fourball')) ? m : defaultMatches(r); }
+function matchPH(pid, r){ const p=pById(pid); return p ? playingHcp(p,r) : 0; }   /* volledige handicap */
+/* Iedereen tegen iedereen */
+function encounters(){ const out={};
+  [1,2,3].forEach(r=>matches(r).forEach(m=>{ const s=matchState(m,r); m.a.forEach(a=>m.b.forEach(b=>{ if (!a||!b) return; (out[a+'|'+b]=out[a+'|'+b]||[]).push({r,m,s}); })); }));
+  return out; }
+function missingPairs(){ const e=encounters(), out=[]; teamPlayers('A').forEach(a=>teamPlayers('B').forEach(b=>{ if (!e[a.id+'|'+b.id]) out.push([a,b]); })); return out; }
+function indivMatchRanking(){
+  const rows = [...teamPlayers('A'),...teamPlayers('B')].map(p=>({p,t:teamOf(p.id),n:0,w:0,h:0,l:0,pts:0,diff:0,live:0}));
+  const by = Object.fromEntries(rows.map(x=>[x.p.id,x]));
+  [1,2,3].forEach(r=>matches(r).forEach(m=>{ const s=matchState(m,r); if (!s.valid) return;
+    [['A',m.a],['B',m.b]].forEach(([side,ids])=>ids.forEach(id=>{ const x=by[id]; if (!x) return;
+      if (!s.done){ if (s.thru) x.live++; return; }
+      x.n++; const my = side==='A'?s.up:-s.up;
+      if (s.winner==='H'){ x.h++; x.pts+=.5; } else if (s.winner===side){ x.w++; x.pts+=1; } else x.l++;
+      x.diff += my; })); }));
+  rows.sort((a,b)=>b.pts-a.pts || b.w-a.w || b.diff-a.diff || a.p.name.localeCompare(b.p.name));
+  rows.forEach((x,i)=>{ const pr=rows[i-1]; x.pos = pr && pr.pts===x.pts && pr.w===x.w && pr.diff===x.diff ? pr.pos : i+1; });
+  return rows;
+}
+function h2hChip(e, rowSide){
+  const s=e.s;
+  let cls='n', title='nog te spelen';
+  if (s.valid && s.done){ cls = s.winner==='H' ? 'h' : s.winner; title = s.winner==='H'?'gelijk':`${teamName(s.winner)} won ${s.text}`; }
+  else if (s.valid && s.thru){ cls='live'; title=`bezig, ${s.text||'AS'} na ${s.thru}`; }
+  return `<i class="hc ${cls}" title="${esc(title)}">${e.m.type==='fourball'?'F':'S'}<sub>${['','vr','za','zo'][e.r]}</sub></i>`;
+}
 function matchState(m, r){
   const ok = m.a.length && m.b.length && [...m.a,...m.b].every(id=>id && pById(id));
   if (!ok) return {valid:false, holes:[], pts:[0,0], proj:[0,0]};
@@ -711,12 +764,27 @@ function viewTeams(){
         <span class="rc-p r ${wA?'lost':''} ${wB?'won':''}" style="--ink:${TEAMCOL.B}">${sideNames(m.b).map(esc).join('<br>')||'–'}</span></button>`;
       if (ui.expanded[key] && s.valid){
         h += `<div class="rc-x"><div class="rc-holes num">${Array.from({length:18},(_,j)=>{ const x=s.holes[j]; return `<span class="${x?'h'+x:''}" title="Hole ${j+1}">${j+1}</span>`; }).join('')}</div>
-          <p class="tiny muted" style="margin:8px 0 0">Slagen in deze partij: ${[...m.a,...m.b].map(id=>`${esc(first(pById(id).name))} ${s.strokes[id]}`).join(', ')}. ${m.type==='fourball'?'Fourball met 90% van de playing handicap,':'Single met 100% van de playing handicap,'} de laagste speelt van 0.</p></div>`;
+          <p class="tiny muted" style="margin:8px 0 0">Slagen in deze partij: ${[...m.a,...m.b].map(id=>`${esc(first(pById(id).name))} ${s.strokes[id]}`).join(', ')}. Volledige handicapverrekening: de laagste speelt van 0, de anderen krijgen het volledige verschil.</p></div>`;
       }
     });
     h += `</div>`;
   });
-  h += `<details class="fold card fmt-card" style="margin-top:0"><summary>Wat is een fourball en wat is een single?</summary>${FORMAT_HELP}</details>`;
+  const ir = indivMatchRanking(), anyDone = ir.some(x=>x.n);
+  h += `<h2>Klassement per speler</h2><div class="lb">
+    <div class="lrow head ir"><span></span><span>Speler</span><span>W-G-V</span><span style="text-align:right">Pnt</span></div>`;
+  ir.forEach(x=>{ h += `<button class="lrow ir t${x.t}" data-act="openp" data-p="${x.p.id}"><span class="pos">${anyDone?x.pos:''}</span>
+      <span class="nm">${esc(x.p.name)}<small><b class="tname" style="color:${TEAMCOL[x.t]}">${esc(teamName(x.t))}</b>, ${x.n} ${x.n===1?'partij':'partijen'}${x.n?`, holes ${x.diff>0?'+':''}${x.diff}`:''}${x.live?', nu bezig':''}</small></span>
+      <span class="wgv num">${x.w}-${x.h}-${x.l}</span><span class="pts num">${fmtPts(x.pts)||'0'}</span></button>`; });
+  h += `</div><p class="tiny muted" style="margin:8px 2px 0">Winst is 1 punt, gelijk ½. Bij gelijke punten telt het aantal overwinningen en daarna het holesaldo.</p>`;
+  const enc = encounters(), TA=teamPlayers('A'), TB=teamPlayers('B');
+  if (TA.length && TB.length){
+    h += `<h2>Iedereen tegen iedereen</h2><div class="h2h"><table><thead><tr><th class="corner"></th>${TB.map(b=>`<th class="colB">${esc(first(b.name))}</th>`).join('')}</tr></thead><tbody>`;
+    TA.forEach(a=>{ h += `<tr><th class="rowA">${esc(first(a.name))}</th>${TB.map(b=>{ const es=enc[a.id+'|'+b.id]||[]; return `<td>${es.length?es.map(e=>h2hChip(e,'A')).join(''):'<span class="nomeet">–</span>'}</td>`; }).join('')}</tr>`; });
+    h += `</tbody></table></div>
+      <div class="h2h-key"><span><i class="hc A">F</i>${esc(teamName('A'))} won</span><span><i class="hc B">F</i>${esc(teamName('B'))} won</span><span><i class="hc h">F</i>Gelijk</span><span><i class="hc live">F</i>Bezig</span><span><i class="hc n">F</i>Nog te spelen</span></div>
+      <p class="tiny muted" style="margin:4px 2px 0">F is fourball, S is single, met de dag erbij. Een streep betekent dat deze twee elkaar nog niet treffen.</p>`;
+  }
+  h += `<details class="fold card fmt-card" style="margin-top:14px"><summary>Wat is een fourball en wat is een single?</summary>${FORMAT_HELP}</details>`;
   h += `<div class="rc-roster"><div><b style="color:${TEAMCOL.A}">${esc(A)}</b>${teamPlayers('A').map(p=>`<span>${esc(p.name)}</span>`).join('')}</div><div class="r"><b style="color:${TEAMCOL.B}">${esc(B)}</b>${teamPlayers('B').map(p=>`<span>${esc(p.name)}</span>`).join('')}</div></div>`;
   return h;
 }
@@ -930,14 +998,17 @@ function viewProg(){
     <p style="margin-bottom:0">Bij gelijke stand beslist de laatste ronde, daarna de laatste 9, 6, 3 en 1 hole van die ronde.</p></div>`;
   if (isTeams()) h += `<h3>Teamwedstrijd</h3><div class="card" style="font-size:15px">
     <p style="margin-top:0">${esc(teamName('A'))} speelt tegen ${esc(teamName('B'))} in matchplay. Elke gewonnen partij is 1 punt, een gelijke partij ½ punt. Het team met de meeste punten na drie dagen wint de cup.</p>
-    <p><b>Fourball:</b> twee tegen twee, de beste nettoscore van elk duo telt per hole. 90% van de playing handicap; de laagste van de vier speelt van 0, de anderen krijgen het verschil.</p>
-    <p style="margin-bottom:0"><b>Single:</b> één tegen één met 100% van het verschil in playing handicap. Een streep verliest de hole. De individuele Stableford loopt gewoon mee.</p></div>`;
+    <p>Elke dag speelt één flight een fourball (2 tegen 2) en één flight een single (1 tegen 1). Over drie dagen speelt iedereen minstens één keer tegen iedere tegenstander.</p>
+    <p><b>Fourball:</b> twee tegen twee, de beste nettoscore van elk duo telt per hole.</p>
+    <p><b>Single:</b> één tegen één, de laagste nettoscore wint de hole.</p>
+    <p style="margin-bottom:0">Matchplay met volledige handicapverrekening: de laagste speler in de partij speelt van 0, de anderen krijgen het volledige verschil in playing handicap. Een streep verliest de hole. De individuele Stableford loopt gewoon mee.</p></div>`;
   return h;
 }
 const FORMAT_HELP = `<div class="fmt-help">
-  <div><b>Fourball</b><p>Twee tegen twee. Iedereen speelt zijn eigen bal; per hole telt alleen de beste nettoscore van elk duo. Het duo met de laagste van die twee scores wint de hole. Zo kan je maat je redden als jij een hole verknoeit. Handicap: 90% van de playing handicap, de laagste van de vier speelt van 0 en de anderen krijgen het verschil.</p></div>
-  <div><b>Single</b><p>Eén tegen één. Wie op een hole de laagste nettoscore heeft, wint die hole. Handicap: 100% van het verschil in playing handicap.</p></div>
-  <div><b>Matchplay, hoe tel je?</b><p>Je speelt om holes, niet om slagen. <i>2 up</i> betekent twee holes voor, <i>AS</i> (all square) staat gelijk. Een partij is beslist als je meer holes voor staat dan er nog te spelen zijn: <i>3&amp;2</i> is drie holes voor met nog twee te gaan. Een streep verliest de hole. Een gewonnen partij levert je team 1 punt op, gelijkspel ½ punt.</p></div>
+  <div><b>Fourball</b><p>Twee tegen twee. Iedereen speelt zijn eigen bal; per hole telt alleen de beste nettoscore van elk duo. Het duo met de laagste van die twee scores wint de hole. Zo kan je maat je redden als jij een hole verknoeit. Volledige handicap: de laagste van de vier speelt van 0, de anderen krijgen het volledige verschil.</p></div>
+  <div><b>Single</b><p>Eén tegen één. Wie op een hole de laagste nettoscore heeft, wint die hole. Volledige handicap: de laagste speelt van 0, de ander krijgt het hele verschil.</p></div>
+  <div><b>Matchplay, hoe tel je?</b><p>Je speelt om holes, niet om slagen. <i>2 up</i> betekent twee holes voor, <i>AS</i> (all square) staat gelijk. Een partij is beslist als je meer holes voor staat dan er nog te spelen zijn: <i>3&amp;2</i> is drie holes voor met nog twee te gaan. Een streep verliest de hole. Een gewonnen partij levert je team 1 punt op, gelijkspel ½ punt. Voor het individuele klassement krijgt ieder lid van het winnende duo of de winnende single 1 punt.</p></div>
+  <div><b>Iedereen tegen iedereen</b><p>Elke dag één fourball en één single. De indeling rouleert zo dat je na drie dagen tegen alle drie de tegenstanders hebt gespeeld.</p></div>
 </div>`;
 function flightCard(r){
   const c = course(r), fl = flights(r), times = (String(c.tees).match(/\d{1,2}[.:]\d{2}/g) || []);
@@ -953,7 +1024,7 @@ function flightCard(r){
           const sl = st.valid ? st.strokes[id] : null;
           return `<div class="fc-p t${t}"><span>${esc(p.name)}</span><small>PH ${playingHcp(p,r)}${sl!==null?`, ${sl===0?'speelt van 0':'krijgt '+sl}`:''}</small></div>`; };
         h += `<div class="tm"><div class="tm-type">${m.type==='fourball'?'Fourball, 2 tegen 2':'Single, 1 tegen 1'}</div>
-          <div class="tm-grid"><div>${m.a.map(id=>cell(id,'A')).join('')}</div><div class="tm-vs">tegen</div><div>${m.b.map(id=>cell(id,'B')).join('')}</div></div></div>`; });
+          <div class="tm-grid"><div class="tpan A"><em>${esc(teamName('A'))}</em>${m.a.map(id=>cell(id,'A')).join('')}</div><div class="tm-vs">tegen</div><div class="tpan B"><em>${esc(teamName('B'))}</em>${m.b.map(id=>cell(id,'B')).join('')}</div></div></div>`; });
       h += `</div>`;
     });
     return h + `</div>`;
@@ -996,11 +1067,13 @@ function viewAdmin(){
       h += `<div class="tpick"><div class="nm">${esc(p.name)}<small>hcp ${fmtHcp(p.hcp)}</small></div><div class="tg">
         <button class="${t==='A'?'onA':''}" data-act="tset" data-p="${p.id}" data-v="A" aria-pressed="${t==='A'}">Blauw</button>
         <button class="${t==='B'?'onB':''}" data-act="tset" data-p="${p.id}" data-v="B" aria-pressed="${t==='B'}">Wit</button></div></div>`; });
-    h += `</div><h2>Partijen per dag</h2>`;
+    const miss = missingPairs();
+    h += `</div><h2>Partijen per dag</h2><div class="card"><p class="small" style="margin-top:0">Elke dag speelt flight 1 een single en flight 2 een fourball, met volledige handicapverrekening.</p>
+      ${miss.length ? `<div class="note warn"><b>Nog niet iedereen tegen iedereen.</b><br>${miss.map(([a,b])=>`${esc(first(a.name))} speelt nog niet tegen ${esc(first(b.name))}`).join('<br>')}</div>` : `<div class="note">Iedereen speelt minstens één keer tegen iedere tegenstander.</div>`}
+      <div class="btns col"><button class="btn sm" data-act="rotate">Automatisch indelen: iedereen tegen iedereen</button></div></div>`;
     [1,2,3].forEach(r=>{ const c=course(r), ms=matches(r), iss=matchIssues(r);
       h += `<div class="card"><h3 style="margin-top:0">${esc(c.short)}, ${c.dayname.toLowerCase()}</h3>
-        <div class="choice sm"><button class="${dayFormat(r)==='fourball'?'on':''}" data-act="fmt" data-r="${r}" data-v="fourball"><b>Fourball</b><span>2 tegen 2, plus een single</span></button>
-        <button class="${dayFormat(r)==='singles'?'on':''}" data-act="fmt" data-r="${r}" data-v="singles"><b>Singles</b><span>Iedereen 1 tegen 1</span></button></div>`;
+`;
       ms.forEach((m,i)=>{
         const sel = (side,j,id)=>`<select class="t" data-chg="mslot" data-r="${r}" data-i="${i}" data-side="${side}" data-j="${j}" aria-label="Speler"><option value="">Kies speler</option>${teamPlayers(side==='a'?'A':'B').map(p=>`<option value="${p.id}" ${p.id===id?'selected':''}>${esc(p.name)}</option>`).join('')}</select>`;
         h += `<div class="mblock"><div class="mhd">Partij ${i+1}, ${m.type==='fourball'?'fourball':'single'}</div>
@@ -1008,7 +1081,7 @@ function viewAdmin(){
           <div class="mvs">tegen</div>
           <div class="mside" style="${teamStyle('B')}"><span>${esc(teamName('B'))}</span>${m.b.map((id,j)=>sel('b',j,id)).join('')}</div></div>`; });
       if (iss.length) h += `<div class="note warn">${iss.map(esc).join('<br>')}</div>`;
-      h += `<div class="btns col"><button class="btn sm red" data-act="mreset" data-r="${r}">Standaardindeling</button></div></div>`;
+      h += `</div>`;
     });
   }
   h += `<h2>Spelers</h2><div class="card plist">`;
@@ -1168,6 +1241,8 @@ document.addEventListener('click', async e=>{
       ui.boardView = v==='teams' ? 'teams' : 'tot'; markDirty('settings'); render(); break;
     case 'tset': { const tm=state.settings.teams=state.settings.teams||{}; tm.members=tm.members||{}; tm.members[pid]=v; markDirty('settings'); render(); break; }
     case 'fmt': { const r=b.dataset.r; state.settings.formats=state.settings.formats||{}; state.settings.formats[r]=v; if (state.settings.matches) delete state.settings.matches[r]; markDirty('settings'); render(); break; }
+    case 'rotate': if (!confirm('Alle drie de dagen opnieuw indelen zodat iedereen tegen iedereen speelt? Je huidige partijen worden overschreven.')) break;
+      state.settings.matches = {}; [1,2,3].forEach(r=>{ state.settings.matches[r] = defaultMatches(r); }); markDirty('settings'); render(); toast('Partijen ingedeeld'); break;
     case 'mreset': { const r=b.dataset.r; if (state.settings.matches) delete state.settings.matches[r]; markDirty('settings'); render(); break; }
     case 'autoflight': { const r=Number(b.dataset.r), fl = state.settings.flights = state.settings.flights || {}; fl[r] = {}; let n=0;
       matches(r).forEach(m=>{ const ids=[...m.a,...m.b].filter(Boolean); const g = (n>0 && n+ids.length>4) ? 'B' : (n>=4?'B':'A'); ids.forEach(id=>fl[r][id]=g); if (g==='A') n+=ids.length; });
