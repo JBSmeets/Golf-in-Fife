@@ -1,5 +1,5 @@
 // Golf in Fife – service worker: app keeps opening without signal
-const CACHE = 'gif-v9';
+const CACHE = 'gif-v10';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './logo.webp', './favicon.png', './apple-touch-icon.png', './icon-192.png'];
 
 self.addEventListener('install', e => {

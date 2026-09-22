@@ -44,7 +44,7 @@ button{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:tran
 .brand img{width:40px;height:40px;border-radius:50%;background:#F8F6EF;box-shadow:0 0 0 2px #fff;flex:none}
 .flag{width:30px;height:18px;border-radius:2px;flex:none;box-shadow:0 0 0 1px rgba(255,255,255,.6);display:block}
 .brand h1{font-family:var(--serif);font-weight:600;font-size:24px;line-height:1;margin:0;letter-spacing:.3px}
-.brand .sub{font-size:12px;color:#D6E4F5;margin-top:3px;letter-spacing:.3px}
+.brand .sub{white-space:nowrap;font-size:12px;color:#D6E4F5;margin-top:3px;letter-spacing:.3px}
 .pill{flex:none;display:flex;align-items:center;gap:6px;font-size:12px;border:1px solid rgba(255,255,255,.55);background:none;border-radius:999px;padding:5px 10px;color:var(--ivory)}
 .pill i{width:7px;height:7px;border-radius:50%;background:#8FBF7F;display:block}
 .pill.live i{animation:pulse 1.8s ease-in-out infinite}
@@ -242,13 +242,13 @@ details.fold[open] summary::after{content:' −';}
 .site span{color:var(--golddk)}
 .rcb{background:var(--card);border:1px solid var(--hair);border-radius:var(--r);overflow:hidden;margin-bottom:14px;text-align:center;padding-bottom:12px}
 .rc-top{display:grid;grid-template-columns:1fr 1fr}
-.rc-team{background:var(--tc);color:#fff;padding:12px 10px 10px;font-family:var(--serif);font-weight:600;font-size:21px;line-height:1.1;text-align:left}
+.rc-team{background:var(--tc);color:var(--tf);border-bottom:2px solid var(--tb);padding:12px 10px 10px;font-family:var(--serif);font-weight:600;font-size:21px;line-height:1.1;text-align:left}
 .rc-team.r{text-align:right}
 .rc-score{display:flex;align-items:center;justify-content:center;gap:18px;padding:14px 0 6px}
 .rc-score b{font-family:var(--serif);font-weight:700;font-size:64px;line-height:.9;min-width:90px}
 .rc-score b:first-child{text-align:right} .rc-score b:last-child{text-align:left}
 .rc-score i{width:1px;height:46px;background:var(--hair)}
-.rc-bar{position:relative;height:8px;margin:6px 16px 10px;background:#E6ECF4;border-radius:4px;overflow:hidden}
+.rc-bar{position:relative;height:10px;margin:6px 16px 10px;background:#E6ECF4;border-radius:4px;overflow:hidden}
 .rc-bar span{position:absolute;top:0;bottom:0}
 .rc-bar span.pj{opacity:.35}
 .rc-bar em{position:absolute;left:50%;top:-2px;bottom:-2px;width:2px;margin-left:-1px;background:var(--gold)}
@@ -264,24 +264,51 @@ details.fold[open] summary::after{content:' −';}
 .rc-p{font-family:var(--serif);font-weight:600;font-size:18px;line-height:1.15;color:var(--midnight)}
 .rc-p.r{text-align:right}
 .rc-p.lost{color:#A4AFBC} .rc-p.won{text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:3px}
-.rc-s{background:var(--sc);color:#fff;border-radius:10px;padding:7px 4px;text-align:center;line-height:1.05}
+.rc-s{background:var(--tc);color:var(--tf);border:1.5px solid var(--tb);border-radius:10px;padding:7px 4px;text-align:center;line-height:1.05}
 .rc-s b{display:block;font-size:17px;font-weight:600}
 .rc-s small{display:block;font-size:10px;opacity:.85;margin-top:2px}
 .rc-x{padding:4px 12px 12px;background:#F7F9FC}
 .rc-holes{display:grid;grid-template-columns:repeat(9,1fr);gap:4px}
 .rc-holes span{height:24px;border-radius:6px;background:#E6ECF4;color:var(--faint);font-size:11px;display:flex;align-items:center;justify-content:center}
-.rc-holes .hA{background:#1F4B8E;color:#fff} .rc-holes .hB{background:#9C2A31;color:#fff} .rc-holes .hH{background:#C9C3B6;color:#fff}
+.rc-holes .hA{background:#005EB8;color:#E6C35C;font-weight:600} .rc-holes .hB{background:#fff;color:#A67C1B;box-shadow:inset 0 0 0 1.5px #C9A34A;font-weight:600} .rc-holes .hH{background:#C9C3B6;color:#fff}
 .rc-roster{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:14px;margin-top:4px}
 .rc-roster div{background:var(--card);border:1px solid var(--hair);border-radius:12px;padding:10px 12px}
 .rc-roster .r{text-align:right}
 .rc-roster b{display:block;font-family:var(--serif);font-size:18px;margin-bottom:4px}
 .rc-roster span{display:block;color:#364252}
-.tbadge{display:inline-block;margin-top:8px;padding:3px 12px;border-radius:999px;background:var(--tc);color:#fff;font-size:13px}
+.tbadge{display:inline-block;margin-top:8px;padding:3px 12px;border-radius:999px;background:var(--tc);color:var(--tf);border:1.5px solid var(--tb);font-size:13px;font-weight:600}
 .mline{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 14px;border-top:1px solid var(--hair2);font-size:13px;background:#F7F9FC}
 .mline i{color:var(--muted)} .mline b{flex:none;font-weight:600}
 .mgrid{display:grid;grid-template-columns:1fr 40px 1fr;gap:6px;align-items:center}
 .mgrid > span{text-align:center;font-size:12px;color:var(--muted)}
 .mgrid select{margin-bottom:6px;padding:9px 6px;font-size:15px}
+.choice{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}
+.choice button{border:1.5px solid var(--hair);background:#fff;border-radius:14px;padding:14px 12px;text-align:left;min-height:96px;display:flex;flex-direction:column;justify-content:flex-start}
+.choice button b{font-family:var(--serif);font-size:21px;font-weight:600;color:var(--midnight);line-height:1.1}
+.choice button span{font-size:12.5px;color:var(--muted);margin-top:5px;line-height:1.3}
+.choice button.on{border-color:var(--saltire);background:#F2F7FD;box-shadow:0 0 0 3px rgba(0,94,184,.14)}
+.choice button.on b::after{content:' ✓';color:var(--saltire);font-family:var(--sans);font-size:16px}
+.choice.sm button{min-height:74px;padding:11px 12px}
+.choice.sm button b{font-size:19px}
+.tsum{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 4px;font-size:12px;text-align:center}
+.tsum span{background:var(--tc);color:var(--tf);border:1.5px solid var(--tb);border-radius:10px;padding:7px 4px;font-weight:600}
+.tpick{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--hair2)}
+.tpick:first-of-type{border-top:0}
+.tpick .nm{font-family:var(--serif);font-weight:600;font-size:18px;color:var(--midnight);line-height:1.15;min-width:0}
+.tpick .nm small{display:block;font-family:var(--sans);font-weight:400;font-size:12px;color:var(--muted)}
+.tpick .tg{display:flex;gap:6px;flex:none}
+.tpick .tg button{width:68px;height:46px;border-radius:12px;border:1.5px solid var(--hair);background:#fff;font-size:14px;font-weight:500;color:var(--muted)}
+.tpick .tg button.onA{background:#005EB8;border-color:#005EB8;color:#E6C35C;font-weight:600}
+.tpick .tg button.onB{background:#fff;border-color:#C9A34A;color:#A67C1B;font-weight:600;box-shadow:0 0 0 2px rgba(201,163,74,.18)}
+.mblock{border:1px solid var(--hair2);border-radius:12px;padding:10px;margin-top:12px;background:#F7F9FC}
+.mhd{font-size:13px;color:var(--muted);margin-bottom:8px}
+.mside{border-radius:10px;padding:8px;background:var(--tc);border:1.5px solid var(--tb)}
+.mside > span{display:block;font-family:var(--serif);font-weight:600;font-size:16px;color:var(--tf);margin:0 2px 6px}
+.mside select{margin-top:6px}
+.mside select:first-of-type{margin-top:0}
+.mvs{text-align:center;font-size:12px;color:var(--muted);padding:6px 0}
+.btns.col{flex-direction:column}
+.btns.col .btn{width:100%}
 .stats-card{padding:4px 14px}
 .srow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--hair2)}
 .srow:first-child{border-top:0}
@@ -328,6 +355,12 @@ input.t,select.t{width:100%;border:1px solid var(--hair);border-radius:10px;padd
 #toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--midnight);color:#fff;border:1px solid rgba(255,255,255,.4);padding:10px 16px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:88vw;z-index:30;text-align:center}
 #toast.show{opacity:1}
 @media (prefers-reduced-motion: reduce){#toast{transition:none}}
+@media (max-width:400px){
+  .brand h1{font-size:21px} .brand img{width:36px;height:36px} .brand{gap:9px}
+  .flag{width:24px;height:15px}
+  .pill{font-size:11px;padding:4px 8px;max-width:38vw;overflow:hidden;white-space:nowrap}
+  .pill span{overflow:hidden;text-overflow:ellipsis}
+}
 @media (max-width:360px){
   .prow{grid-template-columns:1fr 46px 52px 46px 34px;padding:10px 10px}
   .hrow{grid-template-columns:26px 1fr 30px 30px 30px 42px}
@@ -378,8 +411,8 @@ const DEFAULT_COURSES = {
       par:[4,4,3,4,4,4,4,4,4, 4,3,4,4,4,4,4,4,4],
       si: [12,3,17,6,13,7,15,1,10, 9,18,2,11,5,16,4,14,8],
       yds:[406,284,204,372,305,306,241,370,432, 278,131,436,371,402,303,397,434,337], totalYds:6009, names:null, cr:69.3, slope:121, check:'',
-      founded:'Clubhuis 1875, golf sinds de 16e eeuw', architect:'Old Tom Morris, James Braid', member:'Mathijs', url:'https://www.golfhouseclub.co.uk/',
-      desc:'Op deze links wordt al eeuwen gegolfd en de club behoort tot de oudste ter wereld. Elie telt geen enkele par 5 en maar twee par 3’s, en is daardoor een baan van precisie in plaats van lengte. Op de eerste hole sla je blind over een heuvel; de starter kijkt met een periscoop uit een Royal Navy-onderzeeër of de fairway vrij is. Hole 10 tot en met 13 liggen spectaculair langs de zee.' },
+      founded:'1589 (club 1875)', architect:'Old Tom Morris, James Braid', member:'Mathijs', url:'https://www.golfhouseclub.co.uk/',
+      desc:'Op deze links wordt sinds 1589 gegolfd, waarmee Elie tot de oudste golfplekken ter wereld behoort; de club zelf bestaat sinds 1875. Elie telt geen enkele par 5 en maar twee par 3’s, en is daardoor een baan van precisie in plaats van lengte. Op de eerste hole sla je blind over een heuvel; de starter kijkt met een periscoop uit een Royal Navy-onderzeeër of de fairway vrij is. Hole 10 tot en met 13 liggen spectaculair langs de zee.' },
   3:{ name:'Crail Golfing Society, Balcomie Links', short:'Crail', dayname:'Zondag', day:'Zondag 4 oktober', date:'2026-10-04', tees:'tijd volgt',
       par:[4,4,3,4,4,3,4,4,4, 4,4,5,3,3,4,3,4,3],
       si: [17,13,5,9,1,7,11,3,15, 12,16,6,2,14,18,10,4,8],
@@ -495,7 +528,10 @@ function prizeHtml(r){
 function statList(items){ return items.map(x=>`<div class="srow"><div><div class="sl">${esc(x.label)}</div><div class="sw">${esc(x.who)}</div></div><div class="sv">${esc(x.val)}</div></div>`).join(''); }
 
 /* ============ Teams & matchplay ============ */
-const TEAMCOL = {A:'#1F4B8E', B:'#9C2A31'};
+const TEAMCOL = {A:'#005EB8', B:'#A67C1B'};   /* tekstkleur per team: Schots blauw en goud (voor het witte team) */
+const TEAMBG  = {A:'#005EB8', B:'#FFFFFF'};
+const TEAMFG  = {A:'#E6C35C', B:'#A67C1B'};
+const teamStyle = t => `--tc:${TEAMBG[t]};--tf:${TEAMFG[t]};--tb:${t==='B'?'#C9A34A':TEAMBG[t]}`;
 const isTeams = () => state.settings.mode==='teams';
 function teamOf(pid){ return ((state.settings.teams||{}).members||{})[pid] || null; }
 function teamName(t){ const n=(state.settings.teams||{}).names||{}; return n[t] || (t==='A'?'Team Forth':'Team Tay'); }
@@ -584,7 +620,7 @@ function viewTeams(){
   const t = teamTotals(), A=teamName('A'), B=teamName('B');
   const tot = Math.max(t.n,1), pctA = t.a/tot*100, pctB = t.b/tot*100, ppA = (t.pa-t.a)/tot*100, ppB = (t.pb-t.b)/tot*100;
   let h = `<div class="rcb">
-    <div class="rc-top"><div class="rc-team" style="--tc:${TEAMCOL.A}"><span>${esc(A)}</span></div><div class="rc-team r" style="--tc:${TEAMCOL.B}"><span>${esc(B)}</span></div></div>
+    <div class="rc-top"><div class="rc-team" style="${teamStyle('A')}"><span>${esc(A)}</span></div><div class="rc-team r" style="${teamStyle('B')}"><span>${esc(B)}</span></div></div>
     <div class="rc-score num"><b style="color:${TEAMCOL.A}">${fmtPts(t.a)}</b><i></i><b style="color:${TEAMCOL.B}">${fmtPts(t.b)}</b></div>
     <div class="rc-bar"><span style="left:0;width:${pctA}%;background:${TEAMCOL.A}"></span><span class="pj" style="left:${pctA}%;width:${ppA}%;background:${TEAMCOL.A}"></span>
       <span style="right:0;width:${pctB}%;background:${TEAMCOL.B}"></span><span class="pj" style="right:${pctB}%;width:${ppB}%;background:${TEAMCOL.B}"></span><em></em></div>
@@ -595,13 +631,14 @@ function viewTeams(){
     const dp = ms.map(m=>matchState(m,r)).reduce((acc,s)=>[acc[0]+s.pts[0],acc[1]+s.pts[1]],[0,0]);
     h += `<div class="rc-day"><div class="rc-dh"><div><b>${c.dayname}, ${esc(c.short)}</b><span>${FORMAT[dayFormat(r)]}${dayFormat(r)==='fourball'?' met single':''}</span></div><div class="num"><b style="color:${TEAMCOL.A}">${fmtPts(dp[0])}</b> – <b style="color:${TEAMCOL.B}">${fmtPts(dp[1])}</b></div></div>`;
     ms.forEach((m,i)=>{ const s=matchState(m,r), key=`m${r}-${i}`;
-      const col = !s.valid ? '#B9B3A6' : s.done ? (s.winner==='H'?'#8A8578':TEAMCOL[s.winner]) : (s.leader==='A'||s.leader==='B') ? TEAMCOL[s.leader] : (s.thru?'#8A8578':'#D9D2C3');
+      const tm = s.valid ? (s.done ? (s.winner==='H'?null:s.winner) : (s.leader==='A'||s.leader==='B') ? s.leader : null) : null;
+      const pst = tm ? teamStyle(tm) : `--tc:${!s.valid?'#A9B6C6':s.thru?'#7F8B99':'#D3DCE7'};--tf:#fff;--tb:transparent`;
       const label = !s.valid ? 'Onvolledig' : s.done ? (s.winner==='H'?'Gelijk':s.text) : s.thru ? s.text : '–';
       const sub = !s.valid ? '' : s.done ? (s.winner==='H'?'½ – ½':`${teamName(s.winner)} wint`) : s.thru ? `na ${s.thru}` : m.type==='fourball'?'Fourball':'Single';
       const wA = s.done && s.winner==='A', wB = s.done && s.winner==='B';
       h += `<button class="rc-m" data-act="rcexp" data-v="${key}">
         <span class="rc-p ${wB?'lost':''} ${wA?'won':''}">${sideNames(m.a).map(esc).join('<br>')||'–'}</span>
-        <span class="rc-s" style="--sc:${col}"><b>${label}</b><small>${sub}</small></span>
+        <span class="rc-s" style="${pst}"><b>${label}</b><small>${sub}</small></span>
         <span class="rc-p r ${wA?'lost':''} ${wB?'won':''}">${sideNames(m.b).map(esc).join('<br>')||'–'}</span></button>`;
       if (ui.expanded[key] && s.valid){
         h += `<div class="rc-x"><div class="rc-holes num">${Array.from({length:18},(_,j)=>{ const x=s.holes[j]; return `<span class="${x?'h'+x:''}" title="Hole ${j+1}">${j+1}</span>`; }).join('')}</div>
@@ -740,7 +777,7 @@ function viewProfile(p){
   const d = distribution(p), tot = sum(Object.values(d));
   let h = `<button class="back" data-act="closep">‹ Alle spelers</button>
     <div class="prof"><span class="mono lg">${esc(initials(p.name))}</span><div class="pn">${esc(p.name)}</div>
-    <div class="small muted" style="margin-top:6px">Handicapindex ${fmtHcp(p.hcp)}</div>${isTeams()&&teamOf(p.id)?`<div class="tbadge" style="--tc:${TEAMCOL[teamOf(p.id)]}">${esc(teamName(teamOf(p.id)))}</div>`:''}</div>
+    <div class="small muted" style="margin-top:6px">Handicapindex ${fmtHcp(p.hcp)}</div>${isTeams()&&teamOf(p.id)?`<div class="tbadge" style="${teamStyle(teamOf(p.id))}">${esc(teamName(teamOf(p.id)))}</div>`:''}</div>
     <div class="stats"><div class="stat"><b class="num">${any?me.pos:'–'}</b><span>Positie</span></div><div class="stat"><b class="num">${me.main}</b><span>Punten</span></div><div class="stat"><b class="num">${sum(me.rs.map(x=>x.thru))}</b><span>Holes</span></div></div>`;
   h += `<div class="card">`;
   [1,2,3].forEach(r=>{ const c=course(r), s=me.rs[r-1];
@@ -843,24 +880,32 @@ function viewPin(){
 }
 function viewAdmin(){
   const ps = players();
-  let h = `<h2>Wedstrijdvorm</h2><div class="card"><div class="seg" style="margin-bottom:6px"><button class="${!isTeams()?'on':''}" data-act="mode" data-v="individual">Individueel</button><button class="${isTeams()?'on':''}" data-act="mode" data-v="teams">Twee teams</button></div>
-    <p class="small muted" style="margin:6px 0 0">${isTeams()?'Matchplay tussen twee teams met een Ryder Cup-scorebord. De individuele Stableford loopt mee.':'Individuele Stableford over drie rondes.'}</p></div>`;
+  let h = `<h2>Wedstrijdvorm</h2><div class="choice">
+    <button class="${!isTeams()?'on':''}" data-act="mode" data-v="individual"><b>Individueel</b><span>Stableford over drie rondes, iedereen voor zich.</span></button>
+    <button class="${isTeams()?'on':''}" data-act="mode" data-v="teams"><b>Twee teams</b><span>Matchplay met fourballs en singles, Ryder Cup-scorebord.</span></button></div>`;
   if (isTeams()){
-    h += `<h2>Teams</h2><div class="card"><div class="row2"><div><label class="f">Naam team blauw</label><input class="t" value="${esc(teamName('A'))}" data-chg="tname" data-t="A"></div><div><label class="f">Naam team rood</label><input class="t" value="${esc(teamName('B'))}" data-chg="tname" data-t="B"></div></div>
-      <label class="f">Indeling</label>`;
-    ps.forEach(p=>{ const t=teamOf(p.id);
-      h += `<div class="fl" style="grid-template-columns:1fr 150px"><span>${esc(p.name)} <span class="tiny muted">${fmtHcp(p.hcp)}</span></span><div class="seg"><button class="${t==='A'?'on':''}" style="${t==='A'?`color:${TEAMCOL.A}`:''}" data-act="tset" data-p="${p.id}" data-v="A">Blauw</button><button class="${t==='B'?'on':''}" style="${t==='B'?`color:${TEAMCOL.B}`:''}" data-act="tset" data-p="${p.id}" data-v="B">Rood</button></div></div>`; });
     const na=teamPlayers('A'), nb=teamPlayers('B'), sa=sum(na.map(p=>Number(p.hcp)||0)), sb=sum(nb.map(p=>Number(p.hcp)||0));
-    h += `<p class="small muted">${na.length} tegen ${nb.length} spelers. Totale handicapindex ${sa.toFixed(1)} tegen ${sb.toFixed(1)}.</p></div>`;
-    h += `<h2>Partijen per dag</h2>`;
+    h += `<h2>Teams</h2><div class="card">
+      <label class="f" style="margin-top:0">Naam team blauw</label><input class="t" value="${esc(teamName('A'))}" data-chg="tname" data-t="A">
+      <label class="f">Naam team wit</label><input class="t" value="${esc(teamName('B'))}" data-chg="tname" data-t="B">
+      <div class="tsum num"><span style="${teamStyle('A')}">${na.length} spelers, hcp ${sa.toFixed(1)}</span><span style="${teamStyle('B')}">${nb.length} spelers, hcp ${sb.toFixed(1)}</span></div>`;
+    ps.forEach(p=>{ const t=teamOf(p.id);
+      h += `<div class="tpick"><div class="nm">${esc(p.name)}<small>hcp ${fmtHcp(p.hcp)}</small></div><div class="tg">
+        <button class="${t==='A'?'onA':''}" data-act="tset" data-p="${p.id}" data-v="A" aria-pressed="${t==='A'}">Blauw</button>
+        <button class="${t==='B'?'onB':''}" data-act="tset" data-p="${p.id}" data-v="B" aria-pressed="${t==='B'}">Wit</button></div></div>`; });
+    h += `</div><h2>Partijen per dag</h2>`;
     [1,2,3].forEach(r=>{ const c=course(r), ms=matches(r), iss=matchIssues(r);
       h += `<div class="card"><h3 style="margin-top:0">${esc(c.short)}, ${c.dayname.toLowerCase()}</h3>
-        <div class="seg"><button class="${dayFormat(r)==='fourball'?'on':''}" data-act="fmt" data-r="${r}" data-v="fourball">Fourball</button><button class="${dayFormat(r)==='singles'?'on':''}" data-act="fmt" data-r="${r}" data-v="singles">Singles</button></div>`;
+        <div class="choice sm"><button class="${dayFormat(r)==='fourball'?'on':''}" data-act="fmt" data-r="${r}" data-v="fourball"><b>Fourball</b><span>2 tegen 2, plus een single</span></button>
+        <button class="${dayFormat(r)==='singles'?'on':''}" data-act="fmt" data-r="${r}" data-v="singles"><b>Singles</b><span>Iedereen 1 tegen 1</span></button></div>`;
       ms.forEach((m,i)=>{
-        const sel = (side,j,id)=>`<select class="t" data-chg="mslot" data-r="${r}" data-i="${i}" data-side="${side}" data-j="${j}"><option value="">Kies</option>${teamPlayers(side==='a'?'A':'B').map(p=>`<option value="${p.id}" ${p.id===id?'selected':''}>${esc(first(p.name))}</option>`).join('')}</select>`;
-        h += `<label class="f">Partij ${i+1}, ${m.type==='fourball'?'fourball':'single'}</label><div class="mgrid"><div>${m.a.map((id,j)=>sel('a',j,id)).join('')}</div><span>tegen</span><div>${m.b.map((id,j)=>sel('b',j,id)).join('')}</div></div>`; });
+        const sel = (side,j,id)=>`<select class="t" data-chg="mslot" data-r="${r}" data-i="${i}" data-side="${side}" data-j="${j}" aria-label="Speler"><option value="">Kies speler</option>${teamPlayers(side==='a'?'A':'B').map(p=>`<option value="${p.id}" ${p.id===id?'selected':''}>${esc(p.name)}</option>`).join('')}</select>`;
+        h += `<div class="mblock"><div class="mhd">Partij ${i+1}, ${m.type==='fourball'?'fourball':'single'}</div>
+          <div class="mside" style="${teamStyle('A')}"><span>${esc(teamName('A'))}</span>${m.a.map((id,j)=>sel('a',j,id)).join('')}</div>
+          <div class="mvs">tegen</div>
+          <div class="mside" style="${teamStyle('B')}"><span>${esc(teamName('B'))}</span>${m.b.map((id,j)=>sel('b',j,id)).join('')}</div></div>`; });
       if (iss.length) h += `<div class="note warn">${iss.map(esc).join('<br>')}</div>`;
-      h += `<div class="btns"><button class="btn sm alt" data-act="autoflight" data-r="${r}">Flights indelen volgens partijen</button><button class="btn sm red" data-act="mreset" data-r="${r}">Standaard</button></div></div>`;
+      h += `<div class="btns col"><button class="btn sm alt" data-act="autoflight" data-r="${r}">Flights indelen volgens partijen</button><button class="btn sm red" data-act="mreset" data-r="${r}">Standaardindeling</button></div></div>`;
     });
   }
   h += `<h2>Spelers</h2><div class="card plist">`;
