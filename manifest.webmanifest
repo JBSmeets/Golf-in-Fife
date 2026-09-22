@@ -1,10 +1,10 @@
 {
-  "name": "Golf in Fife",
-  "short_name": "Golf in Fife",
+  "name": "Golf in Five",
+  "short_name": "Golf in Five",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#F3F6FA",
+  "background_color": "#FFFFFF",
   "theme_color": "#005EB8",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },

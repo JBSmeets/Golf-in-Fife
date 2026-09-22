@@ -7,12 +7,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Golf in Fife">
+<meta name="apple-mobile-web-app-title" content="Golf in Five">
 <meta name="format-detection" content="telephone=no">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<title>Golf in Fife</title>
+<title>Golf in Five</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
@@ -41,7 +41,7 @@ button{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:tran
   padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px;box-shadow:0 1px 0 rgba(10,58,115,.25)}
 .top-in{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:12px}
 .brand{display:flex;align-items:center;gap:11px;flex:1;min-width:0}
-.brand img{width:40px;height:40px;border-radius:50%;background:#F8F6EF;box-shadow:0 0 0 2px #fff;flex:none}
+.brand img{width:40px;height:40px;border-radius:50%;background:#fff;box-shadow:0 0 0 2px #fff;flex:none;object-fit:contain;padding:2px}
 .flag{width:30px;height:18px;border-radius:2px;flex:none;box-shadow:0 0 0 1px rgba(255,255,255,.6);display:block}
 .brand h1{font-family:var(--serif);font-weight:600;font-size:24px;line-height:1;margin:0;letter-spacing:.3px}
 .brand .sub{white-space:nowrap;font-size:12px;color:#D6E4F5;margin-top:3px;letter-spacing:.3px}
@@ -214,7 +214,8 @@ details.fold[open] summary::after{content:' −';}
 /* Programme */
 .hero{text-align:center;padding:8px 0 4px}
 .saltire{display:block;width:120px;height:72px;margin:14px auto 0;border-radius:3px;box-shadow:0 2px 8px rgba(10,58,115,.25)}
-.hero img{width:min(190px,52vw);height:auto;border-radius:50%;filter:drop-shadow(0 4px 10px rgba(13,27,51,.15))}
+.hero{margin:-14px -14px 0}
+.hero img{display:block;width:100%;height:auto;background:#fff;border-bottom:1px solid var(--hair)}
 .tl{position:relative;margin:6px 0 0 6px;padding-left:18px;border-left:1px solid var(--goldlt)}
 .tl .d{position:relative;padding:0 0 16px}
 .tl .d::before{content:'';position:absolute;left:-23.5px;top:9px;width:9px;height:9px;border-radius:50%;background:var(--ivory);border:1.5px solid var(--gold)}
@@ -314,16 +315,24 @@ details.fold[open] summary::after{content:' −';}
 .mono[data-team]{background:var(--tc);color:var(--tf);box-shadow:inset 0 0 0 2px var(--tc),inset 0 0 0 3.5px var(--tf)}
 .mono[data-team="B"]{box-shadow:0 0 0 1.5px #C9A34A,inset 0 0 0 3px #fff,inset 0 0 0 4.5px #C9A34A}
 .tname{font-weight:600}
+.fmt-card{padding:10px 14px}
+.fmt-card summary{margin:0;border:0}
+.fmt-card.fold{border-top:1px solid var(--hair)}
+.fmt-help > div{padding:10px 0;border-top:1px solid var(--hair2)}
+.fmt-help > div:first-child{border-top:0}
+.fmt-help b{font-family:var(--serif);font-size:18px;color:var(--midnight)}
+.fmt-help p{font-size:14px;color:#364252;margin:3px 0 0}
 .fc{padding:12px}
 .fc-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:10px}
-.fc-top b{font-family:var(--serif);font-size:20px;color:var(--midnight)}
-.fc-top span{font-size:12px;color:var(--muted)}
+.fc-top b{font-family:var(--serif);font-size:20px;color:var(--midnight);white-space:nowrap}
+.fc-top span{font-size:12px;color:var(--muted);text-align:right}
 .fc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .fc-f{background:#F7F9FC;border:1px solid var(--hair2);border-radius:12px;padding:8px}
 .fc-h{display:flex;justify-content:space-between;align-items:baseline;margin:0 2px 6px}
 .fc-h b{font-size:14px;color:var(--midnight);font-weight:600}
 .fc-h span{font-size:13px;color:var(--golddk);font-weight:600}
-.fc-p{background:#fff;border-radius:8px;padding:6px 8px;margin-top:4px;line-height:1.15;border:1px solid var(--hair2)}
+.fc-p{background:#fff;border-radius:8px;padding:6px 8px;margin-top:4px;line-height:1.12;border:1px solid var(--hair2);height:62px;min-width:0;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+.fc-f{min-width:0}
 .fc-p span{display:block;font-family:var(--serif);font-weight:600;font-size:16px;color:var(--midnight)}
 .fc-p small{font-size:11px;color:var(--muted)}
 .fc-p.tA{background:#005EB8;border-color:#005EB8} .fc-p.tA span{color:#E6C35C} .fc-p.tA small{color:#CFE2F7}
@@ -404,7 +413,7 @@ input.t,select.t{width:100%;border:1px solid var(--hair);border-radius:10px;padd
 <header class="top">
   <div class="top-in">
     <div class="brand"><img src="logo.webp" alt="" width="40" height="40"><div>
-      <h1 style="display:flex;align-items:center;gap:9px;white-space:nowrap">Golf in Fife <svg class="flag" viewBox="0 0 50 30" aria-label="Schotse vlag" role="img"><rect width="50" height="30" fill="#005EB8"/><path d="M0 0L50 30M50 0L0 30" stroke="#fff" stroke-width="6"/></svg></h1>
+      <h1 style="display:flex;align-items:center;gap:9px;white-space:nowrap">Golf in Five <svg class="flag" viewBox="0 0 50 30" aria-label="Schotse vlag" role="img"><rect width="50" height="30" fill="#005EB8"/><path d="M0 0L50 30M50 0L0 30" stroke="#fff" stroke-width="6"/></svg></h1>
       <div class="sub">Fife, 2–4&nbsp;oktober 2026</div>
     </div></div>
     <button class="pill" id="sync" aria-live="polite"><i></i><span>Laden</span></button>
@@ -660,7 +669,7 @@ function viewTeams(){
     <div class="rc-score num"><b style="color:${TEAMCOL.A}">${fmtPts(t.a)}</b><i></i><b style="color:${TEAMCOL.B}">${fmtPts(t.b)}</b></div>
     <div class="rc-bar"><span style="left:0;width:${pctA}%;background:${TEAMCOL.A}"></span><span class="pj" style="left:${pctA}%;width:${ppA}%;background:${TEAMCOL.A}"></span>
       <span style="right:0;width:${pctB}%;background:${TEAMCOL.B}"></span><span class="pj" style="right:${pctB}%;width:${ppB}%;background:${TEAMCOL.B}"></span><em></em></div>
-    <div class="rc-need">${t.n ? (t.a>=t.need ? `${esc(A)} wint de Golf in Fife Cup` : t.b>=t.need ? `${esc(B)} wint de Golf in Fife Cup` : `${fmtPts(t.need)} punten nodig voor de winst, ${t.n} te verdelen`) : 'Stel de teams en partijen in onder Beheer'}</div>
+    <div class="rc-need">${t.n ? (t.a>=t.need ? `${esc(A)} wint de Golf in Five Cup` : t.b>=t.need ? `${esc(B)} wint de Golf in Five Cup` : `${fmtPts(t.need)} punten nodig voor de winst, ${t.n} te verdelen`) : 'Stel de teams en partijen in onder Beheer'}</div>
     ${t.live ? `<div class="rc-proj num">Live projectie ${fmtPts(t.pa)} – ${fmtPts(t.pb)}</div>` : ''}
   </div>`;
   [1,2,3].forEach(r=>{ const c=course(r), ms=matches(r);
@@ -683,6 +692,7 @@ function viewTeams(){
     });
     h += `</div>`;
   });
+  h += `<details class="fold card fmt-card" style="margin-top:0"><summary>Wat is een fourball en wat is een single?</summary>${FORMAT_HELP}</details>`;
   h += `<div class="rc-roster"><div><b style="color:${TEAMCOL.A}">${esc(A)}</b>${teamPlayers('A').map(p=>`<span>${esc(p.name)}</span>`).join('')}</div><div class="r"><b style="color:${TEAMCOL.B}">${esc(B)}</b>${teamPlayers('B').map(p=>`<span>${esc(p.name)}</span>`).join('')}</div></div>`;
   return h;
 }
@@ -803,7 +813,9 @@ function viewPlayers(){
   const ps = players();
   if (!ps.length) return `<h2>Spelers</h2><div class="card">Er zijn nog geen spelers. Voeg ze toe onder Beheer.</div>`;
   const rk = ranking('tot'), any = rk.some(r=>r.main>0 || r.rs.some(x=>x.thru));
-  let h = `<h2>Spelers</h2><div class="pgrid">`;
+  let h = `<h2>Flightindeling</h2><p class="small muted" style="margin:-4px 2px 10px">Zoals vastgesteld door de beheerder. Wijzigingen verschijnen hier direct.</p>${[1,2,3].map(flightCard).join('')}`;
+  if (isTeams()) h += `<details class="fold card fmt-card"><summary>Wat is een fourball en wat is een single?</summary>${FORMAT_HELP}</details>`;
+  h += `<h2>Spelers</h2><div class="pgrid">`;
   rk.sort((a,b)=>(a.p.sort||0)-(b.p.sort||0)).forEach(r=>{
     h += `<button class="pcard" data-act="openp" data-p="${r.p.id}"><span class="mono"${monoStyle(r.p.id)}>${esc(initials(r.p.name))}</span>
       <div class="pn">${esc(r.p.name)}</div><div class="ps">${isTeams()&&teamOf(r.p.id)?`<b class="tname" style="color:${TEAMCOL[teamOf(r.p.id)]}">${esc(teamName(teamOf(r.p.id)))}</b>, `:''}handicap ${fmtHcp(r.p.hcp)}</div>
@@ -857,7 +869,7 @@ function viewProfile(p){
 /* ---- Programma ---- */
 const LINKS_SVG = `<svg viewBox="0 0 320 120" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M0 92 C40 80 70 86 104 78 S170 66 208 74 S280 86 320 76" opacity=".9"/><path d="M0 104 C50 96 96 100 140 94 S230 86 320 92" opacity=".55"/><path d="M0 114 C60 110 120 112 180 108 S270 104 320 108" opacity=".35"/><path d="M226 74 V26"/><path d="M226 27 L248 34 L226 41" fill="currentColor" stroke="none"/><path d="M20 60 h60 M34 54 h34" opacity=".35"/></svg>`;
 function viewProg(){
-  let h = `<div class="hero"><img src="logo.webp" alt="Golf in Fife, Scotland" width="190" height="190"><svg class="saltire" viewBox="0 0 50 30" aria-hidden="true"><rect width="50" height="30" fill="#005EB8"/><path d="M0 0L50 30M50 0L0 30" stroke="#fff" stroke-width="6"/></svg></div>
+  let h = `<div class="hero"><img src="hero.webp" alt="Golf in Five, Elie. Lundin Links, Elie Links en Crail, 2026" width="1200" height="800"></div>
   <p class="lead" style="text-align:center;margin:8px 6px 4px">Zes man, drie dagen, drie historische linksbanen en 54 holes in het Kingdom of Fife. Met de Dunhill Links als toegift.</p>
   <h2>Het weekend</h2>
   <div class="tl">
@@ -865,9 +877,6 @@ function viewProg(){
     <div class="d"><h3>Zaterdag 3 oktober</h3><p><b>The Golf House Club, Elie</b>, afslag 11.00 en 11.10 uur.</p><p>Champagnelunch op de club, diner in de Kinneuchar Inn en live muziek in Station Buffet.</p></div>
     <div class="d" style="padding-bottom:4px"><h3>Zondag 4 oktober</h3><p><b>Crail Golfing Society, Balcomie Links</b>.</p><p>Afsluitende lunch op de club en door naar Edinburgh Airport voor de vlucht naar huis.</p></div>
   </div>
-  <h2>Flightindeling</h2>
-  <p class="small muted" style="margin:-4px 2px 10px">Zoals vastgesteld door de beheerder. Wijzigingen verschijnen hier direct.</p>
-  ${[1,2,3].map(flightCard).join('')}
   <h2>De banen</h2>`;
   [1,2,3].forEach(r=>{
     const c = course(r), photo = state.photos[r] && state.photos[r].data;
@@ -901,12 +910,17 @@ function viewProg(){
     <p style="margin-bottom:0"><b>Single:</b> één tegen één met 100% van het verschil in playing handicap. Een streep verliest de hole. De individuele Stableford loopt gewoon mee.</p></div>`;
   return h;
 }
+const FORMAT_HELP = `<div class="fmt-help">
+  <div><b>Fourball</b><p>Twee tegen twee. Iedereen speelt zijn eigen bal; per hole telt alleen de beste nettoscore van elk duo. Het duo met de laagste van die twee scores wint de hole. Zo kan je maat je redden als jij een hole verknoeit. Handicap: 90% van de playing handicap, de laagste van de vier speelt van 0 en de anderen krijgen het verschil.</p></div>
+  <div><b>Single</b><p>Eén tegen één. Wie op een hole de laagste nettoscore heeft, wint die hole. Handicap: 100% van het verschil in playing handicap.</p></div>
+  <div><b>Matchplay, hoe tel je?</b><p>Je speelt om holes, niet om slagen. <i>2 up</i> betekent twee holes voor, <i>AS</i> (all square) staat gelijk. Een partij is beslist als je meer holes voor staat dan er nog te spelen zijn: <i>3&amp;2</i> is drie holes voor met nog twee te gaan. Een streep verliest de hole. Een gewonnen partij levert je team 1 punt op, gelijkspel ½ punt.</p></div>
+</div>`;
 function flightCard(r){
   const c = course(r), fl = flights(r), times = (String(c.tees).match(/\d{1,2}[.:]\d{2}/g) || []);
   if (!state.players.length) return '';
   const block = (arr, i) => `<div class="fc-f"><div class="fc-h"><b>Flight ${i+1}</b><span>${times[i] ? times[i]+' uur' : 'tijd volgt'}</span></div>
     ${arr.length ? arr.map(p=>`<div class="fc-p${tcls(p.id)}"><span>${esc(p.name)}</span><small>PH ${playingHcp(p,r)}</small></div>`).join('') : '<div class="fc-p"><span class="muted">Nog niemand ingedeeld</span></div>'}</div>`;
-  let h = `<div class="card fc"><div class="fc-top"><b>${c.dayname}, ${esc(c.short)}</b>${isTeams()?`<span>${FORMAT[dayFormat(r)]}${dayFormat(r)==='fourball'?' met single':''}</span>`:''}</div>
+  let h = `<div class="card fc"><div class="fc-top"><b>${c.dayname}, ${esc(c.short)}</b>${isTeams()?`<span>${dayFormat(r)==='fourball'?'Fourball (2 tegen 2) en een single':'Singles (1 tegen 1)'}</span>`:''}</div>
     <div class="fc-grid">${block(fl.A,0)}${block(fl.B,1)}</div>`;
   if (isTeams()){
     const ms = matches(r).filter(m=>[...m.a,...m.b].every(id=>id && pById(id)));
@@ -1203,7 +1217,7 @@ async function restoreFrom(file){
 }
 async function restoreData(d){
   try{
-    if (d.app!=='golf-in-fife' || !Array.isArray(d.players)) throw new Error('Dit is geen Golf in Fife back-up.');
+    if (d.app!=='golf-in-fife' || !Array.isArray(d.players)) throw new Error('Dit is geen Golf in Five back-up.');
     if (!confirm(`Back-up van ${new Date(d.exported_at).toLocaleString('nl-NL')} terugzetten? Alle huidige gegevens worden vervangen.`)) return;
     const now = new Date().toISOString();
     state.players = d.players; state.settings = d.settings || {}; state.scores = {}; state.outbox = {};

@@ -1,6 +1,6 @@
 // Golf in Fife – service worker: app keeps opening without signal
-const CACHE = 'gif-v13';
-const SHELL = ['./', './index.html', './manifest.webmanifest', './logo.webp', './favicon.png', './apple-touch-icon.png', './icon-192.png'];
+const CACHE = 'gif-v15';
+const SHELL = ['./', './index.html', './manifest.webmanifest', './logo.webp', './hero.webp', './favicon.png', './apple-touch-icon.png', './icon-192.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
