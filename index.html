@@ -315,6 +315,14 @@ details.fold[open] summary::after{content:' −';}
 .mono[data-team]{background:var(--tc);color:var(--tf);box-shadow:inset 0 0 0 2px var(--tc),inset 0 0 0 3.5px var(--tf)}
 .mono[data-team="B"]{box-shadow:0 0 0 1.5px #C9A34A,inset 0 0 0 3px #fff,inset 0 0 0 4.5px #C9A34A}
 .tname{font-weight:600}
+.tf{background:#F7F9FC;border:1px solid var(--hair2);border-radius:12px;padding:8px;margin-top:8px}
+.tm{margin-top:6px}
+.tm + .tm{border-top:1px dashed var(--hair);padding-top:8px;margin-top:8px}
+.tm-type{font-size:12px;color:var(--muted);margin:0 2px 4px}
+.tm-grid{display:grid;grid-template-columns:1fr 38px 1fr;align-items:center;gap:4px}
+.tm-grid > div{min-width:0}
+.tm-vs{text-align:center;font-size:12px;color:var(--muted);font-style:italic}
+.tm .fc-p{height:58px}
 .fmt-card{padding:10px 14px}
 .fmt-card summary{margin:0;border:0}
 .fmt-card.fold{border-top:1px solid var(--hair)}
@@ -518,7 +526,23 @@ function ranking(view){
   rows.forEach((r,i)=>{ const prev=rows[i-1]; r.pos = (prev && prev.main===r.main && prev.tb.join()===r.tb.join()) ? prev.pos : i+1; });
   return rows;
 }
+/* Team mode: flights follow the matches. Singles tee off first, max 4 players per flight. */
+function teamFlights(r){
+  const list = matches(r).map((m,i)=>({m,i})).sort((x,y)=>(x.m.type==='single'?0:1)-(y.m.type==='single'?0:1) || x.i-y.i);
+  const out=[]; let cur=[], n=0;
+  list.forEach(x=>{ const size=x.m.a.length+x.m.b.length; if (cur.length && n+size>4){ out.push(cur); cur=[]; n=0; } cur.push(x); n+=size; });
+  if (cur.length) out.push(cur);
+  if (out.length>2) return [out[0], out.slice(1).flat()];
+  return out;
+}
 function flights(r){
+  if (isTeams()){
+    const tf = teamFlights(r), A=[], B=[];
+    (tf[0]||[]).forEach(x=>[...x.m.a,...x.m.b].forEach(id=>{ const p=pById(id); if (p && !A.includes(p)) A.push(p); }));
+    (tf[1]||[]).forEach(x=>[...x.m.a,...x.m.b].forEach(id=>{ const p=pById(id); if (p && !A.includes(p) && !B.includes(p)) B.push(p); }));
+    players().forEach(p=>{ if (!A.includes(p) && !B.includes(p)) B.push(p); });
+    return {A,B};
+  }
   const f = ((state.settings.flights||{})[r]) || {}; const ps = players(); const A=[], B=[];
   ps.forEach((p,i)=>{ const g = f[p.id] || (i<Math.ceil(ps.length/2)?'A':'B'); (g==='A'?A:B).push(p); });
   return {A,B};
@@ -672,10 +696,10 @@ function viewTeams(){
     <div class="rc-need">${t.n ? (t.a>=t.need ? `${esc(A)} wint de Golf in Five Cup` : t.b>=t.need ? `${esc(B)} wint de Golf in Five Cup` : `${fmtPts(t.need)} punten nodig voor de winst, ${t.n} te verdelen`) : 'Stel de teams en partijen in onder Beheer'}</div>
     ${t.live ? `<div class="rc-proj num">Live projectie ${fmtPts(t.pa)} – ${fmtPts(t.pb)}</div>` : ''}
   </div>`;
-  [1,2,3].forEach(r=>{ const c=course(r), ms=matches(r);
+  [1,2,3].forEach(r=>{ const c=course(r), ms=matches(r), order=teamFlights(r).flat();
     const dp = ms.map(m=>matchState(m,r)).reduce((acc,s)=>[acc[0]+s.pts[0],acc[1]+s.pts[1]],[0,0]);
     h += `<div class="rc-day"><div class="rc-dh"><div><b>${c.dayname}, ${esc(c.short)}</b><span>${FORMAT[dayFormat(r)]}${dayFormat(r)==='fourball'?' met single':''}</span></div><div class="num"><b style="color:${TEAMCOL.A}">${fmtPts(dp[0])}</b> – <b style="color:${TEAMCOL.B}">${fmtPts(dp[1])}</b></div></div>`;
-    ms.forEach((m,i)=>{ const s=matchState(m,r), key=`m${r}-${i}`;
+    order.forEach(({m,i})=>{ const s=matchState(m,r), key=`m${r}-${i}`;
       const tm = s.valid ? (s.done ? (s.winner==='H'?null:s.winner) : (s.leader==='A'||s.leader==='B') ? s.leader : null) : null;
       const pst = tm ? teamStyle(tm) : `--tc:${!s.valid?'#A9B6C6':s.thru?'#7F8B99':'#D3DCE7'};--tf:#fff;--tb:transparent`;
       const label = !s.valid ? 'Onvolledig' : s.done ? (s.winner==='H'?'Gelijk':s.text) : s.thru ? s.text : '–';
@@ -920,12 +944,22 @@ function flightCard(r){
   if (!state.players.length) return '';
   const block = (arr, i) => `<div class="fc-f"><div class="fc-h"><b>Flight ${i+1}</b><span>${times[i] ? times[i]+' uur' : 'tijd volgt'}</span></div>
     ${arr.length ? arr.map(p=>`<div class="fc-p${tcls(p.id)}"><span>${esc(p.name)}</span><small>PH ${playingHcp(p,r)}</small></div>`).join('') : '<div class="fc-p"><span class="muted">Nog niemand ingedeeld</span></div>'}</div>`;
-  let h = `<div class="card fc"><div class="fc-top"><b>${c.dayname}, ${esc(c.short)}</b>${isTeams()?`<span>${dayFormat(r)==='fourball'?'Fourball (2 tegen 2) en een single':'Singles (1 tegen 1)'}</span>`:''}</div>
-    <div class="fc-grid">${block(fl.A,0)}${block(fl.B,1)}</div>`;
   if (isTeams()){
-    const ms = matches(r).filter(m=>[...m.a,...m.b].every(id=>id && pById(id)));
-    if (ms.length) h += `<div class="fc-m">${ms.map(m=>`<div><b style="color:${TEAMCOL.A}">${sideNames(m.a).map(esc).join(' & ')}</b> <i>tegen</i> <b style="color:${TEAMCOL.B}">${sideNames(m.b).map(esc).join(' & ')}</b> <span>${m.type==='fourball'?'fourball':'single'}</span></div>`).join('')}</div>`;
+    let h = `<div class="card fc"><div class="fc-top"><b>${c.dayname}, ${esc(c.short)}</b><span>${dayFormat(r)==='fourball'?'Single en fourball':'Singles'}</span></div>`;
+    teamFlights(r).forEach((grp,fi)=>{
+      h += `<div class="tf"><div class="fc-h"><b>Flight ${fi+1}</b><span>${times[fi] ? times[fi]+' uur' : 'tijd volgt'}</span></div>`;
+      grp.forEach(({m})=>{ const st = matchState(m,r);
+        const cell = (id,t)=>{ const p=pById(id); if (!p) return `<div class="fc-p"><span class="muted">Nog niet gekozen</span></div>`;
+          const sl = st.valid ? st.strokes[id] : null;
+          return `<div class="fc-p t${t}"><span>${esc(p.name)}</span><small>PH ${playingHcp(p,r)}${sl!==null?`, ${sl===0?'speelt van 0':'krijgt '+sl}`:''}</small></div>`; };
+        h += `<div class="tm"><div class="tm-type">${m.type==='fourball'?'Fourball, 2 tegen 2':'Single, 1 tegen 1'}</div>
+          <div class="tm-grid"><div>${m.a.map(id=>cell(id,'A')).join('')}</div><div class="tm-vs">tegen</div><div>${m.b.map(id=>cell(id,'B')).join('')}</div></div></div>`; });
+      h += `</div>`;
+    });
+    return h + `</div>`;
   }
+  let h = `<div class="card fc"><div class="fc-top"><b>${c.dayname}, ${esc(c.short)}</b></div>
+    <div class="fc-grid">${block(fl.A,0)}${block(fl.B,1)}</div>`;
   return h + `</div>`;
 }
 function ngfRows(c, o){
@@ -974,7 +1008,7 @@ function viewAdmin(){
           <div class="mvs">tegen</div>
           <div class="mside" style="${teamStyle('B')}"><span>${esc(teamName('B'))}</span>${m.b.map((id,j)=>sel('b',j,id)).join('')}</div></div>`; });
       if (iss.length) h += `<div class="note warn">${iss.map(esc).join('<br>')}</div>`;
-      h += `<div class="btns col"><button class="btn sm alt" data-act="autoflight" data-r="${r}">Flights indelen volgens partijen</button><button class="btn sm red" data-act="mreset" data-r="${r}">Standaardindeling</button></div></div>`;
+      h += `<div class="btns col"><button class="btn sm red" data-act="mreset" data-r="${r}">Standaardindeling</button></div></div>`;
     });
   }
   h += `<h2>Spelers</h2><div class="card plist">`;
@@ -988,7 +1022,8 @@ function viewAdmin(){
     <div class="btns"><button class="btn sm" data-act="padd">Speler toevoegen</button></div></div>`;
 
   h += `<h2>Flights</h2><div class="card">`;
-  [1,2,3].forEach(r=>{ const fl=flights(r), c=course(r);
+  if (isTeams()) h += `<p class="small" style="margin-top:0">Bij de teamwedstrijd volgen de flights automatisch uit de partijen: de single slaat als flight 1 af, de fourball als flight 2. Pas je hierboven een partij aan, dan verandert de indeling direct mee, ook bij de score-invoer en op de spelerspagina.</p>`;
+  else [1,2,3].forEach(r=>{ const fl=flights(r), c=course(r);
     h += `<h3 style="margin-top:${r===1?0:14}px">${esc(c.short)}, ${c.dayname.toLowerCase()}</h3>`;
     ps.forEach(p=>{ const g = fl.A.includes(p)?'A':'B';
       h += `<div class="fl"><span>${tdot(p.id)}${esc(p.name)}</span><div class="seg"><button class="${g==='A'?'on':''}" data-act="fset" data-r="${r}" data-p="${p.id}" data-v="A">1</button><button class="${g==='B'?'on':''}" data-act="fset" data-r="${r}" data-p="${p.id}" data-v="B">2</button></div></div>`; });
