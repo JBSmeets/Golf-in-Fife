@@ -334,6 +334,17 @@ details.fold[open] summary::after{content:' −';}
 .mono[data-team]{background:var(--tc);color:var(--tf);box-shadow:inset 0 0 0 2px var(--tc),inset 0 0 0 3.5px var(--tf)}
 .mono[data-team="B"]{box-shadow:0 0 0 1.5px #C9A34A,inset 0 0 0 3px #fff,inset 0 0 0 4.5px #C9A34A}
 .tname{font-weight:600}
+.mc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:4px}
+.mc-top b{font-family:var(--serif);font-size:19px;color:var(--midnight);display:block}
+.mc-top span{font-size:12px;color:var(--muted)}
+.mc-top em{font-style:normal;font-weight:600;font-size:14px;text-align:right;flex:none;max-width:45%}
+.hr{display:inline-flex;width:20px;height:20px;align-items:center;justify-content:center;border-radius:5px;font-style:normal;font-size:11px;font-weight:700}
+.hr.w{background:#2F8F4E;color:#fff} .hr.l{background:#C8352B;color:#fff} .hr.h{background:#C3CDD9;color:#fff}
+table.sc-t td.rs{font-size:11px;font-weight:600;color:var(--muted)}
+table.sc-t td.rs.up{color:#2F8F4E} table.sc-t td.rs.dn{color:#C8352B}
+table.sc-t td.na{color:#C9D2DE}
+table.sc-t tr.mate td{opacity:.75}
+table.sc-t tr.stb td{font-size:11px;color:var(--faint);font-weight:500}
 .tf{background:#F7F9FC;border:1px solid var(--hair2);border-radius:12px;padding:8px;margin-top:8px}
 .tm{margin-top:6px}
 .tm + .tm{border-top:1px dashed var(--hair);padding-top:8px;margin-top:8px}
@@ -870,7 +881,7 @@ function viewScore(){
   grp.forEach(p=>{
     const i = holeInfo(p,r,hole), rs = roundStats(p,r);
     let st = i.rc>0 ? `${i.rc} ${i.rc===1?'slag':'slagen'}` : (i.rc<0 ? `geeft ${-i.rc}` : 'geen slag');
-    if (isTeams()){ const m=matchOf(p.id,r); if (m){ const ms=matchState(m,r); if (ms.valid){ const mr=received(ms.strokes[p.id], si); st += `, match ${mr>0?'+'+mr:'0'}`; } } }
+    if (isTeams()){ const m=matchOf(p.id,r); if (m){ const ms=matchState(m,r); if (ms.valid){ const mr=received(ms.strokes[p.id], si); st = mr>0 ? `${mr} ${mr===1?'slag':'slagen'} in de match` : 'geen slag in de match'; } } }
     const scTxt = !has(i.s) ? '–' : (i.s===0 ? 'streep' : i.s);
     const cls = !has(i.s) ? 'empty' : (i.s===0 ? 'pu' : (i.s < par ? 'b' : ''));
     const pc = i.pts===null ? '' : 'p'+Math.min(i.pts,4);
@@ -935,12 +946,13 @@ function viewProfile(p){
   if (isTeams() && teamOf(p.id)){
     h += `<h3>Partijen</h3><div class="card">`;
     [1,2,3].forEach(r=>{ const m=matchOf(p.id,r); if (!m) return; const s=matchState(m,r), mySide = m.a.includes(p.id)?'A':'B', opp = mySide==='A'?m.b:m.a, mate=(mySide==='A'?m.a:m.b).filter(id=>id!==p.id);
-      const res = !s.valid ? 'Onvolledig' : s.done ? (s.winner==='H'?'Gelijk':s.winner===mySide?`Gewonnen ${s.text}`:`Verloren ${s.text}`) : s.thru ? (s.leader===mySide?`${s.text} voor`:s.leader==='H'?'AS':`${s.text} achter`)+` na ${s.thru}` : 'Nog te spelen';
+      const res = !s.valid ? 'Onvolledig' : s.done ? (s.winner==='H'?'Gelijk':s.winner===mySide?`Gewonnen ${s.text}`:`Verloren ${s.text}`) : s.thru ? (s.leader==='H'?'All square':`${Math.abs(s.up)} ${s.leader===mySide?'voor':'achter'}`)+` na ${s.thru}` : 'Nog te spelen';
       h += `<div class="rsum"><div class="c">${esc(course(r).short)}, ${m.type==='fourball'?'fourball':'single'}</div><div class="d">${mate.length?`Met ${esc(sideNames(mate).join(''))} `:''}tegen ${esc(sideNames(opp).join(' & '))}</div><div class="v" style="font-size:15px;color:${s.done&&s.winner===mySide?TEAMCOL[mySide]:'var(--midnight)'}">${res}</div></div>`; });
     h += `</div>`;
   }
   h += `<h3>Scorekaarten</h3><div class="mkey"><span><span class="mk e"></span>Eagle</span><span><span class="mk b"></span>Birdie</span><span><span class="mk" style="border:1px solid var(--hair);border-radius:50%"></span>Par</span><span><span class="mk o"></span>Bogey</span><span><span class="mk d"></span>Dubbel+</span></div>`;
   [1,2,3].forEach(r=>{ const c=course(r), s=me.rs[r-1];
+    if (isTeams() && teamOf(p.id)){ const mc = matchCard(p, r); if (mc){ h += mc; return; } }
     h += `<div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b style="font-family:var(--serif);font-size:19px;color:var(--midnight)">${esc(c.short)}</b><span class="small muted">${s.thru?`${s.pts} punten`:'Nog niet gespeeld'}</span></div><div class="tiny muted">Playing handicap ${playingHcp(p,r)}. Bij de par staat hoeveel slagen je op die hole krijgt.</div>`;
     [[1,9,'Uit'],[10,18,'In']].forEach(([a,b,lbl])=>{
       let hh=`<th></th>`, par=`<td class="l">Par</td>`, si=`<td class="l">Index</td>`, g=`<td class="l">Score</td>`, pt=`<td class="l">Punten</td>`;
@@ -956,6 +968,43 @@ function viewProfile(p){
     h += `</div>`;
   });
   return h;
+}
+
+/* Matchplay-scorekaart voor de teamwedstrijd */
+function matchCard(p, r){
+  const m = matchOf(p.id, r); if (!m) return '';
+  const st = matchState(m, r); if (!st.valid) return '';
+  const c = course(r), side = m.a.includes(p.id)?'A':'B', other = side==='A'?'B':'A';
+  const mates = (side==='A'?m.a:m.b).filter(id=>id!==p.id), opps = side==='A'?m.b:m.a;
+  const myStrokes = st.strokes[p.id];
+  const res = st.done ? (st.winner==='H'?'Gelijk':st.winner===side?`Gewonnen ${st.text}`:`Verloren ${st.text}`)
+            : st.thru ? (st.leader==='H'?'All square':`${Math.abs(st.up)} ${st.leader===side?'voor':'achter'}`)+` na ${st.thru}` : 'Nog te spelen';
+  const resCol = st.done && st.winner===side ? TEAMCOL[side] : st.done && st.winner===other ? 'var(--claret)' : 'var(--midnight)';
+  let h = `<div class="card mcard"><div class="mc-top"><div><b>${esc(c.short)}</b><span>${m.type==='fourball'?'Fourball':'Single'}${mates.length?` met ${esc(sideNames(mates).join(''))}`:''} tegen ${esc(sideNames(opps).join(' & '))}</span></div><em style="color:${resCol}">${res}</em></div>
+    <div class="tiny muted">Je krijgt ${myStrokes===0?'geen slagen (je speelt van 0)':myStrokes===1?'1 slag':myStrokes+' slagen'} in deze partij, volledige handicapverrekening. Bij de par staat op welke holes.</div>`;
+  let running = 0; const runAt = [];
+  for (let h2=0; h2<18; h2++){ const x=st.holes[h2]; if (x){ running += x===side?1:x===other?-1:0; runAt.push(running); } else runAt.push(null); }
+  const decidedAt = st.done ? st.thru : 99;
+  [[1,9,'Uit'],[10,18,'In']].forEach(([a,b,lbl])=>{
+    let hh=`<th></th>`, par=`<td class="l">Par</td>`, si=`<td class="l">Index</td>`, g=`<td class="l">${esc(first(p.name))}</td>`, pg=mates.length?`<td class="l">${esc(first(pById(mates[0]).name))}</td>`:'',
+        ores=`<td class="l">Hole</td>`, run=`<td class="l">Stand</td>`, stb=`<td class="l">Stbf</td>`;
+    let sp=0, won=0, lost=0, sg=0, ok=true, spt=0;
+    for (let n=a;n<=b;n++){ const i=holeInfo(p,r,n), mr=received(myStrokes, c.si[n-1]), x=st.holes[n-1], rv=runAt[n-1];
+      hh+=`<th>${n}</th>`; sp+=i.par;
+      par+=`<td>${i.par}${mr?`<span class="rc">+${mr}</span>`:''}</td>`; si+=`<td>${i.si}</td>`;
+      g+=`<td>${has(i.s)?mark(i.s,i.par):''}</td>`; if (i.s>0) sg+=i.s; else ok=false;
+      if (mates.length){ const ms=getS(mates[0],r,n), mrc=received(st.strokes[mates[0]], c.si[n-1]); pg+=`<td>${has(ms)?mark(ms,i.par):''}${has(ms)&&mrc?`<span class="rc">+${mrc}</span>`:''}</td>`; }
+      if (n>decidedAt){ ores+=`<td class="na">·</td>`; run+=`<td class="na"></td>`; }
+      else { ores+= x ? `<td><i class="hr ${x===side?'w':x===other?'l':'h'}">${x===side?'W':x===other?'V':'G'}</i></td>` : '<td></td>';
+        if (x===side) won++; if (x===other) lost++;
+        run+= rv===null ? '<td></td>' : `<td class="rs ${rv>0?'up':rv<0?'dn':''}">${rv>0?rv+'↑':rv<0?(-rv)+'↓':'AS'}</td>`; }
+      stb+=`<td>${i.pts===null?'':i.pts}</td>`; spt+=i.pts||0;
+    }
+    hh+=`<th>${lbl}</th>`; par+=`<td class="s">${sp}</td>`; si+=`<td class="s"></td>`; g+=`<td class="s">${ok?sg:''}</td>`; if (mates.length) pg+=`<td class="s"></td>`;
+    ores+=`<td class="s">${won}-${lost}</td>`; run+=`<td class="s"></td>`; stb+=`<td class="s">${spt}</td>`;
+    h += `<div class="cardwrap"><table class="sc-t num"><thead><tr>${hh}</tr></thead><tbody><tr>${par}</tr><tr>${si}</tr><tr>${g}</tr>${mates.length?`<tr class="mate">${pg}</tr>`:''}<tr>${ores}</tr><tr>${run}</tr><tr class="p stb">${stb}</tr></tbody></table></div>`;
+  });
+  return h + `<div class="mkey" style="margin-top:4px"><span><i class="hr w">W</i>Hole gewonnen</span><span><i class="hr l">V</i>Verloren</span><span><i class="hr h">G</i>Gelijk</span><span>↑ voor, ↓ achter</span></div></div>`;
 }
 
 /* ---- Programma ---- */
