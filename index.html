@@ -314,6 +314,33 @@ details.fold[open] summary::after{content:' −';}
 .mono[data-team]{background:var(--tc);color:var(--tf);box-shadow:inset 0 0 0 2px var(--tc),inset 0 0 0 3.5px var(--tf)}
 .mono[data-team="B"]{box-shadow:0 0 0 1.5px #C9A34A,inset 0 0 0 3px #fff,inset 0 0 0 4.5px #C9A34A}
 .tname{font-weight:600}
+.fc{padding:12px}
+.fc-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:10px}
+.fc-top b{font-family:var(--serif);font-size:20px;color:var(--midnight)}
+.fc-top span{font-size:12px;color:var(--muted)}
+.fc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fc-f{background:#F7F9FC;border:1px solid var(--hair2);border-radius:12px;padding:8px}
+.fc-h{display:flex;justify-content:space-between;align-items:baseline;margin:0 2px 6px}
+.fc-h b{font-size:14px;color:var(--midnight);font-weight:600}
+.fc-h span{font-size:13px;color:var(--golddk);font-weight:600}
+.fc-p{background:#fff;border-radius:8px;padding:6px 8px;margin-top:4px;line-height:1.15;border:1px solid var(--hair2)}
+.fc-p span{display:block;font-family:var(--serif);font-weight:600;font-size:16px;color:var(--midnight)}
+.fc-p small{font-size:11px;color:var(--muted)}
+.fc-p.tA{background:#005EB8;border-color:#005EB8} .fc-p.tA span{color:#E6C35C} .fc-p.tA small{color:#CFE2F7}
+.fc-p.tB{background:#fff;border:1.5px solid #C9A34A} .fc-p.tB span{color:#A67C1B}
+.fc-m{margin-top:10px;border-top:1px solid var(--hair2);padding-top:8px;font-size:13px}
+.fc-m div{padding:3px 0} .fc-m i{color:var(--muted)} .fc-m span{color:var(--faint);font-size:12px}
+.tleg{display:flex;gap:8px;margin:0 0 10px}
+.tleg span{flex:1;text-align:center;padding:7px 6px;border-radius:10px;background:var(--tc);color:var(--tf);border:1.5px solid var(--tb);font-family:var(--serif);font-weight:600;font-size:16px}
+.hrow.tA{box-shadow:inset 5px 0 0 #E6C35C;background:rgba(0,94,184,.55)}
+.hrow.tB{box-shadow:inset 5px 0 0 #fff;background:rgba(255,255,255,.07)}
+.hrow.tA .tlab{color:#E6C35C} .hrow.tB .tlab{color:#fff}
+.hrow + .hrow{margin-top:2px}
+.hrow.tA,.hrow.tB{border-radius:6px}
+.lrow.tA{box-shadow:inset 5px 0 0 #005EB8;background:linear-gradient(90deg,rgba(0,94,184,.07),transparent 60%)}
+.lrow.tB{box-shadow:inset 5px 0 0 #C9A34A;background:linear-gradient(90deg,rgba(201,163,74,.10),transparent 60%)}
+.mx tr.tA .sticky{box-shadow:inset 4px 0 0 #005EB8;color:#005EB8}
+.mx tr.tB .sticky{box-shadow:inset 4px 0 0 #C9A34A;color:#A67C1B}
 .stats-card{padding:4px 14px}
 .srow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--hair2)}
 .srow:first-child{border-top:0}
@@ -537,6 +564,8 @@ const TEAMCOL = {A:'#005EB8', B:'#A67C1B'};   /* tekstkleur per team: Schots bla
 const TEAMBG  = {A:'#005EB8', B:'#FFFFFF'};
 const TEAMFG  = {A:'#E6C35C', B:'#A67C1B'};
 const tdot = pid => { const t = isTeams() && teamOf(pid); return t ? `<span class="tdot" style="${teamStyle(t)}" title="${esc(teamName(t))}"></span>` : ''; };
+const tcls = pid => { const t = isTeams() && teamOf(pid); return t ? ' t'+t : ''; };
+const tlegend = () => isTeams() ? `<div class="tleg"><span style="${teamStyle('A')}">${esc(teamName('A'))}</span><span style="${teamStyle('B')}">${esc(teamName('B'))}</span></div>` : '';
 const monoStyle = pid => { const t = isTeams() && teamOf(pid); return t ? ` style="${teamStyle(t)}" data-team="${t}"` : ''; };
 const teamStyle = t => `--tc:${TEAMBG[t]};--tf:${TEAMFG[t]};--tb:${t==='B'?'#C9A34A':TEAMBG[t]}`;
 const isTeams = () => state.settings.mode==='teams';
@@ -667,12 +696,13 @@ function viewBoard(){
   if (ui.boardView==='tot'){
     const any = rows.some(r=>r.rs.some(x=>x.thru>0));
     h += `<div class="meta"><span>Stableford over 54 holes</span><span>Bijgewerkt ${upd}</span></div>`;
+    h += tlegend();
     h += `<div class="honours"><p class="ttl">Klassement</p><p class="st">${any?'Stand na '+['','Lundin','Elie','Crail'][lastPlayedRound()]:'Eerste afslag vrijdag om 11.00 uur'}</p>`;
     if (!rows.length) h += `<div class="empty">Voeg de spelers toe onder Beheer.</div>`;
     else {
       h += `<div class="hrow head"><span></span><span style="text-align:left">Speler</span><span>Lun</span><span>Elie</span><span>Crail</span><span style="text-align:right">Tot</span></div>`;
       rows.forEach(r=>{
-        h += `<button class="hrow ${r.pos===1&&any?'first':''}" data-act="openp" data-p="${r.p.id}"><span class="pos">${any?r.pos:''}</span><span class="nm">${tdot(r.p.id)}${esc(first(r.p.name))}<small>hcp ${fmtHcp(r.p.hcp)}</small></span>`;
+        h += `<button class="hrow ${r.pos===1&&any?'first':''}${tcls(r.p.id)}" data-act="openp" data-p="${r.p.id}"><span class="pos">${any?r.pos:''}</span><span class="nm">${esc(first(r.p.name))}<small>${isTeams()&&teamOf(r.p.id)?`<b class="tlab">${esc(teamName(teamOf(r.p.id)))}</b>`:`hcp ${fmtHcp(r.p.hcp)}`}</small></span>`;
         r.rs.forEach(x=>{ h += x.thru ? `<span class="rd num">${x.pts}${x.thru<18?`<sup>${x.thru}</sup>`:''}</span>` : `<span class="rd none">–</span>`; });
         h += `<span class="tot num">${any?r.main:'–'}</span></button>`;
       });
@@ -693,15 +723,16 @@ function viewBoard(){
     h += `<div class="mx"><table class="num"><thead><tr><th class="sticky">Hole</th>${c.par.map((_,i)=>`<th>${i+1}</th>`).join('')}<th>Pnt</th></tr>
       <tr><th class="sticky">Par</th>${c.par.map(x=>`<th>${x}</th>`).join('')}<th></th></tr></thead><tbody>`;
     rows.forEach(x=>{ const s=x.rs[r-1];
-      h += `<tr><td class="sticky">${tdot(x.p.id)}${esc(first(x.p.name))}</td>${s.info.map(i=>`<td>${has(i.s)?mark(i.s,i.par):'<span class="mk n">·</span>'}</td>`).join('')}<td class="tot">${s.thru?s.pts:'–'}</td></tr>`; });
+      h += `<tr class="${tcls(x.p.id).trim()}"><td class="sticky">${esc(first(x.p.name))}</td>${s.info.map(i=>`<td>${has(i.s)?mark(i.s,i.par):'<span class="mk n">·</span>'}</td>`).join('')}<td class="tot">${s.thru?s.pts:'–'}</td></tr>`; });
     h += `</tbody></table></div><div class="mkey"><span><span class="mk e"></span>Eagle</span><span><span class="mk b"></span>Birdie</span><span><span class="mk" style="border:1px solid var(--hair);border-radius:50%"></span>Par</span><span><span class="mk o"></span>Bogey</span><span><span class="mk d"></span>Dubbel+</span></div>`;
     return h;
   }
+  h += tlegend();
   h += `<div class="lb"><div class="lrow head"><span></span><span>Speler</span><span>Hole</span><span style="text-align:right">Pnt</span></div>`;
   rows.forEach(x=>{ const s=x.rs[r-1], open=ui.expanded[x.p.id];
     const thru = s.thru===18 ? '<span class="thru f">F</span>' : s.thru ? `<span class="thru on num">${s.last}</span>` : '<span class="thru">–</span>';
-    h += `<button class="lrow" data-act="exp" data-p="${x.p.id}" aria-expanded="${!!open}"><span class="pos">${any&&s.thru?x.pos:''}</span>
-      <span class="nm">${tdot(x.p.id)}${esc(x.p.name)}<small>${isTeams()&&teamOf(x.p.id)?`<b class="tname" style="color:${TEAMCOL[teamOf(x.p.id)]}">${esc(teamName(teamOf(x.p.id)))}</b>, `:''}PH ${playingHcp(x.p,r)}, flight ${flightOf(x.p,r)}${s.thru&&!s.pu&&s.thru===18?`, ${s.gross} bruto`:''}</small></span>${thru}
+    h += `<button class="lrow${tcls(x.p.id)}" data-act="exp" data-p="${x.p.id}" aria-expanded="${!!open}"><span class="pos">${any&&s.thru?x.pos:''}</span>
+      <span class="nm">${esc(x.p.name)}<small>${isTeams()&&teamOf(x.p.id)?`<b class="tname" style="color:${TEAMCOL[teamOf(x.p.id)]}">${esc(teamName(teamOf(x.p.id)))}</b>, `:''}PH ${playingHcp(x.p,r)}, flight ${flightOf(x.p,r)}${s.thru&&!s.pu&&s.thru===18?`, ${s.gross} bruto`:''}</small></span>${thru}
       <span class="pts num">${s.thru?s.pts:'–'}</span></button>`;
     if (open){
       h += `<div class="exp">`;
@@ -834,6 +865,9 @@ function viewProg(){
     <div class="d"><h3>Zaterdag 3 oktober</h3><p><b>The Golf House Club, Elie</b>, afslag 11.00 en 11.10 uur.</p><p>Champagnelunch op de club, diner in de Kinneuchar Inn en live muziek in Station Buffet.</p></div>
     <div class="d" style="padding-bottom:4px"><h3>Zondag 4 oktober</h3><p><b>Crail Golfing Society, Balcomie Links</b>.</p><p>Afsluitende lunch op de club en door naar Edinburgh Airport voor de vlucht naar huis.</p></div>
   </div>
+  <h2>Flightindeling</h2>
+  <p class="small muted" style="margin:-4px 2px 10px">Zoals vastgesteld door de beheerder. Wijzigingen verschijnen hier direct.</p>
+  ${[1,2,3].map(flightCard).join('')}
   <h2>De banen</h2>`;
   [1,2,3].forEach(r=>{
     const c = course(r), photo = state.photos[r] && state.photos[r].data;
@@ -866,6 +900,19 @@ function viewProg(){
     <p><b>Fourball:</b> twee tegen twee, de beste nettoscore van elk duo telt per hole. 90% van de playing handicap; de laagste van de vier speelt van 0, de anderen krijgen het verschil.</p>
     <p style="margin-bottom:0"><b>Single:</b> één tegen één met 100% van het verschil in playing handicap. Een streep verliest de hole. De individuele Stableford loopt gewoon mee.</p></div>`;
   return h;
+}
+function flightCard(r){
+  const c = course(r), fl = flights(r), times = (String(c.tees).match(/\d{1,2}[.:]\d{2}/g) || []);
+  if (!state.players.length) return '';
+  const block = (arr, i) => `<div class="fc-f"><div class="fc-h"><b>Flight ${i+1}</b><span>${times[i] ? times[i]+' uur' : 'tijd volgt'}</span></div>
+    ${arr.length ? arr.map(p=>`<div class="fc-p${tcls(p.id)}"><span>${esc(p.name)}</span><small>PH ${playingHcp(p,r)}</small></div>`).join('') : '<div class="fc-p"><span class="muted">Nog niemand ingedeeld</span></div>'}</div>`;
+  let h = `<div class="card fc"><div class="fc-top"><b>${c.dayname}, ${esc(c.short)}</b>${isTeams()?`<span>${FORMAT[dayFormat(r)]}${dayFormat(r)==='fourball'?' met single':''}</span>`:''}</div>
+    <div class="fc-grid">${block(fl.A,0)}${block(fl.B,1)}</div>`;
+  if (isTeams()){
+    const ms = matches(r).filter(m=>[...m.a,...m.b].every(id=>id && pById(id)));
+    if (ms.length) h += `<div class="fc-m">${ms.map(m=>`<div><b style="color:${TEAMCOL.A}">${sideNames(m.a).map(esc).join(' & ')}</b> <i>tegen</i> <b style="color:${TEAMCOL.B}">${sideNames(m.b).map(esc).join(' & ')}</b> <span>${m.type==='fourball'?'fourball':'single'}</span></div>`).join('')}</div>`;
+  }
+  return h + `</div>`;
 }
 function ngfRows(c, o){
   const par=c.par.slice(o,o+9), si=c.si.slice(o,o+9), m=c.yds?c.yds.slice(o,o+9).map(y=>y?Math.round(y*YD):''):Array(9).fill('');
