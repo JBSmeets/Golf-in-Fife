@@ -154,6 +154,9 @@ button.hrow{width:100%;background:none;border-left:0;border-right:0;border-botto
 .ptsb{text-align:center;font-weight:600;font-size:20px;color:var(--midnight);line-height:1}
 .ptsb small{display:block;font-size:10px;font-weight:400;color:var(--muted);margin-top:2px}
 .ptsb.p0{color:var(--claret)} .ptsb.p3{color:var(--green)} .ptsb.p4{color:var(--golddk)}
+.plinks{grid-column:1/-1;display:flex;gap:18px;margin-top:-6px}
+.plinks .pu-link{margin-top:0}
+.pu-link.clr{color:var(--claret)}
 .pu-link{grid-column:1/2;justify-self:start;margin-top:-6px;border:0;background:none;color:var(--muted);font-size:13px;text-decoration:underline;text-underline-offset:2px;padding:4px 0}
 .holenav{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;padding:0 14px 14px}
 .btn{border:1px solid var(--midnight);background:var(--midnight);color:#fff;border-radius:12px;padding:13px 14px;font-weight:500;font-size:16px;min-height:48px}
@@ -892,7 +895,7 @@ function viewScore(){
       <button class="sc num ${cls}" data-act="setpar" data-p="${p.id}" aria-label="Score ${esc(p.name)}">${scTxt}</button>
       <button class="pm" data-act="inc" data-p="${p.id}" aria-label="Eén slag meer voor ${esc(p.name)}">+</button>
       <div class="ptsb num ${pc}">${i.pts===null?'':i.pts}<small>${i.pts===null?'':'pnt'}</small></div>
-      <button class="pu-link" data-act="pickup" data-p="${p.id}">${i.s===0?'Streep weghalen':'Streep'}</button>
+      <div class="plinks"><button class="pu-link" data-act="pickup" data-p="${p.id}">${i.s===0?'Streep weghalen':'Streep'}</button>${has(i.s)?`<button class="pu-link clr" data-act="clear" data-p="${p.id}" aria-label="Score van ${esc(p.name)} op deze hole wissen">Wissen</button>`:''}</div>
     </div>`;
   });
   if (isTeams()){
@@ -1268,6 +1271,7 @@ document.addEventListener('click', async e=>{
     case 'setpar': { const s=getS(pid,ui.round,ui.hole); if (!has(s)) setScore(pid, par); break; }
     case 'inc': { const s=getS(pid,ui.round,ui.hole); setScore(pid, (!has(s)||s===0) ? par : Math.min(15, s+1)); break; }
     case 'dec': { const s=getS(pid,ui.round,ui.hole); setScore(pid, (!has(s)||s===0) ? par-1 : Math.max(1, s-1)); break; }
+    case 'clear': { if (has(getS(pid,ui.round,ui.hole))){ setScore(pid, null); toast('Score gewist'); } break; }
     case 'pickup': { const s=getS(pid,ui.round,ui.hole); setScore(pid, s===0 ? null : 0); break; }
     case 'copyngf': { const t=ngfText(Number(b.dataset.r)); try{ await navigator.clipboard.writeText(t); toast('Gegevens gekopieerd'); }catch(err){ toast('Kopiëren lukt niet op dit toestel'); } break; }
     case 'unlock': { const pin = $('#pin').value.trim(); if (pin === String(state.settings.pin||DEFAULT_PIN)){ ui.admin=true; sessionStorage.setItem('gif_admin','1'); render(); } else toast('Onjuiste pincode'); break; }
