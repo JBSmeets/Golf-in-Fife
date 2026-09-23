@@ -351,6 +351,8 @@ details.fold[open] summary::after{content:' −';}
 .mc-top b{font-family:var(--serif);font-size:19px;color:var(--midnight);display:block}
 .mc-top span{font-size:12px;color:var(--muted)}
 .mc-top em{font-style:normal;font-weight:600;font-size:14px;text-align:right;flex:none;max-width:45%}
+.hr.win{box-shadow:0 0 0 1.5px #C9A34A}
+table.sc-t td .hr{display:block;margin:2px auto 0}
 .hr{display:inline-flex;width:20px;height:20px;align-items:center;justify-content:center;border-radius:5px;font-style:normal;font-size:11px;font-weight:700}
 .hr.w{background:#2F8F4E;color:#fff} .hr.l{background:#C8352B;color:#fff} .hr.h{background:#C3CDD9;color:#fff}
 table.sc-t td.rs{font-size:11px;font-weight:600;color:var(--muted)}
@@ -1013,6 +1015,14 @@ function matchCard(p, r){
   const resCol = st.done && st.winner===side ? TEAMCOL[side] : st.done && st.winner===other ? 'var(--claret)' : 'var(--midnight)';
   let h = `<div class="card mcard"><div class="mc-top"><div><b>${esc(c.short)}</b><span>${m.type==='fourball'?'Fourball':'Single'}${mates.length?` met ${esc(sideNames(mates).join(''))}`:''} tegen ${esc(sideNames(opps).join(' & '))}</span></div><em style="color:${resCol}">${res}</em></div>
     <div class="tiny muted">Je krijgt ${myStrokes===0?'geen slagen (je speelt van 0)':myStrokes===1?'1 slag':myStrokes+' slagen'} in deze partij, volledige handicapverrekening. Bij de par staat op welke holes.</div>`;
+  const netOf = (id,n)=>{ const g=getS(id,r,n); if (!has(g)) return null; if (g===0) return Infinity; return g-received(st.strokes[id], c.si[n-1]); };
+  const mySide = [p.id, ...mates];
+  const ballChip = (id,n)=>{ const x=st.holes[n-1]; if (!x) return '';
+    const nets = mySide.map(i=>netOf(i,n)).filter(v=>v!==null); if (!nets.length) return '';
+    const best = Math.min(...nets), mine = netOf(id,n);
+    if (x===side && mine===best) return `<span class="hr w win">W</span>`;
+    if (x==='H') return `<span class="hr h">G</span>`;
+    return ''; };
   let running = 0; const runAt = [];
   for (let h2=0; h2<18; h2++){ const x=st.holes[h2]; if (x){ running += x===side?1:x===other?-1:0; runAt.push(running); } else runAt.push(null); }
   const decidedAt = st.done ? st.thru : 99;
@@ -1023,8 +1033,8 @@ function matchCard(p, r){
     for (let n=a;n<=b;n++){ const i=holeInfo(p,r,n), mr=received(myStrokes, c.si[n-1]), x=st.holes[n-1], rv=runAt[n-1];
       hh+=`<th>${n}</th>`; sp+=i.par;
       par+=`<td>${i.par}${mr?`<span class="rc">+${mr}</span>`:''}</td>`; si+=`<td>${i.si}</td>`;
-      g+=`<td>${has(i.s)?mark(i.s,i.par):''}</td>`; if (i.s>0) sg+=i.s; else ok=false;
-      if (mates.length){ const ms=getS(mates[0],r,n), mrc=received(st.strokes[mates[0]], c.si[n-1]); pg+=`<td>${has(ms)?mark(ms,i.par):''}${has(ms)&&mrc?`<span class="rc">+${mrc}</span>`:''}</td>`; }
+      g+=`<td>${has(i.s)?mark(i.s,i.par):''}${mates.length?ballChip(p.id,n):''}</td>`; if (i.s>0) sg+=i.s; else ok=false;
+      if (mates.length){ const ms=getS(mates[0],r,n), mrc=received(st.strokes[mates[0]], c.si[n-1]); pg+=`<td>${has(ms)?mark(ms,i.par):''}${has(ms)&&mrc?`<span class="rc">+${mrc}</span>`:''}${ballChip(mates[0],n)}</td>`; }
       if (n>decidedAt){ ores+=`<td class="na">·</td>`; run+=`<td class="na"></td>`; }
       else { ores+= x ? `<td><i class="hr ${x===side?'w':x===other?'l':'h'}">${x===side?'W':x===other?'V':'G'}</i></td>` : '<td></td>';
         if (x===side) won++; if (x===other) lost++;
@@ -1032,9 +1042,11 @@ function matchCard(p, r){
     }
     hh+=`<th>${lbl}</th>`; par+=`<td class="s">${sp}</td>`; si+=`<td class="s"></td>`; g+=`<td class="s">${ok?sg:''}</td>`; if (mates.length) pg+=`<td class="s"></td>`;
     ores+=`<td class="s">${won}-${lost}</td>`; run+=`<td class="s"></td>`;
-    h += `<div class="cardwrap"><table class="sc-t num"><thead><tr>${hh}</tr></thead><tbody><tr>${par}</tr><tr>${si}</tr><tr>${g}</tr>${mates.length?`<tr class="mate">${pg}</tr>`:''}<tr>${ores}</tr><tr>${run}</tr></tbody></table></div>`;
+    h += `<div class="cardwrap"><table class="sc-t num"><thead><tr>${hh}</tr></thead><tbody><tr>${par}</tr><tr>${si}</tr><tr>${g}</tr>${mates.length?`<tr class="mate">${pg}</tr>`:''}${mates.length?'':`<tr>${ores}</tr>`}<tr>${run}</tr></tbody></table></div>`;
   });
-  return h + `<div class="mkey" style="margin-top:4px"><span><i class="hr w">W</i>Hole gewonnen</span><span><i class="hr l">V</i>Verloren</span><span><i class="hr h">G</i>Gelijk</span><span>↑ voor, ↓ achter</span></div></div>`;
+  return h + `<div class="mkey" style="margin-top:4px">${mates.length
+    ? `<span><i class="hr w win">W</i>Deze bal won de hole</span><span><i class="hr h">G</i>Gelijk</span>`
+    : `<span><i class="hr w win">W</i>Hole gewonnen</span><span><i class="hr l">V</i>Verloren</span><span><i class="hr h">G</i>Gelijk</span>`}<span>↑ voor, ↓ achter</span></div></div>`;
 }
 
 /* ---- Programma ---- */
