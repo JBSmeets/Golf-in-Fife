@@ -7,12 +7,12 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Golf in Five">
+<meta name="apple-mobile-web-app-title" content="Golf in Fife">
 <meta name="format-detection" content="telephone=no">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<title>Golf in Five</title>
+<title>Golf in Fife</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Jost:wght@400;500;600&display=swap" rel="stylesheet">
@@ -462,7 +462,7 @@ input.t,select.t{width:100%;border:1px solid var(--hair);border-radius:10px;padd
   <div class="top-in">
     <div class="brand"><svg class="hflag" viewBox="0 0 64 48" role="img" aria-label="Schotse vlag"><defs><clipPath id="fc"><path d="M8 7C21 2.5 34 11 60 6.5V35C34 39.5 21 31 8 35.5Z"/></clipPath><linearGradient id="fs" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#000" stop-opacity="0"/><stop offset=".32" stop-color="#000" stop-opacity=".16"/><stop offset=".6" stop-color="#fff" stop-opacity=".14"/><stop offset=".85" stop-color="#000" stop-opacity=".12"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient></defs><rect x="4.6" y="4" width="2.6" height="42" rx="1.2" fill="#C9A34A"/><circle cx="5.9" cy="3.6" r="2.4" fill="#D9B45A"/><g clip-path="url(#fc)"><rect x="8" y="0" width="52" height="42" fill="#005EB8"/><path d="M8 7L60 35M60 6.5L8 35.5" stroke="#fff" stroke-width="6.5"/><rect x="8" y="0" width="52" height="42" fill="url(#fs)"/></g><path d="M8 7C21 2.5 34 11 60 6.5V35C34 39.5 21 31 8 35.5Z" fill="none" stroke="#fff" stroke-width="1.1" stroke-opacity=".9"/></svg>
 <div>
-      <h1 style="white-space:nowrap">Golf in Five</h1>
+      <h1 style="white-space:nowrap">Golf in Fife</h1>
       <div class="sub">Fife, 2–4&nbsp;oktober 2026</div>
     </div></div>
     <button class="pill" id="sync" aria-live="polite"><i></i><span>Laden</span></button>
@@ -701,13 +701,14 @@ function matchState(m, r){
   if (!done && thru===18){ done=true; winner = up>0?'A':up<0?'B':'H'; text = up ? `${Math.abs(up)} up` : 'Gelijk'; }
   if (!done) text = thru ? (up ? `${Math.abs(up)} up` : 'AS') : '';
   const leader = up>0?'A':up<0?'B':(thru?'H':null);
-  const pts = done ? (winner==='A'?[1,0]:winner==='B'?[0,1]:[.5,.5]) : [0,0];
-  const proj = done ? pts : (leader==='A'?[1,0]:leader==='B'?[0,1]:leader==='H'?[.5,.5]:[0,0]);
+  const w = m.type==='fourball' ? 2 : 1;   /* elke speler van het winnende duo levert 1 punt op */
+  const pts = done ? (winner==='A'?[w,0]:winner==='B'?[0,w]:[w/2,w/2]) : [0,0];
+  const proj = done ? pts : (leader==='A'?[w,0]:leader==='B'?[0,w]:leader==='H'?[w/2,w/2]:[0,0]);
   return {valid:true, thru, up, done, winner, text, holes, leader, pts, proj, strokes};
 }
 function teamTotals(){
   let a=0,b=0,pa=0,pb=0,n=0,live=false;
-  [1,2,3].forEach(r=>matches(r).forEach(m=>{ const s=matchState(m,r); if (!s.valid) return; n++;
+  [1,2,3].forEach(r=>matches(r).forEach(m=>{ const s=matchState(m,r); if (!s.valid) return; n += m.type==='fourball'?2:1;
     a+=s.pts[0]; b+=s.pts[1]; pa+=s.proj[0]; pb+=s.proj[1]; if (s.thru && !s.done) live=true; }));
   return {a,b,pa,pb,n,live,need:n/2+0.5};
 }
@@ -762,7 +763,7 @@ function viewTeams(){
     <div class="rc-score num"><b style="color:${TEAMCOL.A}">${fmtPts(t.a)}</b><i></i><b style="color:${TEAMCOL.B}">${fmtPts(t.b)}</b></div>
     <div class="rc-bar"><span style="left:0;width:${pctA}%;background:${TEAMCOL.A}"></span><span class="pj" style="left:${pctA}%;width:${ppA}%;background:${TEAMCOL.A}"></span>
       <span style="right:0;width:${pctB}%;background:${TEAMCOL.B}"></span><span class="pj" style="right:${pctB}%;width:${ppB}%;background:${TEAMCOL.B}"></span><em></em></div>
-    <div class="rc-need">${t.n ? (t.a>=t.need ? `${esc(A)} wint de Golf in Five Cup` : t.b>=t.need ? `${esc(B)} wint de Golf in Five Cup` : `${fmtPts(t.need)} punten nodig voor de winst, ${t.n} te verdelen`) : 'Stel de teams en partijen in onder Beheer'}</div>
+    <div class="rc-need">${t.n ? (t.a>=t.need ? `${esc(A)} wint de Golf in Fife Cup` : t.b>=t.need ? `${esc(B)} wint de Golf in Fife Cup` : `${fmtPts(t.need)} punten nodig voor de winst, ${fmtPts(t.n)} te verdelen`) : 'Stel de teams en partijen in onder Beheer'}</div>
     ${t.live ? `<div class="rc-proj num">Live projectie ${fmtPts(t.pa)} – ${fmtPts(t.pb)}</div>` : ''}
   </div>`;
   [1,2,3].forEach(r=>{ const c=course(r), ms=matches(r), order=teamFlights(r).flat();
@@ -772,7 +773,7 @@ function viewTeams(){
       const tm = s.valid ? (s.done ? (s.winner==='H'?null:s.winner) : (s.leader==='A'||s.leader==='B') ? s.leader : null) : null;
       const pst = tm ? teamStyle(tm) : `--tc:${!s.valid?'#A9B6C6':s.thru?'#7F8B99':'#D3DCE7'};--tf:#fff;--tb:transparent`;
       const label = !s.valid ? 'Onvolledig' : s.done ? (s.winner==='H'?'Gelijk':s.text) : s.thru ? s.text : '–';
-      const sub = !s.valid ? '' : s.done ? (s.winner==='H'?'½ – ½':`${teamName(s.winner)} wint`) : s.thru ? `na ${s.thru}` : m.type==='fourball'?'Fourball':'Single';
+      const sub = !s.valid ? '' : s.done ? (s.winner==='H'?(m.type==='fourball'?'1 – 1':'½ – ½'):`${teamName(s.winner)} +${m.type==='fourball'?2:1}`) : s.thru ? `na ${s.thru}` : m.type==='fourball'?'Fourball':'Single';
       const wA = s.done && s.winner==='A', wB = s.done && s.winner==='B';
       h += `<button class="rc-m" data-act="rcexp" data-v="${key}">
         <span class="rc-p ${wB?'lost':''} ${wA?'won':''}" style="--ink:${TEAMCOL.A}">${sideNames(m.a).map(esc).join('<br>')||'–'}</span>
@@ -791,7 +792,7 @@ function viewTeams(){
   ir.forEach(x=>{ h += `<button class="lrow ir t${x.t}" data-act="openp" data-p="${x.p.id}"><span class="pos">${anyDone?x.pos:''}</span>
       <span class="nm">${esc(x.p.name)}<small><b class="tname" style="color:${TEAMCOL[x.t]}">${esc(teamName(x.t))}</b>, ${x.n} ${x.n===1?'partij':'partijen'}${x.n?`, holes ${x.diff>0?'+':''}${x.diff}`:''}${x.live?', nu bezig':''}</small></span>
       <span class="wgv num">${x.w}-${x.h}-${x.l}</span><span class="pts num">${fmtPts(x.pts)||'0'}</span></button>`; });
-  h += `</div><p class="tiny muted" style="margin:8px 2px 0">Winst is 1 punt, gelijk ½. Bij gelijke punten telt het aantal overwinningen en daarna het holesaldo.</p>`;
+  h += `</div><p class="tiny muted" style="margin:8px 2px 0">Iedere speler scoort 1 punt voor een gewonnen partij en ½ bij gelijkspel. Deze punten vormen samen de teamstand. Bij gelijke punten telt het aantal overwinningen en daarna het holesaldo.</p>`;
   const enc = encounters(), TA=teamPlayers('A'), TB=teamPlayers('B');
   if (TA.length && TB.length){
     h += `<h2>Iedereen tegen iedereen</h2><div class="h2h"><table><thead><tr><th class="corner"></th>${TB.map(b=>`<th class="colB">${esc(first(b.name))}</th>`).join('')}</tr></thead><tbody>`;
@@ -921,15 +922,16 @@ function viewPlayers(){
   const ps = players();
   if (!ps.length) return `<h2>Spelers</h2><div class="card">Er zijn nog geen spelers. Voeg ze toe onder Beheer.</div>`;
   const rk = ranking('tot'), any = rk.some(r=>r.main>0 || r.rs.some(x=>x.thru));
-  let h = `<h2>Flightindeling</h2><p class="small muted" style="margin:-4px 2px 10px">Zoals vastgesteld door de beheerder. Wijzigingen verschijnen hier direct.</p>${[1,2,3].map(flightCard).join('')}`;
-  if (isTeams()) h += `<details class="fold card fmt-card"><summary>Wat is een fourball en wat is een single?</summary>${FORMAT_HELP}</details>`;
-  h += `<h2>Spelers</h2><div class="pgrid">`;
+  let h = `<h2>Spelers</h2><div class="pgrid">`;
   rk.sort((a,b)=>(a.p.sort||0)-(b.p.sort||0)).forEach(r=>{
     h += `<button class="pcard" data-act="openp" data-p="${r.p.id}"><span class="mono"${monoStyle(r.p.id)}>${esc(initials(r.p.name))}</span>
       <div class="pn">${esc(r.p.name)}</div><div class="ps">${isTeams()&&teamOf(r.p.id)?`<b class="tname" style="color:${TEAMCOL[teamOf(r.p.id)]}">${esc(teamName(teamOf(r.p.id)))}</b>, `:''}handicap ${fmtHcp(r.p.hcp)}</div>
       <div class="pp">${any ? `${ordinal(r.pos)} plaats, ${r.main} punten` : `PH ${[1,2,3].map(x=>playingHcp(r.p,x)).join(' / ')}`}</div></button>`;
   });
-  return h + `</div><p class="tiny muted" style="margin:10px 2px">PH is de playing handicap op Lundin, Elie en Crail.</p>`;
+  h += `</div><p class="tiny muted" style="margin:10px 2px">PH is de playing handicap op Lundin, Elie en Crail.</p>`;
+  h += `<h2>Flightindeling</h2><p class="small muted" style="margin:-4px 2px 10px">Zoals vastgesteld door de beheerder. Wijzigingen verschijnen hier direct.</p>${[1,2,3].map(flightCard).join('')}`;
+  if (isTeams()) h += `<details class="fold card fmt-card"><summary>Wat is een fourball en wat is een single?</summary>${FORMAT_HELP}</details>`;
+  return h;
 }
 function viewProfile(p){
   const rk = ranking('tot'), me = rk.find(r=>r.p.id===p.id), any = rk.some(r=>r.rs.some(x=>x.thru));
@@ -1015,7 +1017,7 @@ function matchCard(p, r){
 /* ---- Programma ---- */
 const LINKS_SVG = `<svg viewBox="0 0 320 120" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M0 92 C40 80 70 86 104 78 S170 66 208 74 S280 86 320 76" opacity=".9"/><path d="M0 104 C50 96 96 100 140 94 S230 86 320 92" opacity=".55"/><path d="M0 114 C60 110 120 112 180 108 S270 104 320 108" opacity=".35"/><path d="M226 74 V26"/><path d="M226 27 L248 34 L226 41" fill="currentColor" stroke="none"/><path d="M20 60 h60 M34 54 h34" opacity=".35"/></svg>`;
 function viewProg(){
-  let h = `<div class="hero"><img src="hero.webp" alt="Golf in Five, Elie. Lundin Links, Elie Links en Crail, 2026" width="1200" height="800"></div>
+  let h = `<div class="hero"><img src="hero.webp" alt="Golf in Fife, Elie. Lundin Links, Elie Links en Balcomie Links, Schotland" width="1200" height="800"></div>
   <p class="lead" style="text-align:center;margin:8px 6px 4px">Zes man, drie dagen, drie historische linksbanen en 54 holes in het Kingdom of Fife. Met de Dunhill Links als toegift.</p>
   <h2>Het weekend</h2>
   <div class="tl">
@@ -1055,13 +1057,14 @@ function viewProg(){
     <p>Elke dag speelt één flight een fourball (2 tegen 2) en één flight een single (1 tegen 1). Over drie dagen speelt iedereen minstens één keer tegen iedere tegenstander.</p>
     <p><b>Fourball:</b> twee tegen twee, de beste nettoscore van elk duo telt per hole.</p>
     <p><b>Single:</b> één tegen één, de laagste nettoscore wint de hole.</p>
+    <p>Punten: elke speler die zijn partij wint levert 1 punt op, dus een gewonnen fourball is 2 punten en een gewonnen single 1 punt. Gelijk is delen. In totaal 9 punten over drie dagen, 5 punten is genoeg voor de cup.</p>
     <p style="margin-bottom:0">Matchplay met volledige handicapverrekening: de laagste speler in de partij speelt van 0, de anderen krijgen het volledige verschil in playing handicap. Een streep verliest de hole. De individuele Stableford loopt gewoon mee.</p></div>`;
   return h;
 }
 const FORMAT_HELP = `<div class="fmt-help">
   <div><b>Fourball</b><p>Twee tegen twee. Iedereen speelt zijn eigen bal; per hole telt alleen de beste nettoscore van elk duo. Het duo met de laagste van die twee scores wint de hole. Zo kan je maat je redden als jij een hole verknoeit. Volledige handicap: de laagste van de vier speelt van 0, de anderen krijgen het volledige verschil.</p></div>
   <div><b>Single</b><p>Eén tegen één. Wie op een hole de laagste nettoscore heeft, wint die hole. Volledige handicap: de laagste speelt van 0, de ander krijgt het hele verschil.</p></div>
-  <div><b>Matchplay, hoe tel je?</b><p>Je speelt om holes, niet om slagen. <i>2 up</i> betekent twee holes voor, <i>AS</i> (all square) staat gelijk. Een partij is beslist als je meer holes voor staat dan er nog te spelen zijn: <i>3&amp;2</i> is drie holes voor met nog twee te gaan. Een streep verliest de hole. Een gewonnen partij levert je team 1 punt op, gelijkspel ½ punt. Voor het individuele klassement krijgt ieder lid van het winnende duo of de winnende single 1 punt.</p></div>
+  <div><b>Matchplay, hoe tel je?</b><p>Je speelt om holes, niet om slagen. <i>2 up</i> betekent twee holes voor, <i>AS</i> (all square) staat gelijk. Een partij is beslist als je meer holes voor staat dan er nog te spelen zijn: <i>3&amp;2</i> is drie holes voor met nog twee te gaan. Een streep verliest de hole. Elke speler die zijn partij wint levert het team 1 punt op. Een gewonnen fourball is dus 2 punten, een gewonnen single 1 punt. Bij een gelijke partij worden de punten gedeeld. Over drie dagen zijn er 9 punten te verdelen; met 5 punten heb je de cup.</p></div>
   <div><b>Iedereen tegen iedereen</b><p>Elke dag één fourball en één single. De indeling rouleert zo dat je na drie dagen tegen alle drie de tegenstanders hebt gespeeld.</p></div>
 </div>`;
 function flightCard(r){
@@ -1212,7 +1215,10 @@ function viewAdmin(){
 
   h += `<h2>Gegevens</h2><div class="card">
     <p class="small">Laatste synchronisatie: ${state.lastSync?new Date(state.lastSync).toLocaleString('nl-NL'):'nog niet'}. Wachtende scores: ${Object.keys(state.outbox).length}.</p>
-    <div class="btns"><button class="btn sm" data-act="syncnow">Nu synchroniseren</button><button class="btn sm red" data-act="resetscores">Alle scores wissen</button></div>
+    <div class="btns col"><button class="btn sm" data-act="syncnow">Nu synchroniseren</button>
+      <button class="btn sm red" data-act="resetscores">Alle scores wissen</button>
+      <button class="btn sm red" data-act="resetall">Alles opschonen: scores, nearest, longest en controle</button></div>
+    <p class="tiny muted">Handig om te oefenen met de app. De spelers, teams, partijen en baangegevens blijven staan, en er ligt altijd nog een automatische back-up.</p>
     <label class="f" for="newpin">Nieuwe pincode</label><div class="row2"><input class="t" id="newpin" inputmode="numeric"><button class="btn sm alt" data-act="setpin">Pincode opslaan</button></div>
     <div class="btns"><button class="btn sm alt" data-act="lock">Beheer sluiten</button></div></div>`;
   return h;
@@ -1314,6 +1320,9 @@ document.addEventListener('click', async e=>{
         if (a==='bdl') downloadJson(d, 'golf-in-fife-backup-'+v); else await restoreData(d); }catch(err){ toast('Back-up ophalen lukt niet'); } break;
     case 'restore': $('#restorefile').click(); break;
     case 'syncnow': sync(true); break;
+    case 'resetall': if (confirm('Alle scores, dagprijzen en controlemarkeringen wissen? Spelers, teams en partijen blijven staan.')){
+        state.scores={}; state.outbox={}; delete state.settings.prizes; delete state.settings.resolved; ui.log=null;
+        state.op='resetscores'; markDirty('settings'); render(); sync(true); toast('Alles opgeschoond'); } break;
     case 'resetscores': if (confirm('Alle scores van alle rondes wissen? Dit kan niet ongedaan worden, maak eerst een back-up.')){ state.scores={}; state.outbox={}; state.op='resetscores'; save(); render(); sync(true); } break;
     case 'setpin': { const np=$('#newpin').value.trim(); if (np.length<4){ toast('Kies minimaal 4 cijfers'); break; } state.settings.pin=np; markDirty('settings'); toast('Pincode opgeslagen'); render(); break; }
   }
@@ -1382,7 +1391,7 @@ async function restoreFrom(file){
 }
 async function restoreData(d){
   try{
-    if (d.app!=='golf-in-fife' || !Array.isArray(d.players)) throw new Error('Dit is geen Golf in Five back-up.');
+    if (d.app!=='golf-in-fife' || !Array.isArray(d.players)) throw new Error('Dit is geen Golf in Fife back-up.');
     if (!confirm(`Back-up van ${new Date(d.exported_at).toLocaleString('nl-NL')} terugzetten? Alle huidige gegevens worden vervangen.`)) return;
     const now = new Date().toISOString();
     state.players = d.players; state.settings = d.settings || {}; state.scores = {}; state.outbox = {};
