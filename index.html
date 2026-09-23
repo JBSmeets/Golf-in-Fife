@@ -354,7 +354,7 @@ details.fold[open] summary::after{content:' −';}
 .hr.win{box-shadow:0 0 0 1.5px #C9A34A}
 table.sc-t td .hr{display:block;margin:2px auto 0}
 .hr{display:inline-flex;width:20px;height:20px;align-items:center;justify-content:center;border-radius:5px;font-style:normal;font-size:11px;font-weight:700}
-.hr.w{background:#2F8F4E;color:#fff} .hr.l{background:#C8352B;color:#fff} .hr.h{background:#C3CDD9;color:#fff}
+.hr.w{background:#1B5E34;color:#fff} .hr.w.sh{background:#5AA772} .hr.l{background:#C8352B;color:#fff} .hr.h{background:#C3CDD9;color:#fff}
 table.sc-t td.rs{font-size:11px;font-weight:600;color:var(--muted)}
 table.sc-t td.rs.up{color:#2F8F4E} table.sc-t td.rs.dn{color:#C8352B}
 table.sc-t td.na{color:#C9D2DE}
@@ -903,7 +903,7 @@ function viewScore(){
       const mr=received(ms.strokes[p.id], si), side=m.a.includes(p.id)?'A':'B', x=ms.holes[hole-1];
       st = mr>0 ? `${mr} ${mr===1?'slag':'slagen'}` : 'geen slag';
       sub = ms.thru ? (ms.leader==='H' ? `AS na ${ms.thru}` : `${Math.abs(ms.up)} ${ms.leader===side?'voor':'achter'} na ${ms.thru}`) : 'partij nog niet begonnen';
-      holeCell = `<div class="ptsb">${x ? `<i class="hr ${x===side?'w':x==='H'?'h':'l'}">${x===side?'W':x==='H'?'G':'V'}</i>` : ''}<small>${x?'hole':''}</small></div>`;
+      holeCell = `<div class="ptsb">${x==='H' ? '<i class="hr h">G</i>' : x===side ? '<i class="hr w win">W</i>' : ''}<small>${x&&(x===side||x==='H')?'hole':''}</small></div>`;
     } } }
     const scTxt = !has(i.s) ? '–' : (i.s===0 ? 'streep' : i.s);
     const cls = !has(i.s) ? 'empty' : (i.s===0 ? 'pu' : (i.s < par ? 'b' : ''));
@@ -1020,7 +1020,8 @@ function matchCard(p, r){
   const ballChip = (id,n)=>{ const x=st.holes[n-1]; if (!x) return '';
     const nets = mySide.map(i=>netOf(i,n)).filter(v=>v!==null); if (!nets.length) return '';
     const best = Math.min(...nets), mine = netOf(id,n);
-    if (x===side && mine===best) return `<span class="hr w win">W</span>`;
+    if (x===side && mine===best){ const shared = mySide.filter(i=>netOf(i,n)===best).length > 1;
+      return `<span class="hr w win${shared?' sh':''}">W</span>`; }
     if (x==='H') return `<span class="hr h">G</span>`;
     return ''; };
   let running = 0; const runAt = [];
@@ -1036,7 +1037,7 @@ function matchCard(p, r){
       g+=`<td>${has(i.s)?mark(i.s,i.par):''}${mates.length?ballChip(p.id,n):''}</td>`; if (i.s>0) sg+=i.s; else ok=false;
       if (mates.length){ const ms=getS(mates[0],r,n), mrc=received(st.strokes[mates[0]], c.si[n-1]); pg+=`<td>${has(ms)?mark(ms,i.par):''}${has(ms)&&mrc?`<span class="rc">+${mrc}</span>`:''}${ballChip(mates[0],n)}</td>`; }
       if (n>decidedAt){ ores+=`<td class="na">·</td>`; run+=`<td class="na"></td>`; }
-      else { ores+= x ? `<td><i class="hr ${x===side?'w':x===other?'l':'h'}">${x===side?'W':x===other?'V':'G'}</i></td>` : '<td></td>';
+      else { ores+= x==='H' ? `<td><i class="hr h">G</i></td>` : x===side ? `<td><i class="hr w win">W</i></td>` : '<td></td>';
         if (x===side) won++; if (x===other) lost++;
         run+= rv===null ? '<td></td>' : `<td class="rs ${rv>0?'up':rv<0?'dn':''}">${rv>0?rv+'↑':rv<0?(-rv)+'↓':'AS'}</td>`; }
     }
@@ -1045,8 +1046,8 @@ function matchCard(p, r){
     h += `<div class="cardwrap"><table class="sc-t num"><thead><tr>${hh}</tr></thead><tbody><tr>${par}</tr><tr>${si}</tr><tr>${g}</tr>${mates.length?`<tr class="mate">${pg}</tr>`:''}${mates.length?'':`<tr>${ores}</tr>`}<tr>${run}</tr></tbody></table></div>`;
   });
   return h + `<div class="mkey" style="margin-top:4px">${mates.length
-    ? `<span><i class="hr w win">W</i>Deze bal won de hole</span><span><i class="hr h">G</i>Gelijk</span>`
-    : `<span><i class="hr w win">W</i>Hole gewonnen</span><span><i class="hr l">V</i>Verloren</span><span><i class="hr h">G</i>Gelijk</span>`}<span>↑ voor, ↓ achter</span></div></div>`;
+    ? `<span><i class="hr w win">W</i>Deze bal won de hole</span><span><i class="hr w win sh">W</i>Allebei even goed</span><span><i class="hr h">G</i>Gelijk</span>`
+    : `<span><i class="hr w win">W</i>Hole gewonnen</span><span><i class="hr h">G</i>Gelijk</span>`}<span>↑ voor, ↓ achter</span></div></div>`;
 }
 
 /* ---- Programma ---- */
