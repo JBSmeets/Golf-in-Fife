@@ -155,6 +155,8 @@ button.hrow{width:100%;background:none;border-left:0;border-right:0;border-botto
 .ptsb{text-align:center;font-weight:600;font-size:20px;color:var(--midnight);line-height:1}
 .ptsb small{display:block;font-size:10px;font-weight:400;color:var(--muted);margin-top:2px}
 .ptsb.p0{color:var(--claret)} .ptsb.p3{color:var(--green)} .ptsb.p4{color:var(--golddk)}
+.submit{display:flex;flex-direction:column;align-items:stretch;gap:6px;padding:0 14px 12px;text-align:center}
+.submit .btn{width:100%}
 .plinks{grid-column:1/-1;display:flex;gap:18px;margin-top:-6px}
 .plinks .pu-link{margin-top:0}
 .pu-link.clr{color:var(--claret)}
@@ -170,6 +172,13 @@ button.hrow{width:100%;background:none;border-left:0;border-right:0;border-botto
 .strip button{border:1px solid var(--hair);background:#fff;border-radius:8px;padding:0;height:34px;font-size:13px;font-weight:500;color:var(--muted)}
 .strip button.done{background:var(--green);border-color:var(--green);color:#fff}
 .strip button.part{background:#E8EDE4;border-color:#C4CFBD;color:var(--green)}
+.strip button.wA{background:#005EB8;border-color:#C9A34A;color:#E6C35C;box-shadow:inset 0 0 0 1px #C9A34A}
+.strip button.wB{background:#fff;border-color:#C9A34A;color:#A67C1B;box-shadow:inset 0 0 0 1px #C9A34A}
+.strip button.wH{background:#C3CDD9;border-color:#C3CDD9;color:#fff}
+.striplegend{display:flex;gap:14px;justify-content:center;font-size:11px;color:var(--muted);padding:0 14px 12px;margin-top:-6px}
+.striplegend span{display:inline-flex;align-items:center;gap:5px}
+.striplegend .sq{width:10px;height:10px;border-radius:3px;display:inline-block}
+.striplegend .sq.a{background:#005EB8;box-shadow:inset 0 0 0 1.5px #C9A34A} .striplegend .sq.b{background:#fff;box-shadow:inset 0 0 0 1.5px #C9A34A} .striplegend .sq.h{background:#C3CDD9}
 .strip button.cur{box-shadow:0 0 0 2px var(--ivory),0 0 0 3.5px var(--gold);color:var(--midnight)}
 .strip button.done.cur{color:#fff}
 
@@ -275,7 +284,7 @@ details.fold[open] summary::after{content:' −';}
 .rc-x{padding:4px 12px 12px;background:#F7F9FC}
 .rc-holes{display:grid;grid-template-columns:repeat(9,1fr);gap:4px}
 .rc-holes span{height:24px;border-radius:6px;background:#E6ECF4;color:var(--faint);font-size:11px;display:flex;align-items:center;justify-content:center}
-.rc-holes .hA{background:#005EB8;color:#E6C35C;font-weight:600} .rc-holes .hB{background:#fff;color:#A67C1B;box-shadow:inset 0 0 0 1.5px #C9A34A;font-weight:600} .rc-holes .hH{background:#C9C3B6;color:#fff}
+.rc-holes .hA{background:#005EB8;color:#E6C35C;font-weight:600;box-shadow:inset 0 0 0 1.5px #C9A34A} .rc-holes .hB{background:#fff;color:#A67C1B;box-shadow:inset 0 0 0 1.5px #C9A34A;font-weight:600} .rc-holes .hH{background:#C9C3B6;color:#fff}
 .lrow.ir{grid-template-columns:34px 1fr 54px 44px}
 .wgv{justify-self:center;font-size:14px;color:var(--muted);font-weight:500}
 .h2h{overflow-x:auto;background:var(--card);border:1px solid var(--hair);border-radius:var(--r)}
@@ -283,11 +292,11 @@ details.fold[open] summary::after{content:' −';}
 .h2h th,.h2h td{padding:8px 6px;text-align:center;border-bottom:1px solid var(--hair2);border-right:1px solid var(--hair2)}
 .h2h tr:last-child th,.h2h tr:last-child td{border-bottom:0}
 .h2h th.colB{background:#fff;color:#A67C1B;font-family:var(--serif);font-size:16px;font-weight:600;box-shadow:inset 0 -3px 0 #C9A34A}
-.h2h th.rowA{background:#005EB8;color:#E6C35C;font-family:var(--serif);font-size:16px;font-weight:600;text-align:left;white-space:nowrap}
+.h2h th.rowA{background:#005EB8;color:#E6C35C;box-shadow:inset 0 0 0 1.5px #C9A34A;font-family:var(--serif);font-size:16px;font-weight:600;text-align:left;white-space:nowrap}
 .h2h th.corner{background:#F7F9FC}
 .hc{display:inline-flex;align-items:baseline;justify-content:center;min-width:30px;height:24px;line-height:24px;border-radius:6px;font-style:normal;font-size:12px;font-weight:600;margin:2px;padding:0 3px}
 .hc sub{font-size:8px;font-weight:500;margin-left:1px;vertical-align:baseline}
-.hc.A{background:#005EB8;color:#E6C35C}
+.hc.A{background:#005EB8;color:#E6C35C;box-shadow:inset 0 0 0 1.5px #C9A34A}
 .hc.B{background:#fff;color:#A67C1B;box-shadow:inset 0 0 0 1.5px #C9A34A}
 .hc.h{background:#C3CDD9;color:#fff}
 .hc.live{background:#fff;color:var(--golddk);box-shadow:inset 0 0 0 1.5px var(--gold);border-style:dashed}
@@ -322,7 +331,7 @@ details.fold[open] summary::after{content:' −';}
 .tpick .nm small{display:block;font-family:var(--sans);font-weight:400;font-size:12px;color:var(--muted)}
 .tpick .tg{display:flex;gap:6px;flex:none}
 .tpick .tg button{width:68px;height:46px;border-radius:12px;border:1.5px solid var(--hair);background:#fff;font-size:14px;font-weight:500;color:var(--muted)}
-.tpick .tg button.onA{background:#005EB8;border-color:#005EB8;color:#E6C35C;font-weight:600}
+.tpick .tg button.onA{background:#005EB8;border-color:#C9A34A;color:#E6C35C;font-weight:600;box-shadow:0 0 0 2px rgba(201,163,74,.18)}
 .tpick .tg button.onB{background:#fff;border-color:#C9A34A;color:#A67C1B;font-weight:600;box-shadow:0 0 0 2px rgba(201,163,74,.18)}
 .mblock{border:1px solid var(--hair2);border-radius:12px;padding:10px;margin-top:12px;background:#F7F9FC}
 .mhd{font-size:13px;color:var(--muted);margin-bottom:8px}
@@ -358,7 +367,7 @@ table.sc-t tr.stb td{font-size:11px;color:var(--faint);font-weight:500}
 .tm-vs{text-align:center;font-size:12px;color:var(--muted);font-style:italic}
 .tpan{border-radius:12px;padding:6px 6px 2px}
 .tpan em{display:block;font-style:normal;font-family:var(--serif);font-weight:600;font-size:13px;margin:0 4px 2px}
-.tpan.A{background:#005EB8} .tpan.A em{color:#E6C35C}
+.tpan.A{background:#005EB8;box-shadow:inset 0 0 0 1.5px #C9A34A} .tpan.A em{color:#E6C35C}
 .tpan.B{background:#fff;box-shadow:inset 0 0 0 1.5px #C9A34A} .tpan.B em{color:#A67C1B}
 .tm .fc-p{height:56px;margin:0 0 4px}
 .tpan.A .fc-p{background:rgba(255,255,255,.12);border:1px solid rgba(230,195,92,.55)} .tpan.A .fc-p span{color:#E6C35C} .tpan.A .fc-p small{color:#DCE9F8}
@@ -383,7 +392,7 @@ table.sc-t tr.stb td{font-size:11px;color:var(--faint);font-weight:500}
 .fc-f{min-width:0}
 .fc-p span{display:block;font-family:var(--serif);font-weight:600;font-size:16px;color:var(--midnight)}
 .fc-p small{font-size:11px;color:var(--muted)}
-.fc-p.tA{background:#005EB8;border-color:#005EB8} .fc-p.tA span{color:#E6C35C} .fc-p.tA small{color:#CFE2F7}
+.fc-p.tA{background:#005EB8;border-color:#C9A34A} .fc-p.tA span{color:#E6C35C} .fc-p.tA small{color:#CFE2F7}
 .fc-p.tB{background:#fff;border:1.5px solid #C9A34A} .fc-p.tB span{color:#A67C1B}
 .fc-m{margin-top:10px;border-top:1px solid var(--hair2);padding-top:8px;font-size:13px}
 .fc-m div{padding:3px 0} .fc-m i{color:var(--muted)} .fc-m span{color:var(--faint);font-size:12px}
@@ -887,17 +896,22 @@ function viewScore(){
   grp.forEach(p=>{
     const i = holeInfo(p,r,hole), rs = roundStats(p,r);
     let st = i.rc>0 ? `${i.rc} ${i.rc===1?'slag':'slagen'}` : (i.rc<0 ? `geeft ${-i.rc}` : 'geen slag');
-    if (isTeams()){ const m=matchOf(p.id,r); if (m){ const ms=matchState(m,r); if (ms.valid){ const mr=received(ms.strokes[p.id], si); st = mr>0 ? `${mr} ${mr===1?'slag':'slagen'} in de match` : 'geen slag in de match'; } } }
+    let sub = `${rs.pts} pnt na ${rs.thru}`, holeCell = `<div class="ptsb num ${i.pts===null?'':'p'+Math.min(i.pts,4)}">${i.pts===null?'':i.pts}<small>${i.pts===null?'':'pnt'}</small></div>`;
+    if (isTeams()){ const m=matchOf(p.id,r); if (m){ const ms=matchState(m,r); if (ms.valid){
+      const mr=received(ms.strokes[p.id], si), side=m.a.includes(p.id)?'A':'B', x=ms.holes[hole-1];
+      st = mr>0 ? `${mr} ${mr===1?'slag':'slagen'}` : 'geen slag';
+      sub = ms.thru ? (ms.leader==='H' ? `AS na ${ms.thru}` : `${Math.abs(ms.up)} ${ms.leader===side?'voor':'achter'} na ${ms.thru}`) : 'partij nog niet begonnen';
+      holeCell = `<div class="ptsb">${x ? `<i class="hr ${x===side?'w':x==='H'?'h':'l'}">${x===side?'W':x==='H'?'G':'V'}</i>` : ''}<small>${x?'hole':''}</small></div>`;
+    } } }
     const scTxt = !has(i.s) ? '–' : (i.s===0 ? 'streep' : i.s);
     const cls = !has(i.s) ? 'empty' : (i.s===0 ? 'pu' : (i.s < par ? 'b' : ''));
-    const pc = i.pts===null ? '' : 'p'+Math.min(i.pts,4);
     const tt = isTeams() && teamOf(p.id);
     h += `<div class="prow" ${tt?`style="box-shadow:inset 4px 0 0 ${tt==='A'?'#005EB8':'#C9A34A'}"`:''}>
-      <div class="pname">${esc(first(p.name))}<small><span class="st">${st}</span>, ${rs.pts} pnt na ${rs.thru}</small></div>
+      <div class="pname">${esc(first(p.name))}<small><span class="st">${st}</span>, ${sub}</small></div>
       <button class="pm" data-act="dec" data-p="${p.id}" aria-label="Eén slag minder voor ${esc(p.name)}">−</button>
       <button class="sc num ${cls}" data-act="setpar" data-p="${p.id}" aria-label="Score ${esc(p.name)}">${scTxt}</button>
       <button class="pm" data-act="inc" data-p="${p.id}" aria-label="Eén slag meer voor ${esc(p.name)}">+</button>
-      <div class="ptsb num ${pc}">${i.pts===null?'':i.pts}<small>${i.pts===null?'':'pnt'}</small></div>
+      ${holeCell}
       <div class="plinks"><button class="pu-link" data-act="pickup" data-p="${p.id}">${i.s===0?'Streep weghalen':'Streep'}</button>${has(i.s)?`<button class="pu-link clr" data-act="clear" data-p="${p.id}" aria-label="Score van ${esc(p.name)} op deze hole wissen">Wissen</button>`:''}</div>
     </div>`;
   });
@@ -908,9 +922,19 @@ function viewScore(){
       h += `<div class="mline"><span><b style="color:${TEAMCOL.A}">${sideNames(m.a).map(esc).join(' & ')}</b> <i>tegen</i> <b style="color:${TEAMCOL.B}">${sideNames(m.b).map(esc).join(' & ')}</b></span><b style="color:${lead?TEAMCOL[lead]:'var(--muted)'}">${s.thru ? (s.done ? (s.winner==='H'?'Gelijk':`${esc(teamName(s.winner))} ${s.text}`) : (lead?`${esc(teamName(lead))} ${s.text}`:'AS')) : 'Nog niet gestart'}</b></div>`; });
   }
   h += `<div class="holenav"><button class="btn alt" data-act="hole" data-v="${Math.max(1,hole-1)}" ${hole===1?'disabled':''}>Vorige</button><button class="btn" data-act="hole" data-v="${Math.min(18,hole+1)}" ${hole===18?'disabled':''}>Volgende hole</button></div>`;
+  const filled = [1,2,3].length && Array.from({length:18},(_,i)=>i+1).every(n=>grp.every(p=>has(getS(p.id,r,n))));
+  const pend0 = Object.keys(state.outbox).length;
+  h += `<div class="submit"><button class="btn ${pend0?'gold':'alt'}" data-act="submit">${pend0?`${pend0} ${pend0===1?'score':'scores'} indienen`:'Scores indienen en verversen'}</button>
+    <span class="tiny muted">${state.lastSync?`Laatst verstuurd om ${new Date(state.lastSync).toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'})}`:'Nog niet verstuurd'}${filled?', alle 18 holes ingevuld':''}</span></div>`;
+  const fm = isTeams() ? matches(r).filter(m=>[...m.a,...m.b].some(id=>grp.some(p=>p.id===id)) && [...m.a,...m.b].every(id=>id&&pById(id))) : [];
+  const fs = fm.length===1 ? matchState(fm[0], r) : null;
   h += `<div class="strip num">${Array.from({length:18},(_,i)=>i+1).map(n=>{
       const cnt = grp.filter(p=>has(getS(p.id,r,n))).length;
-      return `<button class="${cnt===grp.length?'done':cnt?'part':''} ${n===hole?'cur':''}" data-act="hole" data-v="${n}">${n}</button>`;}).join('')}</div></div>`;
+      const w = fs && fs.valid ? fs.holes[n-1] : null;
+      const cls = w ? 'w'+w : (cnt===grp.length?'done':cnt?'part':'');
+      return `<button class="${cls} ${n===hole?'cur':''}" data-act="hole" data-v="${n}">${n}</button>`;}).join('')}</div>`;
+  if (fs && fs.valid) h += `<div class="striplegend"><span><i class="sq a"></i>${esc(teamName('A'))}</span><span><i class="sq b"></i>${esc(teamName('B'))}</span><span><i class="sq h"></i>gelijk</span></div>`;
+  h += `</div>`;
   h += `<p class="tiny muted" style="margin:0 2px 10px">Invoer op deze telefoon door ${esc(DEV.name)}. <button class="pu-link" style="font-size:12px;margin:0;padding:0" data-act="resetdev">Wijzigen</button></p>`;
   const pend = Object.keys(state.outbox).length;
   if (pend) h += `<div class="note">${pend} ${pend===1?'score staat':'scores staan'} veilig op deze telefoon en ${pend===1?'wordt':'worden'} verstuurd zodra er bereik is.</div>`;
@@ -994,8 +1018,8 @@ function matchCard(p, r){
   const decidedAt = st.done ? st.thru : 99;
   [[1,9,'Uit'],[10,18,'In']].forEach(([a,b,lbl])=>{
     let hh=`<th></th>`, par=`<td class="l">Par</td>`, si=`<td class="l">Index</td>`, g=`<td class="l">${esc(first(p.name))}</td>`, pg=mates.length?`<td class="l">${esc(first(pById(mates[0]).name))}</td>`:'',
-        ores=`<td class="l">Hole</td>`, run=`<td class="l">Stand</td>`, stb=`<td class="l">Stbf</td>`;
-    let sp=0, won=0, lost=0, sg=0, ok=true, spt=0;
+        ores=`<td class="l">Hole</td>`, run=`<td class="l">Stand</td>`;
+    let sp=0, won=0, lost=0, sg=0, ok=true;
     for (let n=a;n<=b;n++){ const i=holeInfo(p,r,n), mr=received(myStrokes, c.si[n-1]), x=st.holes[n-1], rv=runAt[n-1];
       hh+=`<th>${n}</th>`; sp+=i.par;
       par+=`<td>${i.par}${mr?`<span class="rc">+${mr}</span>`:''}</td>`; si+=`<td>${i.si}</td>`;
@@ -1005,11 +1029,10 @@ function matchCard(p, r){
       else { ores+= x ? `<td><i class="hr ${x===side?'w':x===other?'l':'h'}">${x===side?'W':x===other?'V':'G'}</i></td>` : '<td></td>';
         if (x===side) won++; if (x===other) lost++;
         run+= rv===null ? '<td></td>' : `<td class="rs ${rv>0?'up':rv<0?'dn':''}">${rv>0?rv+'↑':rv<0?(-rv)+'↓':'AS'}</td>`; }
-      stb+=`<td>${i.pts===null?'':i.pts}</td>`; spt+=i.pts||0;
     }
     hh+=`<th>${lbl}</th>`; par+=`<td class="s">${sp}</td>`; si+=`<td class="s"></td>`; g+=`<td class="s">${ok?sg:''}</td>`; if (mates.length) pg+=`<td class="s"></td>`;
-    ores+=`<td class="s">${won}-${lost}</td>`; run+=`<td class="s"></td>`; stb+=`<td class="s">${spt}</td>`;
-    h += `<div class="cardwrap"><table class="sc-t num"><thead><tr>${hh}</tr></thead><tbody><tr>${par}</tr><tr>${si}</tr><tr>${g}</tr>${mates.length?`<tr class="mate">${pg}</tr>`:''}<tr>${ores}</tr><tr>${run}</tr><tr class="p stb">${stb}</tr></tbody></table></div>`;
+    ores+=`<td class="s">${won}-${lost}</td>`; run+=`<td class="s"></td>`;
+    h += `<div class="cardwrap"><table class="sc-t num"><thead><tr>${hh}</tr></thead><tbody><tr>${par}</tr><tr>${si}</tr><tr>${g}</tr>${mates.length?`<tr class="mate">${pg}</tr>`:''}<tr>${ores}</tr><tr>${run}</tr></tbody></table></div>`;
   });
   return h + `<div class="mkey" style="margin-top:4px"><span><i class="hr w">W</i>Hole gewonnen</span><span><i class="hr l">V</i>Verloren</span><span><i class="hr h">G</i>Gelijk</span><span>↑ voor, ↓ achter</span></div></div>`;
 }
@@ -1320,6 +1343,7 @@ document.addEventListener('click', async e=>{
         if (a==='bdl') downloadJson(d, 'golf-in-fife-backup-'+v); else await restoreData(d); }catch(err){ toast('Back-up ophalen lukt niet'); } break;
     case 'restore': $('#restorefile').click(); break;
     case 'syncnow': sync(true); break;
+    case 'submit': await sync(true); break;
     case 'resetall': if (confirm('Alle scores, dagprijzen en controlemarkeringen wissen? Spelers, teams en partijen blijven staan.')){
         state.scores={}; state.outbox={}; delete state.settings.prizes; delete state.settings.resolved; ui.log=null;
         state.op='resetscores'; markDirty('settings'); render(); sync(true); toast('Alles opgeschoond'); } break;
