@@ -347,6 +347,10 @@ details.fold[open] summary::after{content:' −';}
 .mono[data-team]{background:var(--tc);color:var(--tf);box-shadow:inset 0 0 0 2px var(--tc),inset 0 0 0 3.5px var(--tf)}
 .mono[data-team="B"]{box-shadow:0 0 0 1.5px #C9A34A,inset 0 0 0 3px #fff,inset 0 0 0 4.5px #C9A34A}
 .tname{font-weight:600}
+.ptag{display:block;font-size:9px;font-weight:600;color:var(--golddk);letter-spacing:.3px;margin-top:1px}
+.pchip{display:inline-block;margin-top:6px;background:#C9A34A;color:#fff;font-size:12px;font-weight:600;border-radius:999px;padding:2px 10px}
+.strip button{position:relative}
+.pdot{position:absolute;top:3px;right:3px;width:5px;height:5px;border-radius:50%;background:#C9A34A;display:block}
 .teamblock{background:var(--card);border:1px solid var(--hair);border-radius:var(--r);padding:10px;margin-bottom:6px}
 .teamblock.tA{box-shadow:inset 0 0 0 2px #005EB8, inset 0 0 0 3.5px #C9A34A}
 .teamblock.tB{box-shadow:inset 0 0 0 2px #C9A34A}
@@ -653,11 +657,17 @@ function statsFor(rounds){
   add('Meeste strepen en nullen', leaders(rows,'zeros',2), 'holes', ', de poedelprijs');
   return out;
 }
+const PRIZES = [['longest','Longest drive','LD'],['nearest','Neary','N'],['leary','Leary','L']];
 function prizeHtml(r){
   const pr = ((state.settings.prizes||{})[r]) || {}, out=[];
-  [['nearest','Nearest the pin'],['longest','Longest drive']].forEach(([k,l])=>{ const x=pr[k]; if (x && x.pid && pById(x.pid)) out.push({label:l, who:pById(x.pid).name, val:[x.hole?`hole ${x.hole}`:'', x.note||''].filter(Boolean).join(', ')}); });
+  PRIZES.forEach(([k,l])=>{ const x=pr[k]; if (x && x.pid && pById(x.pid)) out.push({label:l, who:pById(x.pid).name, val:x.hole?`hole ${x.hole}`:''}); });
   return out;
 }
+function prizeAt(r, hole){
+  const pr = ((state.settings.prizes||{})[r]) || {};
+  return PRIZES.filter(([k])=>pr[k] && Number(pr[k].hole)===Number(hole)).map(([k,l,tag])=>({k,l,tag,x:pr[k]}));
+}
+function prizeTags(r, hole){ const a=prizeAt(r,hole); return a.length ? `<span class="ptag">${a.map(z=>z.tag).join(' ')}</span>` : ''; }
 function statList(items){ return items.map(x=>`<div class="srow"><div><div class="sl">${esc(x.label)}</div><div class="sw">${esc(x.who)}</div></div><div class="sv">${esc(x.val)}</div></div>`).join(''); }
 
 /* ============ Teams & matchplay ============ */
@@ -923,7 +933,8 @@ function viewScore(){
   const yds = c.yds && c.yds[hole-1] ? c.yds[hole-1] : null;
   h += `<div class="hole"><div class="holehead"><div class="holenum">${hole}</div><div class="holeinfo">
         <div class="nm">${esc(name)}</div>
-        <div class="facts"><span>Par <b>${par}</b></span><span>Index <b>${si}</b></span>${yds?`<span><b>${Math.round(yds*YD)}</b> m</span>`:''}</div></div></div>`;
+        <div class="facts"><span>Par <b>${par}</b></span><span>Index <b>${si}</b></span>${yds?`<span><b>${Math.round(yds*YD)}</b> m</span>`:''}</div>
+        ${prizeAt(r,hole).map(z=>`<span class="pchip">${esc(z.l)}${z.x.pid&&pById(z.x.pid)?`: ${esc(first(pById(z.x.pid).name))}`:''}</span>`).join('')}</div></div>`;
   grp.forEach(p=>{
     const i = holeInfo(p,r,hole), rs = roundStats(p,r);
     let st = i.rc>0 ? `${i.rc} ${i.rc===1?'slag':'slagen'}` : (i.rc<0 ? `geeft ${-i.rc}` : 'geen slag');
@@ -967,7 +978,8 @@ function viewScore(){
       const cnt = grp.filter(p=>has(getS(p.id,r,n))).length;
       const w = fs && fs.valid ? fs.holes[n-1] : null;
       const cls = w ? 'w'+w : (cnt===grp.length?'done':cnt?'part':'');
-      return `<button class="${cls} ${n===hole?'cur':''}" data-act="hole" data-v="${n}">${n}</button>`;}).join('')}</div>`;
+      const pz = prizeAt(r,n).length ? '<i class="pdot"></i>' : '';
+      return `<button class="${cls} ${n===hole?'cur':''}" data-act="hole" data-v="${n}">${n}${pz}</button>`;}).join('')}</div>`;
   if (fs && fs.valid) h += `<div class="striplegend"><span><i class="sq a"></i>${esc(teamName('A'))}</span><span><i class="sq b"></i>${esc(teamName('B'))}</span><span><i class="sq h"></i>gelijk</span></div>`;
   h += `</div>`;
   h += `<p class="tiny muted" style="margin:0 2px 10px">Invoer op deze telefoon door ${esc(DEV.name)}. <button class="pu-link" style="font-size:12px;margin:0;padding:0" data-act="resetdev">Wijzigen</button></p>`;
@@ -1035,7 +1047,7 @@ function viewProfile(p){
     [[1,9,'Uit'],[10,18,'In']].forEach(([a,b,lbl])=>{
       let hh=`<th></th>`, par=`<td class="l">Par</td>`, si=`<td class="l">Index</td>`, g=`<td class="l">Score</td>`, pt=`<td class="l">Punten</td>`;
       let sp=0, sg=0, spt=0, ok=true;
-      for (let n=a;n<=b;n++){ const i=s.info[n-1]; hh+=`<th>${n}</th>`;
+      for (let n=a;n<=b;n++){ const i=s.info[n-1]; hh+=`<th>${n}${prizeTags(r,n)}</th>`;
         par+=`<td>${i.par}${i.rc?`<span class="rc">${i.rc>0?'+':'−'}${Math.abs(i.rc)}</span>`:''}</td>`;
         si+=`<td>${i.si}</td>`;
         sp+=i.par; g+=`<td>${has(i.s)?mark(i.s,i.par):''}</td>`; pt+=`<td>${i.pts===null?'':i.pts}</td>`;
@@ -1077,7 +1089,7 @@ function matchCard(p, r){
         ores=`<td class="l">Hole</td>`, run=`<td class="l">Stand</td>`;
     let sp=0, won=0, lost=0, sg=0, ok=true;
     for (let n=a;n<=b;n++){ const i=holeInfo(p,r,n), mr=received(myStrokes, c.si[n-1]), x=st.holes[n-1], rv=runAt[n-1];
-      hh+=`<th>${n}</th>`; sp+=i.par;
+      hh+=`<th>${n}${prizeTags(r,n)}</th>`; sp+=i.par;
       par+=`<td>${i.par}${mr?`<span class="rc">+${mr}</span>`:''}</td>`; si+=`<td>${i.si}</td>`;
       g+=`<td>${has(i.s)?mark(i.s,i.par):''}${mates.length?ballChip(p.id,n):''}</td>`; if (i.s>0) sg+=i.s; else ok=false;
       if (mates.length){ const ms=getS(mates[0],r,n), mrc=received(st.strokes[mates[0]], c.si[n-1]); pg+=`<td>${has(ms)?mark(ms,i.par):''}${has(ms)&&mrc?`<span class="rc">+${mrc}</span>`:''}${ballChip(mates[0],n)}</td>`; }
@@ -1090,6 +1102,8 @@ function matchCard(p, r){
     ores+=`<td class="s">${won}-${lost}</td>`; run+=`<td class="s"></td>`;
     h += `<div class="cardwrap"><table class="sc-t num"><thead><tr>${hh}</tr></thead><tbody><tr>${par}</tr><tr>${si}</tr><tr>${g}</tr>${mates.length?`<tr class="mate">${pg}</tr>`:''}${mates.length?'':`<tr>${ores}</tr>`}<tr>${run}</tr></tbody></table></div>`;
   });
+  const pz = PRIZES.map(([k,l])=>{ const x=((state.settings.prizes||{})[r]||{})[k]; return x&&x.hole?`${l}: hole ${x.hole}`:''; }).filter(Boolean);
+  if (pz.length) h += `<p class="tiny muted" style="margin:6px 0 0">${esc(pz.join(', '))}</p>`;
   return h + `<div class="mkey" style="margin-top:4px">${mates.length
     ? `<span><i class="hr w win">W</i>Deze bal won de hole</span><span><i class="hr w win sh">W</i>Allebei even goed</span><span><i class="hr h">G</i>Gelijk</span>`
     : `<span><i class="hr w win">W</i>Hole gewonnen</span><span><i class="hr h">G</i>Gelijk</span>`}<span>↑ voor, ↓ achter</span></div></div>`;
@@ -1258,17 +1272,17 @@ function viewAdmin(){
   });
   h += `<input type="file" id="photofile" accept="image/*" hidden>`;
 
-  h += `<h2>Nearest en longest drive</h2><div class="card"><p class="small muted" style="margin-top:0">Vul na de ronde in wie er won. Het komt bij de uitslag van de dag en de weekendstatistieken.</p>`;
+  h += `<h2>Longest, neary en leary</h2><p class="small muted" style="margin:-4px 2px 10px">Kies vooraf op welke hole elke prijs telt; die staat dan op de scorekaart en bij de hole tijdens het invoeren. De winnaar vul je na de ronde in, en die komt bij de uitslag van de dag te staan.</p>`;
   [1,2,3].forEach(r=>{ const c=course(r), pr=((state.settings.prizes||{})[r])||{};
-    h += `<h3>${esc(c.short)}</h3>`;
-    [['nearest','Nearest the pin',c.par.map((x,i)=>x===3?i+1:0).filter(Boolean)],['longest','Longest drive',c.par.map((x,i)=>x>=4?i+1:0).filter(Boolean)]].forEach(([kk,l,holes])=>{
+    h += `<div class="card"><h3 style="margin-top:0">${esc(c.short)}, ${c.dayname.toLowerCase()}</h3>`;
+    PRIZES.forEach(([kk,l])=>{
       const x = pr[kk]||{};
-      h += `<label class="f">${l}</label><div class="row2"><select class="t" data-chg="prize" data-r="${r}" data-k="${kk}" data-f="pid"><option value="">Nog niet bekend</option>${ps.map(p=>`<option value="${p.id}" ${x.pid===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select>
-        <select class="t" data-chg="prize" data-r="${r}" data-k="${kk}" data-f="hole"><option value="">Hole</option>${holes.map(n=>`<option value="${n}" ${Number(x.hole)===n?'selected':''}>Hole ${n}</option>`).join('')}</select></div>
-        <input class="t" style="margin-top:6px" placeholder="${kk==='nearest'?'Afstand, bijvoorbeeld 1,80 m':'Eventueel afstand'}" value="${esc(x.note||'')}" data-chg="prize" data-r="${r}" data-k="${kk}" data-f="note">`;
+      h += `<label class="f">${l}</label>
+        <select class="t" data-chg="prize" data-r="${r}" data-k="${kk}" data-f="hole"><option value="">Hole nog niet gekozen</option>${c.par.map((pp,i)=>`<option value="${i+1}" ${Number(x.hole)===i+1?'selected':''}>Hole ${i+1}, par ${pp}</option>`).join('')}</select>
+        <select class="t" style="margin-top:6px" data-chg="prize" data-r="${r}" data-k="${kk}" data-f="pid"><option value="">Winnaar volgt</option>${ps.map(p=>`<option value="${p.id}" ${x.pid===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select>`;
     });
+    h += `</div>`;
   });
-  h += `</div>`;
 
   h += `<h2>Controle van de scores</h2><div class="card">`;
   if (!ui.log) h += `<p class="small" style="margin-top:0">Hier zie je holes waarop verschillende telefoons een andere score hebben doorgegeven. De live stand gebruikt steeds de laatste invoer; hier kies je achteraf de juiste.</p><div class="btns"><button class="btn sm" data-act="loadlog">Controle uitvoeren</button></div>`;
