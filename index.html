@@ -357,7 +357,9 @@ details.fold[open] summary::after{content:' −';}
 .tcard.wide{max-width:64%;margin:0 auto 12px}
 .tcard.cap img{box-shadow:0 0 0 2px #C9A34A, 0 2px 8px rgba(10,58,115,.22)}
 .capflag{position:absolute;top:8px;left:8px;background:#C9A34A;color:#fff;font-size:11px;font-weight:600;letter-spacing:.4px;padding:3px 8px;border-radius:999px}
-.tc-b{display:block;text-align:center;font-size:12px;color:var(--muted);padding:6px 2px 0}
+.tc-b{display:block;text-align:center;padding:6px 2px 0}
+.tc-b b{display:block;font-family:var(--serif);font-size:18px;color:var(--midnight);line-height:1.1}
+.tc-b span{display:block;font-size:12px;color:var(--muted)}
 .profimg{width:min(240px,62vw);height:auto;border-radius:12px;box-shadow:0 3px 10px rgba(10,58,115,.2)}
 .capsmall{font-family:var(--sans);font-size:12px;background:#C9A34A;color:#fff;border-radius:999px;padding:2px 9px;vertical-align:4px}
 .pl2{display:grid;grid-template-columns:1fr auto;gap:6px;margin-top:6px}
@@ -984,7 +986,7 @@ function viewPlayers(){
     return `<button class="tcard${wide?' wide':''}${cap?' cap':''}" data-act="openp" data-p="${p.id}">
       ${ph?`<img src="${ph}" alt="${esc(p.name)}" loading="lazy">`:`<span class="mono lg"${monoStyle(p.id)}>${esc(initials(p.name))}</span>`}
       ${cap?'<span class="capflag">Captain</span>':''}
-      <span class="tc-b">${any ? `${ordinal(r.pos)} plaats, ${r.main} punten` : `handicap ${fmtHcp(p.hcp)}`}</span></button>`; };
+      <span class="tc-b">${nickOf(p.id)?`<b>${esc(nickOf(p.id))}</b>`:''}<span>handicap ${fmtHcp(p.hcp)}</span></span></button>`; };
   let h = '';
   if (isTeams() && (teamPlayers('A').length || teamPlayers('B').length)){
     ['A','B'].forEach(t=>{ const ps2=teamPlayers(t).filter(p=>byId[p.id]); if (!ps2.length) return;
