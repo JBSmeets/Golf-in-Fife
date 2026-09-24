@@ -549,7 +549,14 @@ const DEFAULT_COURSES = {
 function blank(){ return {players:[], scores:{}, settings:{}, photos:{}, photoDirty:{}, outbox:{}, dirty:{players:false,settings:false}, deleted:[], op:null, lastSync:null}; }
 let state = load();
 function load(){ try{ const s = JSON.parse(localStorage.getItem(LS)); return s ? Object.assign(blank(), s) : blank(); }catch(e){ return blank(); } }
-function save(){ try{ localStorage.setItem(LS, JSON.stringify(state)); }catch(e){ toast('Opslag op deze telefoon is vol'); } }
+function save(){
+  try{ localStorage.setItem(LS, JSON.stringify(state)); }
+  catch(e){
+    try{ const slim = Object.assign({}, state, {photos:{}}); localStorage.setItem(LS, JSON.stringify(slim));
+      toast('Foto’s passen niet in het geheugen van deze telefoon, de scores zijn wel bewaard'); }
+    catch(e2){ toast('Opslag op deze telefoon is vol'); }
+  }
+}
 
 let DEV = (()=>{ try{ return JSON.parse(localStorage.getItem('gif_device')) || null; }catch(e){ return null; } })();
 if (!DEV){ DEV = { id:'d'+Date.now().toString(36)+Math.random().toString(36).slice(2,7), name:'' }; localStorage.setItem('gif_device', JSON.stringify(DEV)); }
@@ -1430,8 +1437,9 @@ document.addEventListener('change', async e=>{
   const el = e.target;
   if (el.id==='restorefile'){ const f=el.files[0]; if (f) restoreFrom(f); el.value=''; return; }
   if (el.id==='photofile'){ const f=el.files[0]; el.value=''; if (!f || !photoRound) return;
-    try{ const data = await compressImage(f); state.photos[photoRound]={data, t:new Date().toISOString()}; state.photoDirty[photoRound]=true; save(); render(); toast('Foto opgeslagen'); sync(); }
-    catch(err){ toast('Deze foto kon niet worden gelezen'); } return; }
+    toast('Foto wordt verkleind…');
+    try{ const data = await compressImage(f); state.photos[photoRound]={data, t:new Date().toISOString()}; state.photoDirty[photoRound]=true; save(); render(); toast('Foto opgeslagen, wordt verstuurd'); sync(true); }
+    catch(err){ console.warn(err); toast(err.message || 'Deze foto kon niet worden gelezen'); } return; }
   const c = el.dataset.chg; if (!c) return;
   const p = el.dataset.p ? pById(el.dataset.p) : null, r = Number(el.dataset.r), h = Number(el.dataset.h);
   const num = x => { x=String(x).trim().replace(',', '.'); return x.startsWith('+') ? -Number(x.slice(1)) : Number(x); };
@@ -1454,15 +1462,34 @@ document.addEventListener('change', async e=>{
       render(); break; }
   }
 });
-function compressImage(file){
-  return new Promise((res, rej)=>{
+async function loadBitmap(file){
+  if (window.createImageBitmap){
+    try{ return await createImageBitmap(file, {imageOrientation:'from-image'}); }
+    catch(e){ try{ return await createImageBitmap(file); }catch(e2){} }
+  }
+  return await new Promise((res, rej)=>{
     const img = new Image(), url = URL.createObjectURL(file);
-    img.onload = ()=>{ const max=1280, s=Math.min(1, max/Math.max(img.width,img.height));
-      const cv=document.createElement('canvas'); cv.width=Math.round(img.width*s); cv.height=Math.round(img.height*s);
-      cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height); URL.revokeObjectURL(url); res(cv.toDataURL('image/jpeg',0.74)); };
-    img.onerror = ()=>{ URL.revokeObjectURL(url); rej(new Error('img')); };
+    img.onload = ()=>{ URL.revokeObjectURL(url); res(img); };
+    img.onerror = ()=>{ URL.revokeObjectURL(url); rej(new Error('Deze foto kon niet worden gelezen. Maak er een schermafbeelding van of sla hem op als JPEG.')); };
     img.src = url;
   });
+}
+async function compressImage(file){
+  const bmp = await loadBitmap(file);
+  const w0 = bmp.width || bmp.naturalWidth, h0 = bmp.height || bmp.naturalHeight;
+  if (!w0 || !h0) throw new Error('Deze foto kon niet worden gelezen.');
+  let max = 1200, out = '';
+  for (let attempt=0; attempt<4; attempt++){
+    const sc = Math.min(1, max/Math.max(w0,h0));
+    const cv = document.createElement('canvas'); cv.width = Math.max(1,Math.round(w0*sc)); cv.height = Math.max(1,Math.round(h0*sc));
+    const ctx = cv.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,cv.width,cv.height); ctx.drawImage(bmp,0,0,cv.width,cv.height);
+    out = cv.toDataURL('image/jpeg', attempt===0 ? 0.72 : 0.6);
+    if (out.length < 420000) break;
+    max = Math.round(max * 0.75);
+  }
+  if (bmp.close) bmp.close();
+  if (!out || out.length < 200) throw new Error('Deze foto kon niet worden verwerkt.');
+  return out;
 }
 
 /* Keep the screen awake while entering scores */
